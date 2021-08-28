@@ -1,0 +1,27 @@
+- name: Create directory openshift-install
+  ansible.builtin.file:
+    state: directory
+    path: ./openshift-install
+
+- name: Get stats of a file
+  ansible.builtin.stat:
+    path: ./openshift-install/openshift-install
+  register: st
+
+# https://github.com/openshift/okd/releases
+# https://amd64.origin.releases.ci.openshift.org/
+- name: Download openshift-install
+  when: st.stat.exists == false
+  get_url:
+    url: https://github.com/openshift/okd/releases/download/4.7.0-0.okd-2021-08-22-163618/openshift-install-mac-4.7.0-0.okd-2021-08-22-163618.tar.gz
+    dest: ./openshift-install.tar.gz
+    mode: '0440'
+
+- name: Unpack openshift-install
+  when: st.stat.exists == false
+  shell: tar -xvf ./openshift-install.tar.gz -C ./openshift-install
+
+- name: Delete openshift-install
+  ansible.builtin.file:
+    state: absent
+    path: ./openshift-install.tar.gz

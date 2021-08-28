@@ -1,0 +1,14 @@
+- name: Check status of pull secret
+  ansible.builtin.stat:
+    path: ./pull-secret
+  register: secret
+
+- name: Verify pull secret exists
+  when: secret.stat.exists == false
+  fail:
+    msg: there has to be a secret at ./pull-secret. Download secret from https://console.redhat.com/openshift/install/pull-secret to ./pull-secret
+
+- include_tasks: "1-download-installer.yml"
+- include_tasks: "2-download-tools.yml"
+- include_tasks: "3-create-openshift-config.yml"
+- include_tasks: "4-validate-ignition-files.yml"

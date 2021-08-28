@@ -1,0 +1,43 @@
+- name: set timezone to Central Europe
+  timezone:
+    name: Europe/Stockholm
+
+- name: Install ntp
+  apt:
+    name: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+      - ntp
+      - ntpdate
+
+- name: Copy over the NTP configuration
+  template: src=./templates/ntp.conf dest=/etc/ntp.conf
+
+- name: Make ntp /etc/ntp/crypto/pw directory
+  file:
+    path: /etc/ntp/crypto/pw
+    state: directory
+    owner: root
+    group: root
+
+
+- name: Make ntp /etc/ntp/keys directory
+  file:
+    path: /etc/ntp/keys
+    state: directory
+    owner: root
+    group: root
+
+
+- name: Make sure NTP is stopped
+  service: name=ntp state=stopped enabled=yes
+
+
+- name: Sync time initialy
+  shell: ntpd -gq
+
+
+- name: Make sure NTP is started up
+  service: name=ntp state=started enabled=yes
+

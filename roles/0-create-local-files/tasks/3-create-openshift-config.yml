@@ -1,0 +1,38 @@
+- name: Delete directory openshift-files
+  ansible.builtin.file:
+    state: absent
+    path: ./openshift-files
+
+- name: Create directory openshift-files
+  ansible.builtin.file:
+    state: directory
+    path: ./openshift-files
+
+- name: 3. Create installation config
+  ansible.builtin.template:
+    src: templates/install-config.yaml
+    dest: ./openshift-files/install-config.yaml
+    mode: '0644'
+  vars:
+    pullSecret: "{{lookup('file', './pull-secret') | regex_replace('\"', '\\\"') }}"
+    sshKey: "{{lookup('file', '~/.ssh/id_ansible.pub') }}"
+    nrOfMasters: "{{ groups['masters'] | length }}"
+    nrOfNodes: "0"
+# NOTE: Number of nodes=0 means that the masters will also be run standard pods
+#       Added nodes later can handle that taint but since I only will be having a single node,
+#       it seems like a good idea not to waste the three masters.
+
+- name: 3. Create cluster manifests files
+  shell: ./openshift-install/openshift-install create manifests --dir=./openshift-files
+
+- name: 3. Create cluster ignition files
+  shell: ./openshift-install/openshift-install create ignition-configs --dir=./openshift-files
+
+- name: 3. Fix ignition files
+  include_tasks: "3.1-fix-ignition-files.yml"
+  vars:
+    ifname: "eno1"
+  loop:
+    - "bootstrap"
+    - "master"
+    - "worker"

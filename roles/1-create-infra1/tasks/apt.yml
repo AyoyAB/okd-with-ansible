@@ -1,0 +1,41 @@
+- name: Remove a number of packages
+  apt:
+    name: "{{ packages }}"
+    state: absent
+    autoclean: yes
+    autoremove: yes
+    purge: yes
+  vars:
+    packages:
+      - android-*
+      - androidsdk-*
+      - apache2
+      - apache2-*
+      - apertium
+      - apertium-*
+      - argonaut-*
+      - aspell
+      - aspell-*
+      - asterisk
+      - asterisk-*
+      - galculator
+      - geoip-database
+      - libreoffice-*
+      - minecraft-pi
+      - realvnc-vnc-server
+      - realvnc-vnc-viewer
+      - scratch
+      - scratch2
+      - sonic-pi
+      - wolfram-engine
+
+- name: Install network utilities such as ping
+  apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: yes
+  vars:
+    packages:
+      - iputils-*
+      - jq
+      - tcpdump

@@ -1,0 +1,5 @@
+- hosts: infras
+  any_errors_fatal: true
+  gather_facts: no
+  roles:
+    - role: 3-remove-bootstrap-from-infra

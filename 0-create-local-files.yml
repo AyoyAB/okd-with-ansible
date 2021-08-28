@@ -1,0 +1,5 @@
+- hosts: localhost
+  any_errors_fatal: true
+  gather_facts: no
+  roles:
+    - role: 0-create-local-files

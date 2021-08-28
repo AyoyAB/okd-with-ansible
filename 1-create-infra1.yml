@@ -1,0 +1,6 @@
+- hosts: infras
+  any_errors_fatal: true
+  gather_facts: no
+  roles:
+    - role: 1-create-infra1
+      become: yes

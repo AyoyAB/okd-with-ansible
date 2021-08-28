@@ -1,0 +1,57 @@
+- pause:
+    prompt: |
+      Manually run sudo coreos-installer on masters according to README.md and reboot.
+      Verify they are trying to retrieve the second stage ignition file.
+      Press return to continue
+
+- pause:
+    prompt: |
+      Manually run sudo coreos-installer on bootstrap according to README.md and reboot.
+      Press return to continue
+
+- name: Wait 3 hours for target connection to become reachable/usable
+  wait_for_connection:
+    delay: 0
+    sleep: 30
+    timeout: 10800
+  when: inventory_hostname == groups['nodes'][0]
+
+- name: Gathering facts
+  setup:
+  when: inventory_hostname == groups['nodes'][0]
+
+- name: Wait for bootstrap server to start
+  wait_for:
+    host: hostvars[groups['nodes'][0]]['ansible_host']
+    port: 22623
+    delay: 5
+    sleep: 30
+    timeout: 3000
+  when: inventory_hostname == "localhost"
+
+- pause:
+    prompt: |
+      Manually check that the boostrap machine is working correctly and has started to create the temporary control plane.
+      Hint:
+      ssh core@{{ groups['nodes'][0] }}
+      journalctl -b -f -u release-image.service -u bootkube.service
+
+- name: Make sure the bootstrap server is started
+  wait_for:
+    host: hostvars[groups['nodes'][0]]['ansible_host']
+    port: 22623
+    delay: 5
+    sleep: 30
+    timeout: 3000
+  when: inventory_hostname == "localhost"
+
+- name: Check installation status
+  shell: |
+    journalctl -b -u release-image.service -u bootkube.service \
+    | grep "All self-hosted control plane components successfully started" \
+    | wc -l
+  when: inventory_hostname == groups['nodes'][0]
+  register: journalctl
+  retries: 1000
+  delay: 30
+  until: journalctl.stdout == "1"

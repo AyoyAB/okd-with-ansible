@@ -1,0 +1,39 @@
+- name: Create directory openshift-client
+  ansible.builtin.file:
+    state: directory
+    path: ./openshift-client
+
+- name: Get stats of a file
+  ansible.builtin.stat:
+    path: ./openshift-client/oc
+  register: st
+
+# https://github.com/openshift/okd/releases
+- name: Download openshift-client
+  when: st.stat.exists == false
+  get_url:
+    url: https://github.com/openshift/okd/releases/download/4.7.0-0.okd-2021-08-22-163618/openshift-client-mac-4.7.0-0.okd-2021-08-22-163618.tar.gz
+    dest: ./openshift-client.tar.gz
+    mode: '0440'
+
+- name: Unpack openshift-client
+  when: st.stat.exists == false
+  shell: tar -xvf ./openshift-client.tar.gz -C ./openshift-client
+
+- name: Delete packed openshift-client
+  ansible.builtin.file:
+    state: absent
+    path: ./openshift-client.tar.gz
+
+- name: Get stats of a validator file
+  ansible.builtin.stat:
+    path: ./openshift-client/ignition-validate
+  register: st
+
+# https://github.com/coreos/ignition/releases
+- name: Download ignition validator
+  when: st.stat.exists == false
+  get_url:
+    url: https://github.com/coreos/ignition/releases/download/v2.12.0/ignition-validate-x86_64-apple-darwin
+    dest: ./openshift-client/ignition-validate
+    mode: '0755'

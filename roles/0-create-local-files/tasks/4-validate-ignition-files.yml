@@ -1,0 +1,10 @@
+- name: Find ignition files
+  find:
+    paths: ./openshift-files
+    patterns: '*.ign'
+  register: files
+
+- name: Validate ignition files
+  shell: "./openshift-client/ignition-validate ${PWD}/{{ item.path }}"
+  loop: "{{ files.files }}"
+  changed_when: false
