@@ -1,0 +1,9 @@
+- name: 1. Patch update URL
+  shell: |
+    KUBECONFIG=./openshift-files/auth/kubeconfig \
+    ./openshift-client/oc \
+    patch ClusterVersion version \
+    --type merge \
+    --patch '{"spec":{"upstream":"https://amd64.origin.releases.ci.openshift.org/graph"}}'
+  register: patchoutput
+  changed_when: patchoutput.stdout != "clusterversion.config.openshift.io/version patched (no change)"
