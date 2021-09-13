@@ -172,3 +172,46 @@ You can now open the cluster console by
 opening https://console-openshift-console.apps.ocp4.example.com.
 
 Have fun with your cluster!
+
+## Adding the bootstrap node as a worker
+
+Once the cluster has been correctly installed, shutdown the
+bootstrap node, remove the partitions and reinstall using
+this command:
+
+```shell
+$ sudo coreos-installer \
+    install \
+    /dev/sda \
+    --firstboot-args='console=tty0 rd.neednet=1 rd.net.timeout.carrier=30' \
+    --insecure-ignition \
+    --ignition-url=http://infra1.ocp4.example.com:8080/worker.ign
+```
+
+Since this has not been prepared in the cluster earlier,
+you need to approve the certificate requests.
+This is how you list and approve them:
+
+```shell
+$ KUBECONFIG=./openshift-files/auth/kubeconfig \
+    ./openshift-client/oc get csr | grep -i pending
+NAME        AGE     SIGNERNAME                                    REQUESTOR                                                                   CONDITION
+csr-4n948   36m     kubernetes.io/kube-apiserver-client-kubelet   system:serviceaccount:openshift-machine-config-operator:node-bootstrapper   Pending
+csr-7n8zl   51m     kubernetes.io/kube-apiserver-client-kubelet   system:serviceaccount:openshift-machine-config-operator:node-bootstrapper   Pending
+csr-c8nhz   20m     kubernetes.io/kube-apiserver-client-kubelet   system:serviceaccount:openshift-machine-config-operator:node-bootstrapper   Pending
+csr-f4vvb   5m41s   kubernetes.io/kube-apiserver-client-kubelet   system:serviceaccount:openshift-machine-config-operator:node-bootstrapper   Pending
+csr-fz8sk   66m     kubernetes.io/kube-apiserver-client-kubelet   system:serviceaccount:openshift-machine-config-operator:node-bootstrapper   Pending
+
+$ KUBECONFIG=./openshift-files/auth/kubeconfig \
+    ./openshift-client/oc adm certificate approve csr-fz8sk csr-wq7kq
+certificatesigningrequest.certificates.k8s.io/csr-fz8sk approved
+certificatesigningrequest.certificates.k8s.io/csr-wq7kq approved
+
+$ KUBECONFIG=./openshift-files/auth/kubeconfig \
+    ./openshift-client/oc get nodes
+NAME                       STATUS     ROLES           AGE    VERSION
+master0.ocp4.example.com   Ready      master,worker   116m   v1.20.0+01994f4-1091
+master1.ocp4.example.com   Ready      master,worker   116m   v1.20.0+01994f4-1091
+master2.ocp4.example.com   Ready      master,worker   113m   v1.20.0+01994f4-1091
+worker1.ocp4.example.com   NotReady   worker          73s    v1.20.0+01994f4-1091
+```
