@@ -26,7 +26,6 @@ If you have more hardware, adjust the hosts file accordingly.
    | apps.ocp4.example.com          | 192.168.60.179 |
    | *.apps.ocp4.example.com        | 192.168.60.179 |
    | infra1.ocp4.example.com        | 192.168.60.179 |
-   | 
    | master1.ocp4.example.com       | 192.168.60.181 |
    | master2.ocp4.example.com	    | 192.168.60.182 |
    | master3.ocp4.example.com	    | 192.168.60.183 |
