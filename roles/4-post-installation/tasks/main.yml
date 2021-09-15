@@ -1,1 +1,4 @@
 - include_tasks: "1-patch-update-stream.yml"
+
+- include_tasks: "2.0-oauth.yml"
+

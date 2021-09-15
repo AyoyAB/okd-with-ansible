@@ -1,5 +1,7 @@
 .idea/
 *.tgz
+github-config.json
+tmp-github-cluster-config.yaml
 pull-secret
 openshift-client/*
 openshift-files/*

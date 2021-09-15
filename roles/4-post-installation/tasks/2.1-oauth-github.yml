@@ -1,0 +1,67 @@
+# https://docs.openshift.com/container-platform/4.8/authentication/identity_providers/configuring-github-identity-provider.html
+- name: 2.1 Set variables
+  set_fact:
+    ghsecretname: "github-client-secret"
+    ghtempfile: "./tmp-github-cluster-config.yaml"
+
+- name: 2.1 Display the JSON file content
+  shell: cat {{ ghconfigfilename }}
+  register: ghconfigfile
+
+- name: save the Json data to a Variable as a Fact
+  set_fact:
+    ghconfig: "{{ ghconfigfile.stdout | from_json }}"
+
+- debug:
+    var: ghconfig
+
+- fail:
+    msg: "Check your github configuration file"
+  when: ghconfig.clientID is not defined or ghconfig.clientID == "" or ghconfig.clientSecret is not defined or ghconfig.clientSecret == ""
+
+
+- debug:
+    var: ghconfig.clientID
+- debug:
+    var: ghconfig.clientSecret
+- debug:
+    var: ghconfig.organizations
+
+
+- name: 2.1 If secret already exist, delete
+  shell: |
+    KUBECONFIG=./openshift-files/auth/kubeconfig \
+    ./openshift-client/oc \
+    -n openshift-config \
+    delete secret {{ ghsecretname }} \
+    --ignore-not-found
+  register: result
+  changed_when: result.stdout == "secret \"github-client-secret\" deleted"
+
+- name: 2.1 Add github secret
+  shell: |
+    KUBECONFIG=./openshift-files/auth/kubeconfig \
+    ./openshift-client/oc \
+    -n openshift-config \
+    create secret generic {{ ghsecretname }} \
+    --from-literal=clientSecret='{{ ghconfig.clientSecret }}'
+  register: ocresult
+  changed_when: '"unchanged" not in ocresult.stdout'
+
+- name: 2.1 Create temporary file
+  template:
+    src: templates/2-oauth/cluster.yaml
+    dest: "{{ ghtempfile }}"
+
+- name: 2.1. Add github as oauth provider
+  shell: |
+    KUBECONFIG=./openshift-files/auth/kubeconfig \
+    ./openshift-client/oc \
+    apply -f {{ ghtempfile }}
+  register: patchoutput
+  changed_when: patchoutput.stdout != "clusterversion.config.openshift.io/version patched (no change)" and patchoutput.stdout != "oauth.config.openshift.io/cluster unchanged"
+
+- name: 2.1 Delete temporary file
+  file:
+    path: "{{ ghtempfile }}"
+    state: absent

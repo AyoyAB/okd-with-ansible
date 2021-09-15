@@ -16,7 +16,18 @@ If you have more hardware, adjust the hosts file accordingly.
 
 # Preparation
 1. Pull your RedHat pull secret and place in file "pull-secret".
-2. Set up DNS with the following entries (of course, adjust
+2. [If you want github integration](https://docs.openshift.com/container-platform/4.8/authentication/identity_providers/configuring-github-identity-provider.html),
+   create a file called "github-config.json" with similar content as this:
+   ```json
+   {
+     "clientID": "< github client ID >",
+     "clientSecret": "< github client secret >",
+     "organizations": [
+       "< your github organization >"
+     ]
+   }
+   ```
+3. Set up DNS with the following entries (of course, adjust
    addresses to your infrastructure):
 
    | hostname                       | Address        |
