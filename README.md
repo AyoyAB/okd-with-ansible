@@ -32,11 +32,11 @@ If you have more hardware, adjust the hosts file accordingly.
 
    | hostname                       | Address        |
    |--------------------------------|----------------| 
-   | api-int.ocp4.example.com       | 192.168.60.179 |
-   | api.ocp4.example.com           | 192.168.60.179 |
-   | apps.ocp4.example.com          | 192.168.60.179 |
-   | *.apps.ocp4.example.com        | 192.168.60.179 |
-   | infra1.ocp4.example.com        | 192.168.60.179 |
+   | infra1.ocp4.example.com        | 192.168.60.180 |
+   | api-int.ocp4.example.com       | CNAME infra1.ocp4.example.com |
+   | api.ocp4.example.com           | CNAME infra1.ocp4.example.com |
+   | apps.ocp4.example.com          | CNAME infra1.ocp4.example.com |
+   | *.apps.ocp4.example.com        | CNAME infra1.ocp4.example.com |
    | master1.ocp4.example.com       | 192.168.60.181 |
    | master2.ocp4.example.com	    | 192.168.60.182 |
    | master3.ocp4.example.com	    | 192.168.60.183 |
