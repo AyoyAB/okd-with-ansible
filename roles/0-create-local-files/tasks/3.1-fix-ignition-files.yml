@@ -9,6 +9,6 @@
 - name: "3.1 {{ item }} - Prepare the common fixes in {{ item }}.ign file"
   shell: |
     cat openshift-files/{{ item }}.ign \
-    | jq '.storage.files += [{"path": "/run/NetworkManager/conf.d/delay-{{ ifname }}.conf","mode": 0644,"user": {"name": "root"},"contents": {"source": "data:text/plain;charset=utf-8;base64,{{ networkdelay | b64encode }}"}}]' \
+    | jq '.storage.files += [{"overwrite": true,"path": "/run/NetworkManager/conf.d/delay-{{ ifname }}.conf","mode": 420,"user": {"name": "root"},"contents": {"source": "data:text/plain;charset=utf-8;base64,{{ networkdelay | b64encode }}"}}]' \
     > openshift-files/{{ item }}.json \
     && mv openshift-files/{{ item }}.json openshift-files/{{ item }}.ign
