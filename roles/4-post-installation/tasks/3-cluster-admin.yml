@@ -1,0 +1,27 @@
+- name: 3. {{ item }} Check if cluster admin already exists
+  shell: |
+    KUBECONFIG=./openshift-files/auth/kubeconfig \
+    ./openshift-client/oc \
+    get clusterrolebinding -o json \
+    | jq --raw-output \
+    '.items[] | select(.roleRef.name == "cluster-admin") | select(.subjects[].kind=="User") | select(.subjects[].name == "{{ item }}") | .metadata.name'
+  register: result
+  changed_when: false
+
+- name: 3. {{ item }} Render template Add cluster admin
+  template:
+    src: templates/3-cluster-admin.yaml
+    dest: ./tmp/cluster-admin.yaml
+  when: result.stdout == ""
+
+- name: 3. {{ item }} Add cluster admin
+  shell: |
+    KUBECONFIG=./openshift-files/auth/kubeconfig \
+    ./openshift-client/oc \
+    apply -f ./tmp/cluster-admin.yaml
+  when: result.stdout == ""
+
+- name: 3. {{ item }} Remove temporary file
+  file:
+    state: absent
+    path: ./tmp/cluster-admin.yaml

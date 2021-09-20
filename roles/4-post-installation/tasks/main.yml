@@ -2,3 +2,8 @@
 
 - include_tasks: "2.0-oauth.yml"
 
+- include_tasks: "3-cluster-admin.yml"
+  with_items:
+    - smuda
+    - OscarAyoy
+
