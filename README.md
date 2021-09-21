@@ -126,7 +126,7 @@ $ sudo coreos-installer \
     /dev/sda \
     --firstboot-args='console=tty0 rd.neednet=1 rd.net.timeout.carrier=30' \
     --insecure-ignition \
-    --ignition-url=http://infra1.ocp4.example.com:8080/master.ign
+    --ignition-url=http://infra1.ocp4.example.com:8080/master[1-3].ign
 ```
 
 Once the installation has finished, remove the USB and reboot.
@@ -195,7 +195,7 @@ $ sudo coreos-installer \
     /dev/sda \
     --firstboot-args='console=tty0 rd.neednet=1 rd.net.timeout.carrier=30' \
     --insecure-ignition \
-    --ignition-url=http://infra1.ocp4.example.com:8080/worker.ign
+    --ignition-url=http://infra1.ocp4.example.com:8080/worker[1].ign
 ```
 
 Since this has not been prepared in the cluster earlier,

@@ -6,3 +6,16 @@
     - "bootstrap"
     - "master"
     - "worker"
+
+- name: Api-Proxy - Copy over ignition files
+  template:
+    src: ./openshift-files/{{ item }}.ign
+    dest: /usr/share/nginx/html/{{ item }}.ign
+  loop: "{{ groups['masters'] }}"
+
+
+- name: Api-Proxy - Copy over ignition files
+  template:
+    src: ./openshift-files/{{ item }}.ign
+    dest: /usr/share/nginx/html/{{ item }}.ign
+  loop: "{{ groups['nodes'] }}"

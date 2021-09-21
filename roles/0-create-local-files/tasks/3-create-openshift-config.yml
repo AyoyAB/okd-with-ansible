@@ -36,3 +36,21 @@
     - "bootstrap"
     - "master"
     - "worker"
+
+- name: 3. Masters - Create host specific ignition files
+  include_tasks: "3.2-set-hostname.yml"
+  loop: "{{ groups['masters'] }}"
+  vars:
+    template: master.ign
+
+- name: 3. Workers - Create host specific ignition files
+  include_tasks: "3.2-set-hostname.yml"
+  loop: "{{ groups['nodes'] }}"
+  vars:
+    template: worker.ign
+
+- name: 3. Bootstrap - Create host specific ignition files
+  include_tasks: "3.2-set-hostname.yml"
+  vars:
+    template: bootstrap.ign
+    item: bootstrap
