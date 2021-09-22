@@ -1,0 +1,25 @@
+apiVersion: machineconfiguration.openshift.io/v1
+kind: MachineConfig
+metadata:
+  labels:
+    machineconfiguration.openshift.io/role: master
+  name: custom-timezone-configuration-masters
+spec:
+  config:
+    ignition:
+      version: 2.2.0
+    systemd:
+      units:
+        - contents: |
+            [Unit]
+            Description=set timezone
+            After=network-online.target
+
+            [Service]
+            Type=oneshot
+            ExecStart=timedatectl set-timezone Europe/Stockholm
+
+            [Install]
+            WantedBy=multi-user.target
+          enabled: true
+          name: custom-timezone.service
