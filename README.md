@@ -14,6 +14,11 @@ It assumes you have the following hardware:
 
 If you have more hardware, adjust the hosts file accordingly.
 
+NOTE: If you want to run OKD 4.8 (which at time of writing is beta), extract
+the installer under ./openshift-install which will stop retrieving the installer.
+The exact command to extract the 4.8 installer is available per version at
+[OKD Nightly Releases](https://amd64.origin.releases.ci.openshift.org/#4.8.0-0.okd).
+
 # Preparation
 1. Pull your RedHat pull secret and place in file "pull-secret".
 2. [If you want github integration](https://docs.openshift.com/container-platform/4.8/authentication/identity_providers/configuring-github-identity-provider.html),
