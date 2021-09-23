@@ -139,7 +139,7 @@ Once the installation has finished, remove the USB and reboot.
 $ sudo reboot now
 ```
 
-Verify that the master is trying to pull the secondary ignition from api-int.ocp4.example.com:22623.
+Verify that the master is trying to pull the secondary ignition from `https://api-int.ocp4.example.com:22623`.
 
 Once all masters are waiting for the secondary ignition, continue the playbook
 which tell you to boot the first worker machine on
