@@ -29,20 +29,35 @@
     timeout: 3000
   when: inventory_hostname == "localhost"
 
-- pause:
-    prompt: |
-      Manually check that the boostrap machine is working correctly and has started to create the temporary control plane.
-      Hint:
-      ssh core@{{ groups['nodes'][0] }}
-      journalctl -b -f -u release-image.service -u bootkube.service
-
-- name: Make sure the bootstrap server is started
+- name: Wait for API server to be accessable on bootstrap
   wait_for:
     host: hostvars[groups['nodes'][0]]['ansible_host']
-    port: 22623
+    port: 6443
     delay: 5
     sleep: 30
     timeout: 3000
+  when: inventory_hostname == "localhost"
+
+- name: Wait for API server to start on bootstrap
+  uri:
+    url: "https://{{ hostvars[groups['nodes'][0]]['ansible_host'] }}.ocp4.example.com:6443/readyz"
+    method: GET
+    status: 200
+  register: result
+  until: result.status == 200
+  retries: 3000 # retry X times
+  delay: 5 # pause for X sec b/w each call
+  when: inventory_hostname == "localhost"
+
+- name: Wait for API server to start on master1
+  uri:
+    url: "https://{{ hostvars[groups['masters'][0]]['ansible_host'] }}.ocp4.example.com:6443/readyz"
+    method: GET
+    status: 200
+  register: result
+  until: result.status == 200
+  retries: 3000 # retry X times
+  delay: 5 # pause for X sec b/w each call
   when: inventory_hostname == "localhost"
 
 - name: Check installation status
