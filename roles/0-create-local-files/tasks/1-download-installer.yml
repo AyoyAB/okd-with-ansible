@@ -13,7 +13,7 @@
 - name: Download openshift-install
   when: st.stat.exists == false
   get_url:
-    url: https://github.com/openshift/okd/releases/download/4.7.0-0.okd-2021-08-22-163618/openshift-install-mac-4.7.0-0.okd-2021-08-22-163618.tar.gz
+    url: https://github.com/openshift/okd/releases/download/4.7.0-0.okd-2021-09-19-013247/openshift-install-mac-4.7.0-0.okd-2021-09-19-013247.tar.gz
     dest: ./openshift-install.tar.gz
     mode: '0440'
 
