@@ -12,3 +12,16 @@
     | jq '.storage.files += [{"overwrite": true,"path": "/run/NetworkManager/conf.d/delay-{{ ifname }}.conf","mode": 420,"user": {"name": "root"},"contents": {"source": "data:text/plain;charset=utf-8;base64,{{ networkdelay | b64encode }}"}}]' \
     > openshift-files/{{ item }}.json \
     && mv openshift-files/{{ item }}.json openshift-files/{{ item }}.ign
+
+- name: "3.1 {{ item }} - Create content of boot fix (https://github.com/coreos/fedora-coreos-tracker/issues/975)"
+  set_fact:
+    after_ostree: |
+      [Unit]
+      After=ostree-remount.service
+
+- name: "3.1 {{ item }} - Add the boot fix (https://github.com/coreos/fedora-coreos-tracker/issues/975)"
+  shell: |
+    cat openshift-files/{{ item }}.ign \
+    | jq '.storage.files += [{"overwrite": true,"path": "/etc/systemd/system/systemd-backlight@.service.d/45-after-ostree-remount.conf","mode": 420,"user": {"name": "root"},"contents": {"source": "data:text/plain;charset=utf-8;base64,{{ after_ostree | b64encode }}"}}]' \
+    > openshift-files/{{ item }}.json \
+    && mv openshift-files/{{ item }}.json openshift-files/{{ item }}.ign
