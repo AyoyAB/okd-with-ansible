@@ -13,6 +13,21 @@
     > openshift-files/{{ item }}.json \
     && mv openshift-files/{{ item }}.json openshift-files/{{ item }}.ign
 
+############ https://github.com/coreos/fedora-coreos-tracker/issues/746
+- name: "3.1 {{ item }} - Create content of boot fix (https://github.com/coreos/fedora-coreos-tracker/issues/746)"
+  set_fact:
+    before_rfkill: |
+      [Unit]
+      Before=systemd-rfkill.service systemd-rfkill.socket
+
+- name: "3.1 {{ item }} - Add the boot fix (https://github.com/coreos/fedora-coreos-tracker/issues/746)"
+  shell: |
+    cat openshift-files/{{ item }}.ign \
+    | jq '.storage.files += [{"overwrite": true,"path": "/etc/systemd/system/ostree-remount.service.d/before-rfkill.conf","mode": 420,"user": {"name": "root"},"contents": {"source": "data:text/plain;charset=utf-8;base64,{{ before_rfkill | b64encode }}"}}]' \
+    > openshift-files/{{ item }}.json \
+    && mv openshift-files/{{ item }}.json openshift-files/{{ item }}.ign
+
+############ https://github.com/coreos/fedora-coreos-tracker/issues/975
 - name: "3.1 {{ item }} - Create content of boot fix (https://github.com/coreos/fedora-coreos-tracker/issues/975)"
   set_fact:
     after_ostree: |
