@@ -59,8 +59,11 @@ The exact command to extract the 4.8 installer is available per version at
    - thanos-querier-openshift-monitoring.apps.ocp4.example.com
 
 4. Create a new image for the rasperry pi with enabled ssh and boot it up.
-5. Create a bootable USB from the latest version of Fedora coreos. 
-   (At the time of writing, the latest working release is [34.20210529.3.0](https://builds.coreos.fedoraproject.org/prod/streams/stable/builds/34.20210529.3.0/x86_64/fedora-coreos-34.20210529.3.0-live.x86_64.iso)
+5. Create a bootable USB from the correct version of Fedora coreos.
+   (At the time of writing, the current working release is [34.20210626.3.1](https://builds.coreos.fedoraproject.org/prod/streams/stable/builds/34.20210626.3.1/x86_64/fedora-coreos-34.20210626.3.1-live.x86_64.iso)
+   ```
+   ./openshift-install/openshift-install coreos print-stream-json | jq -r '.architectures.x86_64.artifacts.metal.formats.iso.disk.location'
+   ```
 6. Set up static DHCP entries for the machines, matching IP addresses above.
 7. Make sure there are no partitions on the bootstrap and masters
 
