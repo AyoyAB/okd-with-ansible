@@ -20,53 +20,44 @@
   setup:
   when: inventory_hostname == groups['nodes'][0]
 
-- name: Wait for bootstrap server to start
-  wait_for:
-    host: hostvars[groups['nodes'][0]]['ansible_host']
-    port: 22623
-    delay: 5
-    sleep: 30
-    timeout: 3000
-  when: inventory_hostname == "localhost"
-
-- name: Wait for API server to be accessable on bootstrap
-  wait_for:
-    host: hostvars[groups['nodes'][0]]['ansible_host']
-    port: 6443
-    delay: 5
-    sleep: 30
-    timeout: 3000
-  when: inventory_hostname == "localhost"
-
 - name: Wait for API server to start on bootstrap
-  uri:
-    url: "https://{{ hostvars[groups['nodes'][0]]['ansible_host'] }}.ocp4.example.com:6443/readyz"
+  local_action:
+    module: ansible.builtin.uri
+    url: "https://{{ groups['nodes'][0] }}.ocp4.example.com:6443/readyz"
     method: GET
-    status: 200
+    status_code: 200
+    validate_certs: false
   register: result
+  when: inventory_hostname == groups['nodes'][0]
   until: result.status == 200
   retries: 3000 # retry X times
   delay: 5 # pause for X sec b/w each call
-  when: inventory_hostname == "localhost"
 
 - name: Wait for API server to start on master1
-  uri:
-    url: "https://{{ hostvars[groups['masters'][0]]['ansible_host'] }}.ocp4.example.com:6443/readyz"
+  local_action:
+    module: ansible.builtin.uri
+    url: "https://{{ hostvars[groups['masters'][0]]['inventory_hostname'] }}.ocp4.example.com:6443/readyz"
     method: GET
-    status: 200
+    status_code: 200
+    validate_certs: false
   register: result
+  when: inventory_hostname == groups['nodes'][0]
   until: result.status == 200
-  retries: 3000 # retry X times
+  retries: 5000 # retry X times
   delay: 5 # pause for X sec b/w each call
-  when: inventory_hostname == "localhost"
 
 - name: Check installation status
   shell: |
     journalctl -b -u release-image.service -u bootkube.service \
-    | grep "All self-hosted control plane components successfully started" \
+    | grep "bootkube.service: Deactivated successfully." \
     | wc -l
   when: inventory_hostname == groups['nodes'][0]
   register: journalctl
   retries: 1000
   delay: 30
   until: journalctl.stdout == "1"
+
+- name: Shutdown the bootstrap machine
+  community.general.shutdown:
+  when: inventory_hostname == groups['nodes'][0]
+  become: true
