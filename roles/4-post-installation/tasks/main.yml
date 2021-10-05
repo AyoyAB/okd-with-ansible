@@ -7,9 +7,11 @@
     - smuda
     - OscarAyoy
 
+- include_tasks: "4-nfs-storage.yml"
+
 - name: Pause for 20 minutes to let cluster stabilize
   pause:
     minutes: 20
 
-- include_tasks: "4-machine-config.yml"
+- include_tasks: "5-machine-config.yml"
 

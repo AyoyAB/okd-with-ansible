@@ -1,0 +1,21 @@
+# https://docs.okd.io/latest/nodes/nodes/nodes-nodes-resources-configuring.html
+
+- name: 5 Get cluster version
+  shell: |
+    KUBECONFIG=./openshift-files/auth/kubeconfig \
+    ./openshift-client/oc version -o json | jq --raw-output '.openshiftVersion'
+  register: okd_version
+
+- name: 5 Check if OKD version is 4.8.0 nightly (f.ex 4.8.0-0.okd-2021-09-28-193204)
+  include_tasks: "5.1-invalid-default-machine-config.yml"
+  when: okd_version.stdout is match("4.8.0-0.okd-[\d]{4}-[\d]{2}-[\d]{2}-[\d]*")
+
+- name: 5 Apply machine configs
+  shell: |
+    KUBECONFIG=./openshift-files/auth/kubeconfig \
+    ./openshift-client/oc apply -f \
+    {{ item }}
+  with_fileglob:
+    - ../templates/5-machine-config/*.yaml
+  register: machineconfig
+  changed_when: '"unchanged" not in machineconfig.stdout'

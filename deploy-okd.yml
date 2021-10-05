@@ -2,6 +2,10 @@
   any_errors_fatal: true
   gather_facts: no
 
+- import_playbook: 0-handle-ansible-dependencies.yml
+  vars:
+    hosts: localhost
+
 - import_playbook: 0-create-local-files.yml
   vars:
     hosts: all

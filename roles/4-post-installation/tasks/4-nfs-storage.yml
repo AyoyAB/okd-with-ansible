@@ -1,0 +1,157 @@
+- name: 4.1 Create or update the namespace
+  kubernetes.core.k8s:
+    kubeconfig: ./openshift-files/auth/kubeconfig
+    resource_definition:
+      kind: Namespace
+      apiVersion: v1
+      metadata:
+        name: nfs-provisioner
+
+- name: 4.2 Create or update the service account
+  kubernetes.core.k8s:
+    kubeconfig: ./openshift-files/auth/kubeconfig
+    resource_definition:
+      kind: ServiceAccount
+      apiVersion: v1
+      metadata:
+        name: nfs-pod-provisioner-sa
+        namespace: nfs-provisioner
+
+- name: 4.3 Create or update the ClusterRole
+  kubernetes.core.k8s:
+    kubeconfig: ./openshift-files/auth/kubeconfig
+    resource_definition:
+      kind: ClusterRole # Role of kubernetes
+      apiVersion: rbac.authorization.k8s.io/v1 # auth API
+      metadata:
+        name: nfs-provisioner-clusterRole
+      rules:
+        - apiGroups: [""] # rules on persistentvolumes
+          resources: ["persistentvolumes"]
+          verbs: ["get", "list", "watch", "create", "delete"]
+        - apiGroups: [""]
+          resources: ["persistentvolumeclaims"]
+          verbs: ["get", "list", "watch", "update"]
+        - apiGroups: ["storage.k8s.io"]
+          resources: ["storageclasses"]
+          verbs: ["get", "list", "watch"]
+        - apiGroups: [""]
+          resources: ["events"]
+          verbs: ["create", "update", "patch"]
+
+- name: 4.4 Create or update the ClusterRoleBinding
+  kubernetes.core.k8s:
+    kubeconfig: ./openshift-files/auth/kubeconfig
+    resource_definition:
+      kind: ClusterRoleBinding
+      apiVersion: rbac.authorization.k8s.io/v1
+      metadata:
+        name: nfs-provisioner-rolebinding
+      subjects:
+        - kind: ServiceAccount
+          name: nfs-pod-provisioner-sa # defined on top of file
+          namespace: nfs-provisioner
+      roleRef: # binding cluster role to service account
+        kind: ClusterRole
+        name: nfs-provisioner-clusterRole # name defined in clusterRole
+        apiGroup: rbac.authorization.k8s.io
+
+- name: 4.5 Create or update the Role
+  kubernetes.core.k8s:
+    kubeconfig: ./openshift-files/auth/kubeconfig
+    resource_definition:
+      kind: Role
+      apiVersion: rbac.authorization.k8s.io/v1
+      metadata:
+        name: nfs-pod-provisioner-otherRoles
+        namespace: nfs-provisioner
+      rules:
+        - apiGroups: [""]
+          resources: ["endpoints"]
+          verbs: ["get", "list", "watch", "create", "update", "patch"]
+
+- name: 4.6 Create or update the RoleBinding
+  kubernetes.core.k8s:
+    kubeconfig: ./openshift-files/auth/kubeconfig
+    resource_definition:
+      kind: RoleBinding
+      apiVersion: rbac.authorization.k8s.io/v1
+      metadata:
+        name: nfs-pod-provisioner-otherRoles
+        namespace: nfs-provisioner
+      subjects:
+        - kind: ServiceAccount
+          name: nfs-pod-provisioner-sa # same as top of the file
+          # replace with namespace where provisioner is deployed
+      roleRef:
+        kind: Role
+        name: nfs-pod-provisioner-otherRoles
+        apiGroup: rbac.authorization.k8s.io
+
+- name: 4.7 Create or update the storage-class
+  kubernetes.core.k8s:
+    kubeconfig: ./openshift-files/auth/kubeconfig
+    resource_definition:
+      apiVersion: storage.k8s.io/v1
+      kind: StorageClass
+      metadata:
+        name: nfs-storageclass # IMPORTANT pvc needs to mention this name
+        namespace: nfs-provisioner
+        annotations:
+          "storageclass.kubernetes.io/is-default-class": "true"
+      provisioner: nfs-provider # name can be anything
+      parameters:
+        archiveOnDelete: "false"
+
+- name: 4.8 Fix rights to use NFS
+  shell: |
+    KUBECONFIG=./openshift-files/auth/kubeconfig
+    ./openshift-client/oc \
+    adm policy add-scc-to-user hostmount-anyuid -z nfs-pod-provisioner-sa
+
+- name: 4.9 Create or update the provisioner
+  kubernetes.core.k8s:
+    kubeconfig: ./openshift-files/auth/kubeconfig
+    resource_definition:
+      kind: Deployment
+      apiVersion: apps/v1
+      metadata:
+        name: nfs-pod-provisioner
+        namespace: nfs-provisioner
+      spec:
+        replicas: 1
+        strategy:
+          type: Recreate
+        selector:
+          matchLabels:
+            app: nfs-pod-provisioner
+        template:
+          metadata:
+            labels:
+              app: nfs-pod-provisioner
+          spec:
+            securityContext:
+              runAsNonRoot: true
+              privileged: false
+              runAsUser: 1000
+            serviceAccountName: nfs-pod-provisioner-sa # name of service account created in rbac.yaml
+            containers:
+              - name: nfs-pod-provisioner
+                image: k8s.gcr.io/sig-storage/nfs-subdir-external-provisioner:v4.0.2
+                securityContext:
+                  allowPrivilegeEscalation: false
+                volumeMounts:
+                  - name: nfs-provisioner-v
+                    mountPath: /persistentvolumes
+                env:
+                  - name: PROVISIONER_NAME # do not change
+                    value: nfs-provider # SAME AS PROVISONER NAME VALUE IN STORAGECLASS
+                  - name: NFS_SERVER # do not change
+                    value: 192.168.60.20 # Ip of the NFS SERVER
+                  - name: NFS_PATH # do not change
+                    value: /kube-volumes/volumes # path to nfs directory setup
+            volumes:
+              - name: nfs-provisioner-v # same as volume mounts name
+                nfs:
+                  server: 192.168.60.20
+                  path: /kube-volumes/volumes
