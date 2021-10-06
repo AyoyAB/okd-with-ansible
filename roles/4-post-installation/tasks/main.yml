@@ -15,3 +15,6 @@
 
 - include_tasks: "5-machine-config.yml"
 
+- include_tasks: "6-compliance-operator.yml"
+  when:
+    - compliance_operator is defined

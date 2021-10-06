@@ -19,6 +19,18 @@ the installer under ./openshift-install which will stop retrieving the installer
 The exact command to extract the 4.8 installer is available per version at
 [OKD Nightly Releases](https://amd64.origin.releases.ci.openshift.org/#4.8.0-0.okd).
 
+There are optional components to install which are controlled by
+ansible variables. These are defined on the command line:
+
+```
+ansible-playbook -i hosts -v deploy-okd.yml --extra-vars "compliance_operator=true"
+```
+
+| variable | description |
+|----------|-------------|
+| compliance_operator | Whether to install the [OKD compliance operator](https://docs.okd.io/latest/security/compliance_operator/compliance-scans.html) |
+
+
 # Preparation
 1. Pull your RedHat pull secret and place in file "pull-secret".
 2. [If you want github integration](https://docs.openshift.com/container-platform/4.8/authentication/identity_providers/configuring-github-identity-provider.html),

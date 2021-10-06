@@ -1,0 +1,9 @@
+- hosts: localhost
+  any_errors_fatal: true
+  gather_facts: no
+  tasks:
+    - name: make sure module community.kubernetes is installed
+      local_action:
+        module: ansible.builtin.shell
+        cmd: |
+          ansible-galaxy collection install community.kubernetes
