@@ -12,7 +12,7 @@
 - name: Download openshift-client
   when: st.stat.exists == false
   get_url:
-    url: https://github.com/openshift/okd/releases/download/4.7.0-0.okd-2021-09-19-013247/openshift-client-mac-4.7.0-0.okd-2021-09-19-013247.tar.gz
+    url: https://github.com/openshift/okd/releases/download/4.8.0-0.okd-2021-10-10-030117/openshift-client-mac-4.8.0-0.okd-2021-10-10-030117.tar.gz
     dest: ./openshift-client.tar.gz
     mode: '0440'
 
