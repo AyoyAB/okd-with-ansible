@@ -107,6 +107,7 @@
   shell: |
     KUBECONFIG=./openshift-files/auth/kubeconfig \
     ./openshift-client/oc \
+    -n nfs-provisioner \
     adm policy add-scc-to-user hostmount-anyuid -z nfs-pod-provisioner-sa
 
 - name: 4.9 Create or update the provisioner
@@ -155,3 +156,15 @@
                 nfs:
                   server: 192.168.60.20
                   path: /kube-volumes/volumes
+
+- name: 4.9 Wait for NFS provisioner to start
+  shell: |
+    KUBECONFIG=./openshift-files/auth/kubeconfig \
+    ./openshift-client/oc \
+    -n nfs-provisioner \
+    get deployment nfs-pod-provisioner -o json \
+    | jq '.status.readyReplicas'
+  register: readyReplicas
+  retries: 60
+  delay: 5
+  until: readyReplicas.stdout == "1"
