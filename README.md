@@ -138,15 +138,29 @@ ansible-playbook -i hosts -v deploy-okd.yml
 ```
 
 Once the playbook tell you to, boot the masters on
-Fedora coreos USB and start the installation process. 
+Fedora coreos USB. If you don't have a DHCP server on your network, configure the network via nmcli.
+
+```shell
+$ sudo nmcli general hostname master1.ocp4.example.com
+$ sudo nmcli connection show
+$ sudo nmcli con mod 'Wired connection 1' ipv4.addresses 192.168.60.181/24
+$ sudo nmcli con mod 'Wired connection 1' ipv4.gateway 192.168.60.1
+$ sudo nmcli con mod 'Wired connection 1' ipv4.dns '192.168.40.2'
+$ sudo nmcli con mod 'Wired connection 1' ipv4.method manual
+$ sudo nmcli con up 'Wired connection 1'
+```
+
+Now start the installation process. 
 The NUCs are a bit slow on the network side so a number of kernel arguments are needed.
+If you have configured the network manually, include the `--copy-network` argument.
 ```shell
 $ sudo coreos-installer \
     install \
     /dev/sda \
     --firstboot-args='console=tty0 rd.neednet=1 rd.net.timeout.carrier=30' \
     --insecure-ignition \
-    --ignition-url=http://infra1.ocp4.example.com:8080/master[1-3].ign
+    --ignition-url=http://infra1.ocp4.example.com:8080/master[1-3].ign \
+    [--copy-network]
 ```
 
 Once the installation has finished, remove the USB and reboot.
