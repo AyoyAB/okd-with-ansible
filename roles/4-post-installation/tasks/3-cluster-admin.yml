@@ -1,3 +1,8 @@
+- name: 3. {{ item }} Create directory ./tmp
+  ansible.builtin.file:
+    state: directory
+    path: ./tmp
+
 - name: 3. {{ item }} Check if cluster admin already exists
   shell: |
     KUBECONFIG=./openshift-files/auth/kubeconfig \
