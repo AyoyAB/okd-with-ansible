@@ -110,54 +110,27 @@
     -n nfs-provisioner \
     adm policy add-scc-to-user hostmount-anyuid -z nfs-pod-provisioner-sa
 
-- name: 4.9 Create or update the provisioner
+- name: 4.9 Fetch valid UID range to use for namespace
+  shell: |
+    KUBECONFIG=./openshift-files/auth/kubeconfig \
+    ./openshift-client/oc \
+    get ns nfs-provisioner -o json \
+    | jq --raw-output '.metadata.annotations."openshift.io/sa.scc.uid-range"'
+  register: uidrange
+  until: uidrange.stdout != "null"
+
+- debug:
+    var: uidrange
+
+- set_fact:
+    nfs_uid: "{{ uidrange | regex_search('[0-9]+') }}"
+
+- name: 4.10 Create or update the provisioner
   kubernetes.core.k8s:
     kubeconfig: ./openshift-files/auth/kubeconfig
-    resource_definition:
-      kind: Deployment
-      apiVersion: apps/v1
-      metadata:
-        name: nfs-pod-provisioner
-        namespace: nfs-provisioner
-      spec:
-        replicas: 1
-        strategy:
-          type: Recreate
-        selector:
-          matchLabels:
-            app: nfs-pod-provisioner
-        template:
-          metadata:
-            labels:
-              app: nfs-pod-provisioner
-          spec:
-            securityContext:
-              runAsNonRoot: true
-              privileged: false
-              runAsUser: 1000
-            serviceAccountName: nfs-pod-provisioner-sa # name of service account created in rbac.yaml
-            containers:
-              - name: nfs-pod-provisioner
-                image: k8s.gcr.io/sig-storage/nfs-subdir-external-provisioner:v4.0.2
-                securityContext:
-                  allowPrivilegeEscalation: false
-                volumeMounts:
-                  - name: nfs-provisioner-v
-                    mountPath: /persistentvolumes
-                env:
-                  - name: PROVISIONER_NAME # do not change
-                    value: nfs-provider # SAME AS PROVISONER NAME VALUE IN STORAGECLASS
-                  - name: NFS_SERVER # do not change
-                    value: 192.168.60.20 # Ip of the NFS SERVER
-                  - name: NFS_PATH # do not change
-                    value: /kube-volumes/volumes # path to nfs directory setup
-            volumes:
-              - name: nfs-provisioner-v # same as volume mounts name
-                nfs:
-                  server: 192.168.60.20
-                  path: /kube-volumes/volumes
+    template: 'templates/4-nfs-pod-provisioner.yaml'
 
-- name: 4.9 Wait for NFS provisioner to start
+- name: 4.11 Wait for NFS provisioner to start
   shell: |
     KUBECONFIG=./openshift-files/auth/kubeconfig \
     ./openshift-client/oc \
@@ -165,6 +138,6 @@
     get deployment nfs-pod-provisioner -o json \
     | jq '.status.readyReplicas'
   register: readyReplicas
-  retries: 60
+  retries: 120
   delay: 5
   until: readyReplicas.stdout == "1"
