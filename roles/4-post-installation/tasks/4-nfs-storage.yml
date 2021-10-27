@@ -105,7 +105,7 @@
 
 - name: 4.8 Fix rights to use NFS
   shell: |
-    KUBECONFIG=./openshift-files/auth/kubeconfig
+    KUBECONFIG=./openshift-files/auth/kubeconfig \
     ./openshift-client/oc \
     adm policy add-scc-to-user hostmount-anyuid -z nfs-pod-provisioner-sa
 
