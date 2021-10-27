@@ -177,11 +177,11 @@ After some time, you will be able to login via ssh to the bootstrap machine
 and follow the installation:
 
 ```shell
-$ ssh core@nucbootstrap.ocp4.example.com
-The authenticity of host 'nucbootstrap.ocp4.example.com (192.168.60.184)' can't be established.
+$ ssh core@worker1.ocp4.example.com
+The authenticity of host 'worker1.ocp4.example.com (192.168.60.184)' can't be established.
 ECDSA key fingerprint is SHA256:Z3edOf5ImnxO/x9tchkto5LoEQIaFm8DT/7zyGj5r6g.
 Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
-Warning: Permanently added 'nucbootstrap.ocp4.example.com,192.168.60.183' (ECDSA) to the list of known hosts.
+Warning: Permanently added 'worker1.ocp4.example.com,192.168.60.183' (ECDSA) to the list of known hosts.
 This is the bootstrap node; it will be destroyed when the master is fully up.
 
 The primary services are release-image.service followed by bootkube.service. To watch their status, run e.g.
@@ -233,9 +233,8 @@ csr-f4vvb   5m41s   kubernetes.io/kube-apiserver-client-kubelet   system:service
 csr-fz8sk   66m     kubernetes.io/kube-apiserver-client-kubelet   system:serviceaccount:openshift-machine-config-operator:node-bootstrapper   Pending
 
 $ KUBECONFIG=./openshift-files/auth/kubeconfig \
-    ./openshift-client/oc adm certificate approve csr-fz8sk csr-wq7kq
+    ./openshift-client/oc adm certificate approve csr-fz8sk
 certificatesigningrequest.certificates.k8s.io/csr-fz8sk approved
-certificatesigningrequest.certificates.k8s.io/csr-wq7kq approved
 
 $ KUBECONFIG=./openshift-files/auth/kubeconfig \
     ./openshift-client/oc get nodes
