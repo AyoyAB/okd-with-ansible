@@ -53,7 +53,19 @@
         source: compliance-operator
         sourceNamespace: openshift-marketplace
 
-- name: 6.5 Bind scanning type "default" to profiles to initiate scanning
+- name: 6.5 Wait for operator to start
+  shell: |
+    KUBECONFIG=./openshift-files/auth/kubeconfig \
+    ./openshift-client/oc \
+    -n openshift-compliance \
+    get deployment compliance-operator -o json \
+    | jq '.status.readyReplicas'
+  register: readyReplicas
+  retries: 60
+  delay: 5
+  until: readyReplicas.stdout == "1"
+
+- name: 6.6 Bind scanning type "default" to profiles to initiate scanning
   kubernetes.core.k8s:
     kubeconfig: ./openshift-files/auth/kubeconfig
     resource_definition:
