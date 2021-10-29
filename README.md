@@ -141,12 +141,9 @@ Once the playbook tell you to, boot the masters on
 Fedora coreos USB and start the installation process. 
 The NUCs are a bit slow on the network side so a number of kernel arguments are needed.
 ```shell
-$ sudo coreos-installer \
-    install \
-    /dev/sda \
-    --firstboot-args='console=tty0 rd.neednet=1 rd.net.timeout.carrier=30' \
-    --insecure-ignition \
-    --ignition-url=http://infra1.ocp4.example.com:8080/master[1-3].ign
+$ curl --output install.sh http://infra1.ocp4.example.com:8080/install.sh
+$ chmod 755 ./install.sh
+$ ./install.sh master[1-3]
 ```
 
 Once the installation has finished, remove the USB and reboot.
@@ -160,12 +157,9 @@ Once all masters are waiting for the secondary ignition, continue the playbook
 which tell you to boot the first worker machine on
 Fedora coreos USB and start the installation for the bootstrap process:
 ```shell
-$ sudo coreos-installer \
-    install \
-    /dev/sda \
-    --firstboot-args='console=tty0 rd.neednet=1 rd.net.timeout.carrier=30' \
-    --insecure-ignition \
-    --ignition-url=http://infra1.ocp4.example.com:8080/bootstrap.ign
+$ curl --output install.sh http://infra1.ocp4.example.com:8080/install.sh
+$ chmod 755 ./install.sh
+$ ./install.sh bootstrap
 ```
 
 Once the installation has finished, remove the USB and reboot.
@@ -210,12 +204,9 @@ bootstrap node, remove the partitions and reinstall using
 this command:
 
 ```shell
-$ sudo coreos-installer \
-    install \
-    /dev/sda \
-    --firstboot-args='console=tty0 rd.neednet=1 rd.net.timeout.carrier=30' \
-    --insecure-ignition \
-    --ignition-url=http://infra1.ocp4.example.com:8080/worker[1].ign
+$ curl --output install.sh http://infra1.ocp4.example.com:8080/install.sh
+$ chmod 755 ./install.sh
+$ ./install.sh worker1
 ```
 
 Since this has not been prepared in the cluster earlier,

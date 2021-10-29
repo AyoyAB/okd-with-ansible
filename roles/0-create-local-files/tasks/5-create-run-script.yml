@@ -1,0 +1,10 @@
+- debug:
+    var: groups['infras'][0]
+
+- name: Create installation script
+  ansible.builtin.template:
+    src: templates/install.sh
+    dest: ./openshift-files/install.sh
+    mode: '0755'
+#  vars:
+#    hostname: "{{ groups['infras'][0] }}.{{ cluster_name }}.{{ base_domain }}"

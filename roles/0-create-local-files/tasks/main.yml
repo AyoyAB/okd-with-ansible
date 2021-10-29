@@ -8,7 +8,11 @@
   fail:
     msg: there has to be a secret at ./pull-secret. Download secret from https://console.redhat.com/openshift/install/pull-secret to ./pull-secret
 
+- name: Gathering facts
+  setup:
+
 - include_tasks: "1-download-installer.yml"
 - include_tasks: "2-download-tools.yml"
 - include_tasks: "3-create-openshift-config.yml"
 - include_tasks: "4-validate-ignition-files.yml"
+- include_tasks: "5-create-run-script.yml"
