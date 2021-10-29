@@ -2,4 +2,5 @@
   any_errors_fatal: true
   gather_facts: no
   roles:
+    - role: 0-settings
     - role: 2-wait-for-installation
