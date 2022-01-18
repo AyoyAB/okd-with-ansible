@@ -65,7 +65,7 @@
   delay: 5
   until: readyReplicas.stdout == "1"
 
-- name: 6.6 Bind scanning type "default" to profiles to initiate scanning
+- name: 6.6 Bind scanning type to profiles to initiate scanning (CIS-compliance)
   kubernetes.core.k8s:
     kubeconfig: ./openshift-files/auth/kubeconfig
     resource_definition:
@@ -82,7 +82,24 @@
           kind: Profile
           apiGroup: compliance.openshift.io/v1alpha1
       settingsRef:
-        #name: default
-        name: default-auto-apply
+        name: default
+        kind: ScanSetting
+        apiGroup: compliance.openshift.io/v1alpha1
+
+- name: 6.7 Bind scanning type to profiles to initiate scanning (rhcos4-moderate)
+  kubernetes.core.k8s:
+    kubeconfig: ./openshift-files/auth/kubeconfig
+    resource_definition:
+      apiVersion: compliance.openshift.io/v1alpha1
+      kind: ScanSettingBinding
+      metadata:
+        name: rhcos4-moderate
+        namespace: openshift-compliance
+      profiles:
+        - name: rhcos4-moderate
+          kind: Profile
+          apiGroup: compliance.openshift.io/v1alpha1
+      settingsRef:
+        name: default
         kind: ScanSetting
         apiGroup: compliance.openshift.io/v1alpha1
