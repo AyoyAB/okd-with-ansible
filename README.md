@@ -14,9 +14,9 @@ It assumes you have the following hardware:
 
 If you have more hardware, adjust the hosts file accordingly.
 
-NOTE: If you want to run OKD 4.8 (which at time of writing is beta), extract
+NOTE: If you want to run a different version of OKD, extract
 the installer under ./openshift-install which will stop retrieving the installer.
-The exact command to extract the 4.8 installer is available per version at
+The exact command to extract the installer is available per beta version at
 [OKD Nightly Releases](https://amd64.origin.releases.ci.openshift.org/#4.8.0-0.okd).
 
 There are optional components to install which are controlled by
