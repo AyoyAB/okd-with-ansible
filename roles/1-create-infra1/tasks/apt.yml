@@ -8,7 +8,6 @@
   vars:
     packages:
       - android-*
-      - androidsdk-*
       - apache2
       - apache2-*
       - apertium
