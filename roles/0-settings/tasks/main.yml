@@ -1,4 +1,4 @@
 - name: Settings
   set_fact:
     base_domain: example.com
-    cluster_name: ocp4
+    cluster_name: okd4

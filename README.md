@@ -47,28 +47,28 @@ ansible-playbook -i hosts -v deploy-okd.yml --extra-vars "compliance_operator=tr
 3. Set up DNS with the following entries (of course, adjust
    addresses to your infrastructure):
 
-   | hostname                       | Address        |
-   |--------------------------------|----------------| 
-   | infra1.ocp4.example.com        | 192.168.60.180 |
-   | api-int.ocp4.example.com       | CNAME infra1.ocp4.example.com |
-   | api.ocp4.example.com           | CNAME infra1.ocp4.example.com |
-   | apps.ocp4.example.com          | CNAME infra1.ocp4.example.com |
-   | *.apps.ocp4.example.com        | CNAME infra1.ocp4.example.com |
-   | master1.ocp4.example.com       | 192.168.60.181 |
-   | master2.ocp4.example.com	    | 192.168.60.182 |
-   | master3.ocp4.example.com	    | 192.168.60.183 |
-   | worker1.ocp4.example.com       | 192.168.60.184 |
+   | hostname                       | Address                        |
+   |--------------------------------|--------------------------------| 
+   | infra1.okd4.example.com        | 192.168.60.180                 |
+   | api-int.okd4.example.com       | CNAME infra1.okd4.example.com  |
+   | api.okd4.example.com           | CNAME infra1.okd4.example.com  |
+   | apps.okd4.example.com          | CNAME infra1.okd4.example.com  |
+   | *.apps.okd4.example.com        | CNAME infra1.okd4.example.com  |
+   | master1.okd4.example.com       | 192.168.60.181                 |
+   | master2.okd4.example.com	    | 192.168.60.182                 |
+   | master3.okd4.example.com	    | 192.168.60.183                 |
+   | worker1.okd4.example.com       | 192.168.60.184                 |
 
-   If your DNS (like mine) cannot handle wildcards, add these entries as CNAME, pointing to app.ocp4.example.com:
+   If your DNS (like mine) cannot handle wildcards, add these entries as CNAME, pointing to app.okd4.example.com:
 
-   - alertmanager-main-openshift-monitoring.apps.ocp4.example.com 
-   - canary-openshift-ingress-canary.apps.ocp4.example.com
-   - console-openshift-console.apps.ocp4.example.com
-   - downloads-openshift-console.apps.ocp4.example.com
-   - grafana-openshift-monitoring.apps.ocp4.example.com
-   - oauth-openshift.apps.ocp4.example.com
-   - prometheus-k8s-openshift-monitoring.apps.ocp4.example.com
-   - thanos-querier-openshift-monitoring.apps.ocp4.example.com
+   - alertmanager-main-openshift-monitoring.apps.okd4.example.com 
+   - canary-openshift-ingress-canary.apps.okd4.example.com
+   - console-openshift-console.apps.okd4.example.com
+   - downloads-openshift-console.apps.okd4.example.com
+   - grafana-openshift-monitoring.apps.okd4.example.com
+   - oauth-openshift.apps.okd4.example.com
+   - prometheus-k8s-openshift-monitoring.apps.okd4.example.com
+   - thanos-querier-openshift-monitoring.apps.okd4.example.com
 
 4. Create a new image for the rasperry pi with enabled ssh and boot it up.
 5. Create a bootable USB from the correct version of Fedora coreos.
@@ -141,7 +141,7 @@ Once the playbook tell you to, boot the masters on
 Fedora coreos USB and start the installation process. 
 The NUCs are a bit slow on the network side so a number of kernel arguments are needed.
 ```shell
-$ curl --output install.sh http://infra1.ocp4.example.com:8080/install.sh
+$ curl --output install.sh http://infra1.okd4.example.com:8080/install.sh
 $ chmod 755 ./install.sh
 $ ./install.sh master[1-3]
 ```
@@ -151,13 +151,13 @@ Once the installation has finished, remove the USB and reboot.
 $ sudo reboot now
 ```
 
-Verify that the master is trying to pull the secondary ignition from `https://api-int.ocp4.example.com:22623`.
+Verify that the master is trying to pull the secondary ignition from `https://api-int.okd4.example.com:22623`.
 
 Once all masters are waiting for the secondary ignition, continue the playbook
 which tell you to boot the first worker machine on
 Fedora coreos USB and start the installation for the bootstrap process:
 ```shell
-$ curl --output install.sh http://infra1.ocp4.example.com:8080/install.sh
+$ curl --output install.sh http://infra1.okd4.example.com:8080/install.sh
 $ chmod 755 ./install.sh
 $ ./install.sh bootstrap
 ```
@@ -171,11 +171,11 @@ After some time, you will be able to login via ssh to the bootstrap machine
 and follow the installation:
 
 ```shell
-$ ssh core@worker1.ocp4.example.com
-The authenticity of host 'worker1.ocp4.example.com (192.168.60.184)' can't be established.
+$ ssh core@worker1.okd4.example.com
+The authenticity of host 'worker1.okd4.example.com (192.168.60.184)' can't be established.
 ECDSA key fingerprint is SHA256:Z3edOf5ImnxO/x9tchkto5LoEQIaFm8DT/7zyGj5r6g.
 Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
-Warning: Permanently added 'worker1.ocp4.example.com,192.168.60.183' (ECDSA) to the list of known hosts.
+Warning: Permanently added 'worker1.okd4.example.com,192.168.60.183' (ECDSA) to the list of known hosts.
 This is the bootstrap node; it will be destroyed when the master is fully up.
 
 The primary services are release-image.service followed by bootkube.service. To watch their status, run e.g.
@@ -193,7 +193,7 @@ When the installation has started, continue the playbook.
 When the playbook detects that the installation is finished, the playbook will continue with post-installation configuration.
 
 You can now open the cluster console by
-opening https://console-openshift-console.apps.ocp4.example.com.
+opening https://console-openshift-console.apps.okd4.example.com.
 
 Have fun with your cluster!
 
@@ -204,7 +204,7 @@ bootstrap node, remove the partitions and reinstall using
 this command:
 
 ```shell
-$ curl --output install.sh http://infra1.ocp4.example.com:8080/install.sh
+$ curl --output install.sh http://infra1.okd4.example.com:8080/install.sh
 $ chmod 755 ./install.sh
 $ ./install.sh worker1
 ```
@@ -230,8 +230,8 @@ certificatesigningrequest.certificates.k8s.io/csr-fz8sk approved
 $ KUBECONFIG=./openshift-files/auth/kubeconfig \
     ./openshift-client/oc get nodes
 NAME                       STATUS     ROLES           AGE    VERSION
-master0.ocp4.example.com   Ready      master,worker   116m   v1.20.0+01994f4-1091
-master1.ocp4.example.com   Ready      master,worker   116m   v1.20.0+01994f4-1091
-master2.ocp4.example.com   Ready      master,worker   113m   v1.20.0+01994f4-1091
-worker1.ocp4.example.com   NotReady   worker          73s    v1.20.0+01994f4-1091
+master0.okd4.example.com   Ready      master,worker   116m   v1.20.0+01994f4-1091
+master1.okd4.example.com   Ready      master,worker   116m   v1.20.0+01994f4-1091
+master2.okd4.example.com   Ready      master,worker   113m   v1.20.0+01994f4-1091
+worker1.okd4.example.com   NotReady   worker          73s    v1.20.0+01994f4-1091
 ```

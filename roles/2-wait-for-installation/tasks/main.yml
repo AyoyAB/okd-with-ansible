@@ -23,7 +23,7 @@
 - name: Wait for API server to start on bootstrap
   local_action:
     module: ansible.builtin.uri
-    url: "https://{{ groups['nodes'][0] }}.ocp4.example.com:6443/readyz"
+    url: "https://{{ groups['nodes'][0] }}.okd4.example.com:6443/readyz"
     method: GET
     status_code: 200
     validate_certs: false
@@ -36,7 +36,7 @@
 - name: Wait for API server to start on master1
   local_action:
     module: ansible.builtin.uri
-    url: "https://{{ hostvars[groups['masters'][0]]['inventory_hostname'] }}.ocp4.example.com:6443/readyz"
+    url: "https://{{ hostvars[groups['masters'][0]]['inventory_hostname'] }}.okd4.example.com:6443/readyz"
     method: GET
     status_code: 200
     validate_certs: false
