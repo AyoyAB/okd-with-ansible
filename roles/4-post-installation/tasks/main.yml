@@ -1,4 +1,6 @@
-- include_tasks: "1-patch-update-stream.yml"
+# Pathing update stream is no longer needed in 4.9+.
+# Keeping this here if it's needed later.
+#- include_tasks: "1-patch-update-stream.yml"
 
 - include_tasks: "2.0-oauth.yml"
 
