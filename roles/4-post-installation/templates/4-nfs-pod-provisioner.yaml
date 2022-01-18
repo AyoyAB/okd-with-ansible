@@ -34,9 +34,9 @@ spec:
             - name: NFS_SERVER # do not change
               value: 192.168.60.20 # Ip of the NFS SERVER
             - name: NFS_PATH # do not change
-              value: /kube-volumes/volumes # path to nfs directory setup
+              value: /kube-volumes # path to nfs directory setup
       volumes:
         - name: nfs-provisioner-v # same as volume mounts name
           nfs:
             server: 192.168.60.20
-            path: /kube-volumes/volumes
+            path: /kube-volumes
