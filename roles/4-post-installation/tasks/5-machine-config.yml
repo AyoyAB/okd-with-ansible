@@ -6,7 +6,12 @@
     ./openshift-client/oc version -o json | jq --raw-output '.openshiftVersion'
   register: okd_version
 
-- name: 5 Apply machine configs
+- name: 5.1 Pause machine configs
+  shell: |
+    KUBECONFIG=./openshift-files/auth/kubeconfig \
+    ./openshift-client/oc patch --type=merge --patch='{"spec":{"paused":true}}' machineconfigpool/master
+
+- name: 5.2 Apply machine configs
   shell: |
     KUBECONFIG=./openshift-files/auth/kubeconfig \
     ./openshift-client/oc apply -f \
@@ -15,3 +20,13 @@
     - ../templates/5-machine-config/*.yaml
   register: machineconfig
   changed_when: '"unchanged" not in machineconfig.stdout'
+
+- name: 5.3 Unpause machine configs
+  shell: |
+    KUBECONFIG=./openshift-files/auth/kubeconfig \
+    ./openshift-client/oc patch --type=merge --patch='{"spec":{"paused":false}}' machineconfigpool/master
+
+- name: 5.4 Wait for machine config to update
+  shell: |
+    KUBECONFIG=./openshift-files/auth/kubeconfig \
+    ./openshift-client/oc wait mcp/master --for condition=updated
