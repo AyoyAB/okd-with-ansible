@@ -118,6 +118,8 @@
     | jq --raw-output '.metadata.annotations."openshift.io/sa.scc.uid-range"'
   register: uidrange
   until: uidrange.stdout != "null"
+  retries: 60
+  delay: 30
 
 - debug:
     var: uidrange
