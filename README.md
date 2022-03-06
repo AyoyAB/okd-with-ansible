@@ -59,7 +59,13 @@ ansible-playbook -i hosts -v deploy-okd.yml --extra-vars "compliance_operator=tr
    | master3.okd4.example.com	    | 192.168.60.183                 |
    | worker1.okd4.example.com       | 192.168.60.184                 |
 
-   If your DNS (like mine) cannot handle wildcards, add these entries as CNAME, pointing to app.okd4.example.com:
+   If you're using pihole (as I do), create `/etc/dnsmasq.d/99-openshift.conf` 
+   with the following content and restart dns (`pihole restartdns`)
+   ```
+   address=/.apps.okd4.example.com/192.168.60.180
+   ```
+    
+   If your DNS cannot handle wildcards, add these entries as CNAME, pointing to app.okd4.example.com:
 
    - alertmanager-main-openshift-monitoring.apps.okd4.example.com 
    - canary-openshift-ingress-canary.apps.okd4.example.com
