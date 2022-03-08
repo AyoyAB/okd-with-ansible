@@ -1,0 +1,78 @@
+- name: 7.1 Create or update subscription
+  kubernetes.core.k8s:
+    kubeconfig: ./openshift-files/auth/kubeconfig
+    resource_definition:
+      apiVersion: operators.coreos.com/v1alpha1
+      kind: Subscription
+      metadata:
+        labels:
+          operators.coreos.com/argocd-operator.openshift-operators: ""
+        name: argocd-operator
+        namespace: openshift-operators
+      spec:
+        channel: alpha
+        installPlanApproval: Automatic
+        name: argocd-operator
+        source: community-operators
+        sourceNamespace: openshift-marketplace
+        startingCSV: argocd-operator.v0.2.1
+        config:
+          env:
+            - name: ARGOCD_CLUSTER_CONFIG_NAMESPACES
+              value: '*'
+
+- name: 7.2 Wait for operator to start
+  shell: |
+    KUBECONFIG=./openshift-files/auth/kubeconfig \
+    ./openshift-client/oc \
+    -n openshift-operators \
+    get deploy argocd-operator-controller-manager -o json \
+    | jq '.status.readyReplicas'
+  register: readyReplicas
+  retries: 60
+  delay: 5
+  until: readyReplicas.stdout == "1"
+
+- name: 7.3 Create or update namespace argocd
+  kubernetes.core.k8s:
+    kubeconfig: ./openshift-files/auth/kubeconfig
+    resource_definition:
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: argocd
+        annotations:
+          openshift.io/node-selector: ""
+
+- name: 7.4 Setup a basic ArgoCD cluster
+  kubernetes.core.k8s:
+    kubeconfig: ./openshift-files/auth/kubeconfig
+    resource_definition:
+      apiVersion: argoproj.io/v1alpha1
+      kind: ArgoCD
+      metadata:
+        name: argocd
+        namespace: argocd
+      spec:
+        dex:
+          openShiftOAuth: true
+          groups:
+            - "system:authenticated"
+        server:
+          route:
+            enabled: true
+        rbac:
+          defaultPolicy: 'role:readonly'
+          policy: |
+            g, cluster-admins, role:admin
+            g, system:authenticated, role:admin
+          scopes: '[groups]'
+
+- name: 7.5 Apply applications
+  shell: |
+    KUBECONFIG=./openshift-files/auth/kubeconfig \
+    ./openshift-client/oc apply -f \
+    {{ item }}
+  with_fileglob:
+    - ../templates/7-argocd/*.yaml
+  register: argoconfig

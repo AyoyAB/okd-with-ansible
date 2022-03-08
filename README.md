@@ -23,12 +23,13 @@ There are optional components to install which are controlled by
 ansible variables. These are defined on the command line:
 
 ```
-ansible-playbook -i hosts -v deploy-okd.yml --extra-vars "compliance_operator=true"
+ansible-playbook -i hosts -v deploy-okd.yml --extra-vars "compliance_operator=true argocd=true"
 ```
 
-| variable | description |
-|----------|-------------|
+| variable            | description                                                                                                                     |
+|---------------------|---------------------------------------------------------------------------------------------------------------------------------|
 | compliance_operator | Whether to install the [OKD compliance operator](https://docs.okd.io/latest/security/compliance_operator/compliance-scans.html) |
+| argocd              | whether to install the argocd operator                                                                                          |                                                                                       
 
 
 # Preparation
@@ -140,7 +141,7 @@ that will be completed:
 
 This is how to run the playbook:
 ```shell
-ansible-playbook -i hosts -v deploy-okd.yml
+ansible-playbook -i hosts -v deploy-okd.yml --extra-vars "compliance_operator=true argocd=true"
 ```
 
 Once the playbook tell you to, boot the masters on

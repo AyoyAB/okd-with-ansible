@@ -20,3 +20,7 @@
 - include_tasks: "6-compliance-operator.yml"
   when:
     - compliance_operator is defined
+
+- include_tasks: "7-argocd.yml"
+  when:
+    - argocd is defined
