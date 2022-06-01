@@ -15,11 +15,11 @@
         name: argocd-operator
         source: community-operators
         sourceNamespace: openshift-marketplace
-        startingCSV: argocd-operator.v0.2.1
+        startingCSV: argocd-operator.v0.3.0
         config:
           env:
             - name: ARGOCD_CLUSTER_CONFIG_NAMESPACES
-              value: '*'
+              value: argocd
 
 - name: 7.2 Wait for operator to start
   shell: |
@@ -68,11 +68,60 @@
             g, system:authenticated, role:admin
           scopes: '[groups]'
 
-- name: 7.5 Apply applications
-  shell: |
-    KUBECONFIG=./openshift-files/auth/kubeconfig \
-    ./openshift-client/oc apply -f \
-    {{ item }}
-  with_fileglob:
-    - ../templates/7-argocd/*.yaml
-  register: argoconfig
+- name: 7.5 Create or update the namespace
+  kubernetes.core.k8s:
+    kubeconfig: ./openshift-files/auth/kubeconfig
+    resource_definition:
+      kind: Namespace
+      apiVersion: v1
+      metadata:
+        name: argo-apps
+
+
+- name: 7.6 Initiate applications from github
+  kubernetes.core.k8s:
+    kubeconfig: ./openshift-files/auth/kubeconfig
+    resource_definition:
+      apiVersion: v1
+      kind: Secret
+      metadata:
+        name: github-smuda
+        namespace: argocd
+        labels:
+          argocd.argoproj.io/secret-type: repository
+      stringData:
+        type: git
+        url: https://github.com/smuda/home-cluster-argo.git
+
+
+- name: 7.7 Initiate applications from github
+  kubernetes.core.k8s:
+    kubeconfig: ./openshift-files/auth/kubeconfig
+    resource_definition:
+      apiVersion: argoproj.io/v1alpha1
+      kind: Application
+      metadata:
+        name: argo-apps
+        namespace: argocd
+        finalizers:
+          - resources-finalizer.argocd.argoproj.io
+      spec:
+        destination:
+          namespace: argocd
+          server: https://kubernetes.default.svc
+        project: default
+        source:
+          helm:
+            version: v3
+            releaseName: argo-apps
+            valueFiles:
+              - values-okd.yaml
+          path: start/
+          repoURL: https://github.com/smuda/home-cluster-argo.git
+          targetRevision: main
+        syncPolicy:
+          syncOptions:
+            - CreateNamespace=true
+          automated:
+            selfHeal: true
+          preserveResourcesOnDeletion: false
