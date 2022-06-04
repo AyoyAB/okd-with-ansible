@@ -1,4 +1,4 @@
-- name: 3. Fetch install version
+- name: 2. Fetch install version
   include_tasks: "get-oc-version.yml"
 
 - pause:
