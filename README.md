@@ -84,53 +84,6 @@ ansible-playbook -i hosts -v deploy-okd.yml --extra-vars "compliance_operator=tr
    ./openshift-install/openshift-install coreos print-stream-json | jq -r '.architectures.x86_64.artifacts.metal.formats.iso.disk.location'
    ```
 6. Set up static DHCP entries for the machines, matching IP addresses above.
-7. Make sure there are no partitions on the bootstrap and masters
-
-```
-$ sudo fdisk /dev/sda
-
-Command (m for help): p
-Disk /dev/sda: 1.82 TiB, 2000398934016 bytes, 3907029168 sectors
-Disk model: ST2000LM015-2E81
-Units: sectors of 1 * 512 = 512 bytes
-Sector size (logical/physical): 512 bytes / 4096 bytes
-I/O size (minimum/optimal): 4096 bytes / 4096 bytes
-Disklabel type: gpt
-Disk identifier: 1B39BA89-A38F-4F17-94C4-995DC652412E
-
-Device       Start        End    Sectors  Size Type
-/dev/sda1     2048       4095       2048    1M BIOS boot
-/dev/sda2     4096     264191     260096  127M EFI System
-/dev/sda3   264192    1050623     786432  384M Linux filesystem
-/dev/sda4  1050624 3907029134 3905978511  1.8T Linux filesystem
-
-Command (m for help): d
-Partition number (1-4, default 4): 
-
-Partition 4 has been deleted.
-
-Command (m for help): d
-Partition number (1-3, default 3): 3
-
-Partition 3 has been deleted.
-
-Command (m for help): d
-Partition number (1,2, default 2): 2
-
-Partition 2 has been deleted.
-
-Command (m for help): d
-Selected partition 1
-Partition 1 has been deleted.
-
-Command (m for help): w
-The partition table has been altered.
-Failed to remove partition 3 from system: Device or resource busy
-Failed to remove partition 4 from system: Device or resource busy
-
-The kernel still uses the old partitions. The new table will be used at the next reboot. 
-Syncing disks.
-```
 
 # Run playbook
 It's time to run the playbook. There are a number of steps
