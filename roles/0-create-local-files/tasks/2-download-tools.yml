@@ -34,6 +34,6 @@
 - name: Download ignition validator
   when: st.stat.exists == false
   get_url:
-    url: https://github.com/coreos/ignition/releases/download/v2.13.0/ignition-validate-x86_64-apple-darwin
+    url: https://github.com/coreos/ignition/releases/download/v2.14.0/ignition-validate-x86_64-apple-darwin
     dest: ./openshift-client/ignition-validate
     mode: '0755'
