@@ -1,6 +1,3 @@
-- name: 2. Fetch install version
-  include_tasks: "get-oc-version.yml"
-
 - pause:
     prompt: |
       Manually run sudo coreos-installer on masters according to README.md and reboot.
@@ -12,7 +9,7 @@
       Manually run sudo coreos-installer on bootstrap according to README.md and reboot.
       Press return to continue
 
-- name: Wait for API server to start on masters
+- name: Wait for API server to start on all masters
   local_action:
     module: ansible.builtin.uri
     url: "https://{{ hostvars[groups['masters'][0]]['inventory_hostname'] }}.okd4.example.com:6443/readyz"
@@ -25,28 +22,20 @@
   retries: 5000 # retry X times
   delay: 5 # pause for X sec b/w each call
 
-- name: Check installation status
-  shell: |
+- name: Check bootstrap status
+  raw: |
     journalctl -b -u release-image.service -u bootkube.service \
     | grep "bootkube.service: Deactivated successfully." \
     | wc -l
   when:
     - inventory_hostname == groups['nodes'][0]
-    - OC_VERSION_MINOR in ["4.8", "4.9"]
   register: journalctl
   retries: 1000
   delay: 30
-  until: journalctl.stdout == "1"
-
-- name: Pause for 3 minutes to let cluster stabilize
-  pause:
-    minutes: 3
-  when:
-    - OC_VERSION_MINOR not in ["4.8", "4.9"]
+  until: journalctl.stdout == "1\r\n"
 
 - name: Shutdown the bootstrap machine
-  community.general.shutdown:
+  raw: |
+    sudo shutdown 1
   when:
     - inventory_hostname == groups['nodes'][0]
-    - OC_VERSION_MINOR in ["4.8", "4.9"]
-  become: true
