@@ -60,7 +60,7 @@ ansible-playbook -i hosts -v deploy-okd.yml --extra-vars "compliance_operator=tr
    | master3.okd4.example.com	    | 192.168.60.183                 |
    | worker1.okd4.example.com       | 192.168.60.184                 |
 
-   If you're using pihole (as I do), create `/etc/dnsmasq.d/99-openshift.conf` 
+   If you're using pihole (as I do), increase rate limiting, create `/etc/dnsmasq.d/99-openshift.conf` 
    with the following content and restart dns (`pihole restartdns`)
    ```
    address=/.apps.okd4.example.com/192.168.60.180
