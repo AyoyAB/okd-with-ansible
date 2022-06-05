@@ -12,34 +12,6 @@
       Manually run sudo coreos-installer on bootstrap according to README.md and reboot.
       Press return to continue
 
-- name: Wait 3 hours for target connection to bootstrap to become reachable/usable
-  wait_for_connection:
-    delay: 0
-    sleep: 30
-    timeout: 10800
-  when:
-    - inventory_hostname == groups['nodes'][0]
-    - OC_VERSION_MINOR in ["4.8", "4.9"]
-
-- name: Gathering facts
-  setup:
-  when:
-    - inventory_hostname == groups['nodes'][0]
-    - OC_VERSION_MINOR in ["4.8", "4.9"]
-
-- name: Wait for API server to start on bootstrap
-  local_action:
-    module: ansible.builtin.uri
-    url: "https://{{ groups['nodes'][0] }}.okd4.example.com:6443/readyz"
-    method: GET
-    status_code: 200
-    validate_certs: false
-  register: result
-  when: inventory_hostname == groups['nodes'][0]
-  until: result.status == 200
-  retries: 3000 # retry X times
-  delay: 5 # pause for X sec b/w each call
-
 - name: Wait for API server to start on masters
   local_action:
     module: ansible.builtin.uri
