@@ -3,6 +3,6 @@
 github-config.json
 tmp-github-cluster-config.yaml
 pull-secret
-openshift-client/*
-openshift-files/*
-openshift-install/*
+openshift-client/
+openshift-files/
+openshift-install/
