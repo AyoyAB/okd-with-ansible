@@ -32,7 +32,7 @@ ansible-playbook -i hosts -v deploy-okd.yml --extra-vars "compliance_operator=tr
 
 
 # Preparation
-1. Pull your RedHat pull secret and place in file "pull-secret".
+1. Pull your [RedHat pull secret](https://console.redhat.com/openshift/install/metal/user-provisioned) and place in file `pull-secret`.
 2. [If you want github integration](https://docs.openshift.com/container-platform/4.8/authentication/identity_providers/configuring-github-identity-provider.html),
    create a file called "github-config.json" with similar content as this:
    ```json
