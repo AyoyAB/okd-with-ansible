@@ -2,6 +2,5 @@
   any_errors_fatal: true
   gather_facts: no
   roles:
-    - role: 0-settings
     - role: 1-create-infra1
       become: yes
