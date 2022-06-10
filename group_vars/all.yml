@@ -1,4 +1,6 @@
 ---
+# The full domain is <cluster_name>.<base_domain> (e.g. okd4.example.com)
 base_domain:  example.com
 cluster_name: okd4
+
 nfs_server:   192.168.60.20
