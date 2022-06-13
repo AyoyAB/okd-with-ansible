@@ -1,6 +1,6 @@
 - name: "3.2 {{ item }} - Create the full hostname"
   set_fact:
-    hostname: "{{ item }}.okd4.example.com"
+    hostname: "{{ item }}.{{ cluster_name }}.{{ base_domain }}"
 
 
 - name: "3.2 {{ item }} - Prepare the common fixes in {{ item }}.ign file"

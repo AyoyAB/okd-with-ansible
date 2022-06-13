@@ -18,7 +18,7 @@
   lineinfile:
     dest: /etc/hosts
     regexp: "^.*{{ item }}$"
-    line: "{{ hostvars[item].ansible_host }} {{ item }}.okd4.example.com"
+    line: "{{ hostvars[item].ansible_host }} {{ item }}.{{ cluster_name }}.{{ base_domain }}"
     state: present
   when: hostvars[item].ansible_host is defined
   with_items: "{{ groups['all'] }}"
