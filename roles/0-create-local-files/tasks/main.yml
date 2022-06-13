@@ -11,6 +11,28 @@
 - name: Gathering facts
   setup:
 
+- name: Detect install system is Linux x86_64
+  when:
+    - ansible_system == "Linux"
+    - ansible_architecture == "x86_64"
+  set_fact:
+    okd_tools_arch: linux
+    ignition_tool_arch: x86_64-linux
+
+- name: Detect install system is MacOS x86_64
+  when:
+    - ansible_system == "Darwin"
+    - ansible_architecture == "x86_64"
+  set_fact:
+    okd_tools_arch: mac
+    ignition_tool_arch: x86_64-apple-darwin
+
+- name: Fail if architecture is not supported
+  when: (okd_tools_arch is not defined) or
+        (ignition_tool_arch is not defined)
+  fail:
+    msg: "Aborting. System or architecture is not supported at the moment."
+
 - include_tasks: "1-download-installer.yml"
 - include_tasks: "2-download-tools.yml"
 - include_tasks: "3-create-openshift-config.yml"

@@ -12,7 +12,7 @@
 - name: Download openshift-client
   when: st.stat.exists == false
   get_url:
-    url: https://github.com/openshift/okd/releases/download/{{ okd_version }}/openshift-client-mac-{{ okd_version }}.tar.gz
+    url: https://github.com/openshift/okd/releases/download/{{ okd_version }}/openshift-client-{{ okd_tools_arch }}-{{ okd_version }}.tar.gz
     dest: ./openshift-client.tar.gz
     mode: '0440'
 
@@ -34,6 +34,6 @@
 - name: Download ignition validator
   when: st.stat.exists == false
   get_url:
-    url: https://github.com/coreos/ignition/releases/download/{{ ignition_version }}/ignition-validate-x86_64-apple-darwin
+    url: https://github.com/coreos/ignition/releases/download/{{ ignition_version }}/ignition-validate-{{ ignition_tool_arch }}
     dest: ./openshift-client/ignition-validate
     mode: '0755'
