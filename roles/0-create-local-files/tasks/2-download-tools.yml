@@ -8,6 +8,11 @@
     path: ./openshift-client/oc
   register: st
 
+- name: Inform user about download location
+  debug:
+    msg: "Fetching openshift client from https://github.com/openshift/okd/releases/download/{{ okd_version }}/openshift-client-{{ okd_tools_arch }}-{{ okd_version }}.tar.gz"
+  when: st.stat.exists == false
+
 # https://github.com/openshift/okd/releases
 - name: Download openshift-client
   when: st.stat.exists == false
@@ -29,6 +34,11 @@
   ansible.builtin.stat:
     path: ./openshift-client/ignition-validate
   register: st
+
+- name: Inform user about download location
+  debug:
+    msg: "Fetching ignition validator from https://github.com/coreos/ignition/releases/download/{{ ignition_version }}/ignition-validate-{{ ignition_tool_arch }}"
+  when: st.stat.exists == false
 
 # https://github.com/coreos/ignition/releases
 - name: Download ignition validator

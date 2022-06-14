@@ -8,6 +8,11 @@
     path: ./openshift-install/openshift-install
   register: st
 
+- name: Inform user about download location
+  debug:
+    msg: "Fetching okd installer from https://github.com/openshift/okd/releases/download/{{ okd_version }}/openshift-install-{{ okd_tools_arch }}-{{ okd_version }}.tar.gz"
+  when: st.stat.exists == false
+
 # https://github.com/openshift/okd/releases
 # https://amd64.origin.releases.ci.openshift.org/
 - name: Download openshift-install
