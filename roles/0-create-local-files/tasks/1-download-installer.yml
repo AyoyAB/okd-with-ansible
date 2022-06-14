@@ -8,9 +8,14 @@
     path: ./openshift-install/openshift-install
   register: st
 
+- name: Define openshift install download url
+  set_fact:
+    openshift_install_download_url: "https://github.com/openshift/okd/releases/download/{{ okd_version }}/openshift-install-{{ okd_tools_arch }}-{{ okd_version }}.tar.gz"
+  when: st.stat.exists == false
+
 - name: Inform user about download location
   debug:
-    msg: "Fetching okd installer from https://github.com/openshift/okd/releases/download/{{ okd_version }}/openshift-install-{{ okd_tools_arch }}-{{ okd_version }}.tar.gz"
+    msg: "Fetching okd installer from {{ openshift_install_download_url }}"
   when: st.stat.exists == false
 
 # https://github.com/openshift/okd/releases
@@ -18,7 +23,7 @@
 - name: Download openshift-install
   when: st.stat.exists == false
   get_url:
-    url: https://github.com/openshift/okd/releases/download/{{ okd_version }}/openshift-install-{{ okd_tools_arch }}-{{ okd_version }}.tar.gz
+    url: "{{ openshift_install_download_url }}"
     dest: ./openshift-install.tar.gz
     mode: '0440'
 
