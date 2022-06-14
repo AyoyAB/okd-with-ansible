@@ -6,7 +6,6 @@
 - name: Gathering facts
   setup:
 
+- include_tasks: "expand-file-system.yml"
 - include_tasks: "apt.yml"
-- include_tasks: "hostnames.yml"
-- include_tasks: "api-proxy.yml"
-- include_tasks: "copy-ignition-files.yml"
+- include_tasks: "ntp.yml"

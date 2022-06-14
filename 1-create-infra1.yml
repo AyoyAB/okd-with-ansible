@@ -1,3 +1,10 @@
+- hosts: rpis
+  any_errors_fatal: true
+  gather_facts: no
+  roles:
+    - role: 1-setup-rpi
+      become: yes
+
 - hosts: infras
   any_errors_fatal: true
   gather_facts: no
