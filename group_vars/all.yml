@@ -1,4 +1,6 @@
 ---
+okd_version: 4.10.0-0.okd-2022-05-28-062148
+
 # The full domain is <cluster_name>.<base_domain> (e.g. okd4.example.com)
 base_domain:  example.com
 cluster_name: okd4
