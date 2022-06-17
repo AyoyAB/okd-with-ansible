@@ -1,0 +1,7 @@
+---
+
+- name: Copy over nginx loadbalancer configuration
+  template:
+    src: kubernetes.conf
+    dest: /etc/nginx/tcpconf.d/kubernetes.conf
+  notify: nginx restart
