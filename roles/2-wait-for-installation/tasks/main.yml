@@ -28,7 +28,7 @@
     | grep "bootkube.service: Deactivated successfully." \
     | wc -l
   when:
-    - inventory_hostname == groups['nodes'][0]
+    - inventory_hostname == groups['bootstrap'][0]
   register: journalctl
   retries: 1000
   delay: 30
@@ -38,4 +38,4 @@
   raw: |
     sudo shutdown 1
   when:
-    - inventory_hostname == groups['nodes'][0]
+    - inventory_hostname == groups['bootstrap'][0]

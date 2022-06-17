@@ -1,13 +1,18 @@
 [all:children]
+infras
+bootstrap
 masters
 nodes
-infras
 
 [infras]
 infra1.okd4.example.com ansible_user=pi ansible_ssh_pass=raspberry
 
 [rpis]
 infra1.okd4.example.com
+
+[bootstrap]
+# Only first machine in bootstrap group will be used as boostrap machine
+worker1.okd4.example.com
 
 [masters]
 master1.okd4.example.com ansible_user=core
