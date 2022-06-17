@@ -12,7 +12,7 @@
 - name: Wait for API server to start on all masters
   local_action:
     module: ansible.builtin.uri
-    url: "https://{{ hostvars[groups['masters'][0]]['inventory_hostname'] }}.{{ cluster_name }}.{{ base_domain }}:6443/readyz"
+    url: "https://{{ inventory_hostname }}:6443/readyz"
     method: GET
     status_code: 200
     validate_certs: false
