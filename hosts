@@ -1,19 +1,24 @@
 [all:children]
+infras
+bootstrap
 masters
 nodes
-infras
 
 [infras]
-infra1 ansible_host=192.168.60.180 ansible_user=pi   ansible_ssh_pass=raspberry ansible_ssh_private_key_file=~/.ssh/id_ansible ansible_python_interpreter=auto
+infra1.okd4.example.com ansible_user=pi ansible_ssh_pass=raspberry
 
 [rpis]
-infra1
+infra1.okd4.example.com
+
+[bootstrap]
+# Only first machine in bootstrap group will be used as boostrap machine
+worker1.okd4.example.com
 
 [masters]
-master1 ansible_host=192.168.60.181 ansible_user=core ansible_ssh_private_key_file=~/.ssh/id_ansible ansible_python_interpreter=auto
-master2 ansible_host=192.168.60.182 ansible_user=core ansible_ssh_private_key_file=~/.ssh/id_ansible ansible_python_interpreter=auto
-master3 ansible_host=192.168.60.183 ansible_user=core ansible_ssh_private_key_file=~/.ssh/id_ansible ansible_python_interpreter=auto
+master1.okd4.example.com ansible_user=core
+master2.okd4.example.com ansible_user=core
+master3.okd4.example.com ansible_user=core
 
 # The first node is also the bootstrap machine
 [nodes]
-worker1 ansible_host=192.168.60.184 ansible_user=core ansible_ssh_private_key_file=~/.ssh/id_ansible ansible_python_interpreter=auto
+worker1.okd4.example.com ansible_user=core
