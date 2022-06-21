@@ -12,7 +12,7 @@ infra1.okd4.example.com
 
 [bootstrap]
 # Only first machine in bootstrap group will be used as boostrap machine
-worker1.okd4.example.com
+bootstrap.okd4.example.com ansible_user=core
 
 [masters]
 master1.okd4.example.com ansible_user=core
