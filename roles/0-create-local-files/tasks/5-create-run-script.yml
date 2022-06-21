@@ -6,5 +6,3 @@
     src: templates/install.sh
     dest: ./openshift-files/install.sh
     mode: '0755'
-#  vars:
-#    hostname: "{{ groups['infras'][0] }}.{{ cluster_name }}.{{ base_domain }}"
