@@ -141,7 +141,7 @@
     -n nfs-provisioner \
     get deployment nfs-pod-provisioner -o json \
     | jq '.status.readyReplicas'
-  register: readyReplicas
+  register: ready_replicas
   retries: 120
   delay: 5
-  until: readyReplicas.stdout == "1"
+  until: ready_replicas.stdout == "1"

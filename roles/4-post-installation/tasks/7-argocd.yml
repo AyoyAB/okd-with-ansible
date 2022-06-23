@@ -28,10 +28,10 @@
     -n openshift-operators \
     get deploy argocd-operator-controller-manager -o json \
     | jq '.status.readyReplicas'
-  register: readyReplicas
+  register: ready_replicas
   retries: 60
   delay: 5
-  until: readyReplicas.stdout == "1"
+  until: ready_replicas.stdout == "1"
 
 - name: 7.3 Create or update namespace argocd
   kubernetes.core.k8s:
