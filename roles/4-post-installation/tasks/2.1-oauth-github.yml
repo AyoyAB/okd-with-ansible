@@ -64,7 +64,9 @@
     ./openshift-client/oc \
     apply -f {{ ghtempfile }}
   register: patchoutput
-  changed_when: patchoutput.stdout != "clusterversion.config.openshift.io/version patched (no change)" and patchoutput.stdout != "oauth.config.openshift.io/cluster unchanged"
+  changed_when:
+    - patchoutput.stdout != "clusterversion.config.openshift.io/version patched (no change)"
+    - patchoutput.stdout != "oauth.config.openshift.io/cluster unchanged"
 
 - name: 2.1 Delete temporary file
   ansible.builtin.file:
