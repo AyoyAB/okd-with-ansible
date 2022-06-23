@@ -10,12 +10,12 @@
       Press return to continue
 
 - name: Wait for API server to start on all masters
-  local_action:
-    module: ansible.builtin.uri
+  ansible.builtin.uri:
     url: "https://{{ inventory_hostname }}:6443/readyz"
     method: GET
     status_code: 200
     validate_certs: false
+  delegate_to: localhost
   register: result
   when: inventory_hostname in groups['masters']
   until: result.status == 200

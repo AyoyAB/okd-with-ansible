@@ -3,7 +3,6 @@
   gather_facts: false
   tasks:
     - name: make sure module community.kubernetes is installed
-      local_action:
-        module: ansible.builtin.shell
-        cmd: |
-          ansible-galaxy collection install community.kubernetes
+      ansible.builtin.shell:
+        cmd: ansible-galaxy collection install community.kubernetes
+      delegate_to: localhost
