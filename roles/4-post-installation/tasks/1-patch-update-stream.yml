@@ -1,5 +1,5 @@
 - name: 1. Patch update URL
-  shell: |
+  ansible.builtin.shell: |
     KUBECONFIG=./openshift-files/auth/kubeconfig \
     ./openshift-client/oc \
     patch ClusterVersion version \

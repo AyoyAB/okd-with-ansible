@@ -4,7 +4,7 @@
     path: ./tmp
 
 - name: 3. {{ item }} Check if cluster admin already exists
-  shell: |
+  ansible.builtin.shell: |
     KUBECONFIG=./openshift-files/auth/kubeconfig \
     ./openshift-client/oc \
     get clusterrolebinding -o json \
@@ -14,19 +14,19 @@
   changed_when: false
 
 - name: 3. {{ item }} Render template Add cluster admin
-  template:
+  ansible.builtin.template:
     src: templates/3-cluster-admin.yaml
     dest: ./tmp/cluster-admin.yaml
   when: result.stdout == ""
 
 - name: 3. {{ item }} Add cluster admin
-  shell: |
+  ansible.builtin.shell: |
     KUBECONFIG=./openshift-files/auth/kubeconfig \
     ./openshift-client/oc \
     apply -f ./tmp/cluster-admin.yaml
   when: result.stdout == ""
 
 - name: 3. {{ item }} Remove temporary file
-  file:
+  ansible.builtin.file:
     state: absent
     path: ./tmp/cluster-admin.yaml

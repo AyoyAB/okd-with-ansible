@@ -54,7 +54,7 @@
         sourceNamespace: openshift-marketplace
 
 - name: 6.5 Wait for operator to start
-  shell: |
+  ansible.builtin.shell: |
     KUBECONFIG=./openshift-files/auth/kubeconfig \
     ./openshift-client/oc \
     -n openshift-compliance \

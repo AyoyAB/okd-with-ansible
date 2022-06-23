@@ -22,7 +22,7 @@
               value: argocd
 
 - name: 7.2 Wait for operator to start
-  shell: |
+  ansible.builtin.shell: |
     KUBECONFIG=./openshift-files/auth/kubeconfig \
     ./openshift-client/oc \
     -n openshift-operators \

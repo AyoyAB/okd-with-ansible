@@ -1,10 +1,10 @@
-- pause:
+- ansible.builtin.pause:
     prompt: |
       Manually run sudo coreos-installer on masters according to README.md and reboot.
       Verify they are trying to retrieve the second stage ignition file.
       Press return to continue
 
-- pause:
+- ansible.builtin.pause:
     prompt: |
       Manually run sudo coreos-installer on bootstrap according to README.md and reboot.
       Press return to continue
@@ -23,7 +23,7 @@
   delay: 5 # pause for X sec b/w each call
 
 - name: Check bootstrap status
-  raw: |
+  ansible.builtin.raw: |
     journalctl -b -u release-image.service -u bootkube.service \
     | grep "bootkube.service: Deactivated successfully." \
     | wc -l
@@ -35,7 +35,7 @@
   until: journalctl.stdout == "1\r\n"
 
 - name: Shutdown the bootstrap machine
-  raw: |
+  ansible.builtin.raw: |
     sudo shutdown 1
   when:
     - inventory_hostname == groups['bootstrap'][0]

@@ -2,26 +2,26 @@
   any_errors_fatal: true
   gather_facts: no
 
-- import_playbook: 0-handle-ansible-dependencies.yml
+- ansible.builtin.import_playbook: 0-handle-ansible-dependencies.yml
   vars:
     hosts: localhost
 
-- import_playbook: 0-create-local-files.yml
+- ansible.builtin.import_playbook: 0-create-local-files.yml
   vars:
     hosts: all
 
-- import_playbook: 1-create-infra1.yml
+- ansible.builtin.import_playbook: 1-create-infra1.yml
   vars:
     hosts: all
 
-- import_playbook: 2-wait-for-installation.yml
+- ansible.builtin.import_playbook: 2-wait-for-installation.yml
   vars:
     hosts: all
 
-- import_playbook: 3-remove-bootstrap-from-infra.yml
+- ansible.builtin.import_playbook: 3-remove-bootstrap-from-infra.yml
   vars:
     hosts: all
 
-- import_playbook: 4-post-installation.yml
+- ansible.builtin.import_playbook: 4-post-installation.yml
   vars:
     hosts: all

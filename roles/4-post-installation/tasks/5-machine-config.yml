@@ -1,18 +1,18 @@
 # https://docs.okd.io/latest/nodes/nodes/nodes-nodes-resources-configuring.html
 
 - name: 5 Get cluster version
-  shell: |
+  ansible.builtin.shell: |
     KUBECONFIG=./openshift-files/auth/kubeconfig \
     ./openshift-client/oc version -o json | jq --raw-output '.openshiftVersion'
   register: okd_version
 
 - name: 5.1 Pause machine configs
-  shell: |
+  ansible.builtin.shell: |
     KUBECONFIG=./openshift-files/auth/kubeconfig \
     ./openshift-client/oc patch --type=merge --patch='{"spec":{"paused":true}}' machineconfigpool/master
 
 - name: 5.2 Apply machine configs
-  shell: |
+  ansible.builtin.shell: |
     KUBECONFIG=./openshift-files/auth/kubeconfig \
     ./openshift-client/oc apply -f \
     {{ item }}
@@ -22,11 +22,11 @@
   changed_when: '"unchanged" not in machineconfig.stdout'
 
 - name: 5.3 Unpause machine configs
-  shell: |
+  ansible.builtin.shell: |
     KUBECONFIG=./openshift-files/auth/kubeconfig \
     ./openshift-client/oc patch --type=merge --patch='{"spec":{"paused":false}}' machineconfigpool/master
 
 - name: 5.4 Wait for machine config to update
-  shell: |
+  ansible.builtin.shell: |
     KUBECONFIG=./openshift-files/auth/kubeconfig \
     ./openshift-client/oc wait mcp/master --for condition=updated

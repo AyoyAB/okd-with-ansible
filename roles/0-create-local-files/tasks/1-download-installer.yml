@@ -9,12 +9,12 @@
   register: st
 
 - name: Define openshift install download url
-  set_fact:
+  ansible.builtin.set_fact:
     openshift_install_download_url: "https://github.com/openshift/okd/releases/download/{{ okd_version }}/openshift-install-{{ okd_tools_arch }}-{{ okd_version }}.tar.gz"
   when: st.stat.exists == false
 
 - name: Inform user about download location
-  debug:
+  ansible.builtin.debug:
     msg: "Fetching okd installer from {{ openshift_install_download_url }}"
   when: st.stat.exists == false
 
@@ -22,14 +22,14 @@
 # https://amd64.origin.releases.ci.openshift.org/
 - name: Download openshift-install
   when: st.stat.exists == false
-  get_url:
+  ansible.builtin.get_url:
     url: "{{ openshift_install_download_url }}"
     dest: ./openshift-install.tar.gz
     mode: '0440'
 
 - name: Unpack openshift-install
   when: st.stat.exists == false
-  shell: tar -xvf ./openshift-install.tar.gz -C ./openshift-install
+  ansible.builtin.shell: tar -xvf ./openshift-install.tar.gz -C ./openshift-install
 
 - name: Delete openshift-install
   ansible.builtin.file:

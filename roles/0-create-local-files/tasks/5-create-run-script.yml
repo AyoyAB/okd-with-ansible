@@ -1,4 +1,4 @@
-- debug:
+- ansible.builtin.debug:
     var: groups['infras'][0]
 
 - name: Create installation script
