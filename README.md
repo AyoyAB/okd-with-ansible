@@ -102,7 +102,7 @@ The NUCs are a bit slow on the network side so a number of kernel arguments are 
 ```shell
 $ curl --output install.sh http://infra1.okd4.example.com:8080/install.sh
 $ chmod 755 ./install.sh
-$ ./install.sh master[1-3].okd4.example.com
+$ ./install.sh master[1-3]
 ```
 
 Once the installation has finished, remove the USB and reboot.
@@ -118,7 +118,7 @@ Fedora coreos USB and start the installation for the bootstrap process:
 ```shell
 $ curl --output install.sh http://infra1.okd4.example.com:8080/install.sh
 $ chmod 755 ./install.sh
-$ ./install.sh bootstrap.okd4.example.com
+$ ./install.sh bootstrap
 ```
 
 Once the installation has finished, remove the USB and reboot.
