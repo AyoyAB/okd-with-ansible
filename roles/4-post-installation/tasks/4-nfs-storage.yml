@@ -121,10 +121,12 @@
   retries: 60
   delay: 30
 
-- ansible.builtin.debug:
+- name: Log uidrange
+  ansible.builtin.debug:
     var: uidrange
 
-- ansible.builtin.set_fact:
+- name: Set nfs_uid variable
+  ansible.builtin.set_fact:
     nfs_uid: "{{ uidrange | regex_search('[0-9]+') }}"
 
 - name: 4.10 Create or update the provisioner

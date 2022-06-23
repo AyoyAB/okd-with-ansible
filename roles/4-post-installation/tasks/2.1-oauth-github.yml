@@ -12,21 +12,26 @@
   ansible.builtin.set_fact:
     ghconfig: "{{ ghconfigfile.stdout | from_json }}"
 
-- ansible.builtin.debug:
+- name: Log ghconfig
+  ansible.builtin.debug:
     var: ghconfig
 
-- ansible.builtin.fail:
+- name: Validate ghconfig format
+  ansible.builtin.fail:
     msg: "Check your github configuration file"
   when: ghconfig.clientID is not defined or ghconfig.clientID == "" or ghconfig.clientSecret is not defined or ghconfig.clientSecret == ""
 
-
-- ansible.builtin.debug:
+- name: Log ghconfig.clientID
+  ansible.builtin.debug:
     var: ghconfig.clientID
-- ansible.builtin.debug:
-    var: ghconfig.clientSecret
-- ansible.builtin.debug:
-    var: ghconfig.organizations
 
+- name: Log ghconfig.clientSecret
+  ansible.builtin.debug:
+    var: ghconfig.clientSecret
+
+- name: Log ghconfig.organizations
+  ansible.builtin.debug:
+    var: ghconfig.organizations
 
 - name: 2.1 If secret already exist, delete
   ansible.builtin.shell: |

@@ -31,7 +31,8 @@
 - name: 3. Create cluster ignition files
   ansible.builtin.shell: ./openshift-install/openshift-install create ignition-configs --dir=./openshift-files
 
-- ansible.builtin.debug:
+- name: Log OC_VERSION_MINOR
+  ansible.builtin.debug:
     var: OC_VERSION_MINOR
 
 - name: 3. Fix ignition files

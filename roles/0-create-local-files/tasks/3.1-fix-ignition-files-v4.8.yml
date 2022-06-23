@@ -3,7 +3,8 @@
     rendered_template: "{{ lookup('template', 'carrier-wait-timeout.conf') }}"
   register: networkdelay
 
-- ansible.builtin.debug:
+- name: Log networkdelay
+  ansible.builtin.debug:
     var: networkdelay
 
 - name: "3.1 {{ item }} - Add the network delay configuration"
