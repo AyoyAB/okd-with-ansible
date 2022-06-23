@@ -1,0 +1,17 @@
+- name: "3.2 {{ item }} - Create the ignition file name"
+  set_fact:
+    ign_file: "openshift-files/{{ item }}.ign"
+
+- name: "Create ignition file"
+  copy:
+    src: openshift-files/{{ template }}
+    dest: "{{ ign_file }}"
+
+- name: "3.2 {{ item }} - Set /etc/hostname in ignition file"
+  when: set_etc_hostname_in_ignition_file
+  shell: |
+    jq '.storage.files += [{"overwrite": true,"path": "/etc/hostname","mode": 420,"user": {"name": "root"},"contents": {"source": "data:text/plain;charset=utf-8;base64,{{ item | b64encode }}"}}]' \
+    {{ ign_file }} > {{ ign_file }}.tmp \
+    && mv {{ ign_file }}.tmp {{ ign_file }}
+  register: host_result
+  failed_when: host_result.stderr != ""

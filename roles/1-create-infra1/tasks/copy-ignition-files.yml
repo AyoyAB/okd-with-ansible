@@ -1,7 +1,7 @@
 - name: Api-Proxy - Copy over ignition files
   template:
     src: ./openshift-files/{{ item }}.ign
-    dest: /usr/share/nginx/html/{{ item }}.ign
+    dest: /usr/share/nginx/html/{{ item }}.{{ cluster_name }}.{{ base_domain }}.ign
   with_items:
     - "bootstrap"
     - "master"

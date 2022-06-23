@@ -165,7 +165,7 @@ this command:
 ```shell
 $ curl --output install.sh http://infra1.okd4.example.com:8080/install.sh
 $ chmod 755 ./install.sh
-$ ./install.sh worker1
+$ ./install.sh worker1.okd4.example.com
 ```
 
 Since this has not been prepared in the cluster earlier,
