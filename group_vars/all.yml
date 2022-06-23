@@ -3,10 +3,10 @@ okd_version: 4.10.0-0.okd-2022-05-28-062148
 ignition_version: v2.14.0
 
 # The full domain is <cluster_name>.<base_domain> (e.g. okd4.example.com)
-base_domain:  example.com
+base_domain: example.com
 cluster_name: okd4
 
-nfs_server:   192.168.60.20
+nfs_server: 192.168.60.20
 
 # Ansible configuration
 ansible_ssh_private_key_file: ~/.ssh/id_ansible
