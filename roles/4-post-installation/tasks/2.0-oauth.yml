@@ -10,4 +10,3 @@
 - name: 2.1 Install github
   ansible.builtin.include_tasks: "2.1-oauth-github.yml"
   when: github_config_stat.stat.exists
-
