@@ -1,6 +1,6 @@
 # Pathing update stream is no longer needed in 4.9+.
 # Keeping this here if it's needed later.
-#- ansible.builtin.include_tasks: "1-patch-update-stream.yml"
+# - ansible.builtin.include_tasks: "1-patch-update-stream.yml"
 
 - ansible.builtin.include_tasks: "2.0-oauth.yml"
 
