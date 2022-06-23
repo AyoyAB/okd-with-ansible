@@ -1,0 +1,2 @@
+---
+nginx_ignition_files_dir: /usr/share/nginx/html

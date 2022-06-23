@@ -2,4 +2,7 @@
   any_errors_fatal: true
   gather_facts: no
   roles:
-    - role: 3-remove-bootstrap-from-infra
+    - role: nginx-loadbalancer
+      become: yes
+      vars:
+        bootstrap_enabled: false

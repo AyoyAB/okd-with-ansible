@@ -9,5 +9,9 @@
   any_errors_fatal: true
   gather_facts: no
   roles:
-    - role: 1-create-infra1
+    - role: nginx-ignition-files
       become: yes
+    - role: nginx-loadbalancer
+      become: yes
+      vars:
+        bootstrap_enabled: true
