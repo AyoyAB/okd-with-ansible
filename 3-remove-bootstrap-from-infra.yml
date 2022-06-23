@@ -1,8 +1,8 @@
 - hosts: infras
   any_errors_fatal: true
-  gather_facts: no
+  gather_facts: false
   roles:
     - role: nginx-loadbalancer
-      become: yes
+      become: true
       vars:
         bootstrap_enabled: false

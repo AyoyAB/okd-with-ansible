@@ -36,7 +36,7 @@
   ansible.builtin.service:
     name: ntp
     state: stopped
-    enabled: yes
+    enabled: true
 
 - name: Sync time initialy
   ansible.builtin.shell: ntpd -gq
@@ -46,4 +46,4 @@
   ansible.builtin.service:
     name: ntp
     state: started
-    enabled: yes
+    enabled: true

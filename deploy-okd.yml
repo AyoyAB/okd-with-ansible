@@ -1,6 +1,6 @@
 - hosts: all
   any_errors_fatal: true
-  gather_facts: no
+  gather_facts: false
 
 - ansible.builtin.import_playbook: 0-handle-ansible-dependencies.yml
   vars:
