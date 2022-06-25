@@ -4,7 +4,7 @@
   ansible.builtin.apt:
     name: "{{ packages }}"
     state: present
-    update_cache: yes
+    update_cache: true
   vars:
     packages:
       - nginx
@@ -12,7 +12,7 @@
 - name: Enable nginx service
   ansible.builtin.service:
     name: nginx
-    enabled: yes
+    enabled: true
 
 - name: Copy over nginx main configuration
   ansible.builtin.template:

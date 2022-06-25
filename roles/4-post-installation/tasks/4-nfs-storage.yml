@@ -104,14 +104,14 @@
         archiveOnDelete: "false"
 
 - name: 4.8 Fix rights to use NFS
-  shell: |
+  ansible.builtin.shell: |
     KUBECONFIG=./openshift-files/auth/kubeconfig \
     ./openshift-client/oc \
     -n nfs-provisioner \
     adm policy add-scc-to-user hostmount-anyuid -z nfs-pod-provisioner-sa
 
 - name: 4.9 Fetch valid UID range to use for namespace
-  shell: |
+  ansible.builtin.shell: |
     KUBECONFIG=./openshift-files/auth/kubeconfig \
     ./openshift-client/oc \
     get ns nfs-provisioner -o json \
@@ -121,10 +121,12 @@
   retries: 60
   delay: 30
 
-- debug:
+- name: Log uidrange
+  ansible.builtin.debug:
     var: uidrange
 
-- set_fact:
+- name: Set nfs_uid variable
+  ansible.builtin.set_fact:
     nfs_uid: "{{ uidrange | regex_search('[0-9]+') }}"
 
 - name: 4.10 Create or update the provisioner
@@ -133,13 +135,13 @@
     template: 'templates/4-nfs-pod-provisioner.yaml'
 
 - name: 4.11 Wait for NFS provisioner to start
-  shell: |
+  ansible.builtin.shell: |
     KUBECONFIG=./openshift-files/auth/kubeconfig \
     ./openshift-client/oc \
     -n nfs-provisioner \
     get deployment nfs-pod-provisioner -o json \
     | jq '.status.readyReplicas'
-  register: readyReplicas
+  register: ready_replicas
   retries: 120
   delay: 5
-  until: readyReplicas.stdout == "1"
+  until: ready_replicas.stdout == "1"

@@ -14,8 +14,8 @@
     dest: ./openshift-files/install-config.yaml
     mode: '0644'
   vars:
-    pullSecret: "{{lookup('file', './pull-secret') | regex_replace('\"', '\\\"') }}"
-    sshKey: "{{lookup('file', '~/.ssh/id_ansible.pub') }}"
+    pullSecret: "{{ lookup('file', './pull-secret') | regex_replace('\"', '\\\"') }}"
+    sshKey: "{{ lookup('file', '~/.ssh/id_ansible.pub') }}"
     nrOfMasters: "{{ groups['masters'] | length }}"
     nrOfNodes: "0"
 # NOTE: Number of nodes=0 means that the masters will also be run standard pods
@@ -23,41 +23,42 @@
 #       it seems like a good idea not to waste the three masters.
 
 - name: 3. Fetch install version
-  include_tasks: "get-oc-version.yml"
+  ansible.builtin.include_tasks: "get-oc-version.yml"
 
 - name: 3. Create cluster manifests files
-  shell: ./openshift-install/openshift-install create manifests --dir=./openshift-files
+  ansible.builtin.shell: ./openshift-install/openshift-install create manifests --dir=./openshift-files
 
 - name: 3. Create cluster ignition files
-  shell: ./openshift-install/openshift-install create ignition-configs --dir=./openshift-files
+  ansible.builtin.shell: ./openshift-install/openshift-install create ignition-configs --dir=./openshift-files
 
-- debug:
-    var: OC_VERSION_MINOR
+- name: Log oc_version_minor
+  ansible.builtin.debug:
+    var: oc_version_minor
 
 - name: 3. Fix ignition files
-  include_tasks: "3.1-fix-ignition-files-v4.8.yml"
+  ansible.builtin.include_tasks: "3.1-fix-ignition-files-v4.8.yml"
   vars:
     ifname: "eno1"
   loop:
     - "bootstrap"
     - "master"
     - "worker"
-  when: OC_VERSION_MINOR in ["4.8", "4.9"]
+  when: oc_version_minor in ["4.8", "4.9"]
 
 - name: 3. Masters - Create host specific ignition files
-  include_tasks: "3.2-create-host-specific-ignition-file.yml"
+  ansible.builtin.include_tasks: "3.2-create-host-specific-ignition-file.yml"
   loop: "{{ groups['masters'] }}"
   vars:
     template: master.ign
 
 - name: 3. Workers - Create host specific ignition files
-  include_tasks: "3.2-create-host-specific-ignition-file.yml"
+  ansible.builtin.include_tasks: "3.2-create-host-specific-ignition-file.yml"
   loop: "{{ groups['nodes'] }}"
   vars:
     template: worker.ign
 
 - name: 3. Bootstrap - Create host specific ignition files
-  include_tasks: "3.2-create-host-specific-ignition-file.yml"
+  ansible.builtin.include_tasks: "3.2-create-host-specific-ignition-file.yml"
   loop: "{{ groups['bootstrap'] }}"
   vars:
     template: bootstrap.ign

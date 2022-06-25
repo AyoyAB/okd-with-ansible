@@ -1,13 +1,13 @@
 - name: Check unpartitioned space
-  shell: /sbin/parted /dev/mmcblk0 unit gb print free | grep 'Free Space' | tail -n1 | awk '{print $3}'
+  ansible.builtin.shell: /sbin/parted /dev/mmcblk0 unit gb print free | grep 'Free Space' | tail -n1 | awk '{print $3}'
   register: unpartitioned
   changed_when: false
   failed_when: unpartitioned.stderr != ""
 
 - name: Expand filesystem to fill disk
-  command: raspi-config --expand-rootfs
+  ansible.builtin.command: raspi-config --expand-rootfs
   when: unpartitioned.stdout != "0.00GB"
 
 - name: Reboot after file system change
-  reboot:
+  ansible.builtin.reboot:
   when: unpartitioned.stdout != "0.00GB"

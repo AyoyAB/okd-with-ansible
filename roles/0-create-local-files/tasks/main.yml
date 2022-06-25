@@ -4,18 +4,18 @@
   register: secret
 
 - name: Verify pull secret exists
-  when: secret.stat.exists == false
-  fail:
+  when: not secret.stat.exists
+  ansible.builtin.fail:
     msg: there has to be a secret at ./pull-secret. Download secret from https://console.redhat.com/openshift/install/pull-secret to ./pull-secret
 
 - name: Gathering facts
-  setup:
+  ansible.builtin.setup:
 
 - name: Detect install system is Linux x86_64
   when:
     - ansible_system == "Linux"
     - ansible_architecture == "x86_64"
-  set_fact:
+  ansible.builtin.set_fact:
     okd_tools_arch: linux
     ignition_tool_arch: x86_64-linux
 
@@ -23,18 +23,18 @@
   when:
     - ansible_system == "Darwin"
     - ansible_architecture == "x86_64"
-  set_fact:
+  ansible.builtin.set_fact:
     okd_tools_arch: mac
     ignition_tool_arch: x86_64-apple-darwin
 
 - name: Fail if architecture is not supported
   when: (okd_tools_arch is not defined) or
         (ignition_tool_arch is not defined)
-  fail:
+  ansible.builtin.fail:
     msg: "Aborting. System or architecture is not supported at the moment."
 
-- include_tasks: "1-download-installer.yml"
-- include_tasks: "2-download-tools.yml"
-- include_tasks: "3-create-openshift-config.yml"
-- include_tasks: "4-validate-ignition-files.yml"
-- include_tasks: "5-create-run-script.yml"
+- ansible.builtin.include_tasks: "1-download-installer.yml"
+- ansible.builtin.include_tasks: "2-download-tools.yml"
+- ansible.builtin.include_tasks: "3-create-openshift-config.yml"
+- ansible.builtin.include_tasks: "4-validate-ignition-files.yml"
+- ansible.builtin.include_tasks: "5-create-run-script.yml"

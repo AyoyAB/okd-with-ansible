@@ -3,7 +3,7 @@
     name: Europe/Stockholm
 
 - name: Install ntp
-  apt:
+  ansible.builtin.apt:
     name: "{{ packages }}"
     state: present
   vars:
@@ -12,10 +12,12 @@
       - ntpdate
 
 - name: Copy over the NTP configuration
-  template: src=./templates/ntp.conf dest=/etc/ntp.conf
+  ansible.builtin.template:
+    src: ./templates/ntp.conf
+    dest: /etc/ntp.conf
 
 - name: Make ntp /etc/ntp/crypto/pw directory
-  file:
+  ansible.builtin.file:
     path: /etc/ntp/crypto/pw
     state: directory
     owner: root
@@ -23,7 +25,7 @@
 
 
 - name: Make ntp /etc/ntp/keys directory
-  file:
+  ansible.builtin.file:
     path: /etc/ntp/keys
     state: directory
     owner: root
@@ -31,13 +33,17 @@
 
 
 - name: Make sure NTP is stopped
-  service: name=ntp state=stopped enabled=yes
-
+  ansible.builtin.service:
+    name: ntp
+    state: stopped
+    enabled: true
 
 - name: Sync time initialy
-  shell: ntpd -gq
+  ansible.builtin.shell: ntpd -gq
 
 
 - name: Make sure NTP is started up
-  service: name=ntp state=started enabled=yes
-
+  ansible.builtin.service:
+    name: ntp
+    state: started
+    enabled: true

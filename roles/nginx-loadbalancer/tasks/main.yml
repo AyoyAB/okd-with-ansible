@@ -1,7 +1,7 @@
 ---
 
 - name: Copy over nginx loadbalancer configuration
-  template:
+  ansible.builtin.template:
     src: kubernetes.conf
     dest: /etc/nginx/tcpconf.d/kubernetes.conf
   notify: nginx restart

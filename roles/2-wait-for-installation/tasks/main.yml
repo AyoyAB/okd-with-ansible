@@ -1,21 +1,23 @@
-- pause:
+- name: Pause for starting coreos installation on masters
+  ansible.builtin.pause:
     prompt: |
       Manually run sudo coreos-installer on masters according to README.md and reboot.
       Verify they are trying to retrieve the second stage ignition file.
       Press return to continue
 
-- pause:
+- name: Pause for starting coreos installation on bootstrap
+  ansible.builtin.pause:
     prompt: |
       Manually run sudo coreos-installer on bootstrap according to README.md and reboot.
       Press return to continue
 
 - name: Wait for API server to start on all masters
-  local_action:
-    module: ansible.builtin.uri
+  ansible.builtin.uri:
     url: "https://{{ inventory_hostname }}:6443/readyz"
     method: GET
     status_code: 200
     validate_certs: false
+  delegate_to: localhost
   register: result
   when: inventory_hostname in groups['masters']
   until: result.status == 200
@@ -23,7 +25,7 @@
   delay: 5 # pause for X sec b/w each call
 
 - name: Check bootstrap status
-  raw: |
+  ansible.builtin.raw: |
     journalctl -b -u release-image.service -u bootkube.service \
     | grep "bootkube.service: Deactivated successfully." \
     | wc -l
@@ -35,7 +37,7 @@
   until: journalctl.stdout == "1\r\n"
 
 - name: Shutdown the bootstrap machine
-  raw: |
+  ansible.builtin.raw: |
     sudo shutdown 1
   when:
     - inventory_hostname == groups['bootstrap'][0]

@@ -1,17 +1,17 @@
 - hosts: rpis
   any_errors_fatal: true
-  gather_facts: no
+  gather_facts: false
   roles:
     - role: 1-setup-rpi
-      become: yes
+      become: true
 
 - hosts: infras
   any_errors_fatal: true
-  gather_facts: no
+  gather_facts: false
   roles:
     - role: nginx-ignition-files
-      become: yes
+      become: true
     - role: nginx-loadbalancer
-      become: yes
+      become: true
       vars:
         bootstrap_enabled: true

@@ -9,26 +9,26 @@
   register: st
 
 - name: Define openshift client download url
-  set_fact:
+  ansible.builtin.set_fact:
     openshift_client_download_url: "https://github.com/openshift/okd/releases/download/{{ okd_version }}/openshift-client-{{ okd_tools_arch }}-{{ okd_version }}.tar.gz"
-  when: st.stat.exists == false
+  when: not st.stat.exists
 
 - name: Inform user about download location
-  debug:
+  ansible.builtin.debug:
     msg: "Fetching openshift client from {{ openshift_client_download_url }}"
-  when: st.stat.exists == false
+  when: not st.stat.exists
 
 # https://github.com/openshift/okd/releases
 - name: Download openshift-client
-  when: st.stat.exists == false
-  get_url:
+  when: not st.stat.exists
+  ansible.builtin.get_url:
     url: "{{ openshift_client_download_url }}"
     dest: ./openshift-client.tar.gz
     mode: '0440'
 
 - name: Unpack openshift-client
-  when: st.stat.exists == false
-  shell: tar -xvf ./openshift-client.tar.gz -C ./openshift-client
+  when: not st.stat.exists
+  ansible.builtin.shell: tar -xvf ./openshift-client.tar.gz -C ./openshift-client
 
 - name: Delete packed openshift-client
   ansible.builtin.file:
@@ -41,19 +41,19 @@
   register: st
 
 - name: Define ignition validate download url
-  set_fact:
+  ansible.builtin.set_fact:
     ignition_validate_download_url: "https://github.com/coreos/ignition/releases/download/{{ ignition_version }}/ignition-validate-{{ ignition_tool_arch }}"
-  when: st.stat.exists == false
+  when: not st.stat.exists
 
 - name: Inform user about download location
-  debug:
+  ansible.builtin.debug:
     msg: "Fetching ignition validator from {{ ignition_validate_download_url }}"
-  when: st.stat.exists == false
+  when: not st.stat.exists
 
 # https://github.com/coreos/ignition/releases
 - name: Download ignition validator
-  when: st.stat.exists == false
-  get_url:
+  when: not st.stat.exists
+  ansible.builtin.get_url:
     url: "{{ ignition_validate_download_url }}"
     dest: ./openshift-client/ignition-validate
     mode: '0755'

@@ -1,13 +1,14 @@
 - name: "3.1 {{ item }} - Create the network delay configuration"
-  set_fact:
+  ansible.builtin.set_fact:
     rendered_template: "{{ lookup('template', 'carrier-wait-timeout.conf') }}"
   register: networkdelay
 
-- debug:
+- name: Log networkdelay
+  ansible.builtin.debug:
     var: networkdelay
 
 - name: "3.1 {{ item }} - Add the network delay configuration"
-  shell: |
+  ansible.builtin.shell: |
     cat openshift-files/{{ item }}.ign \
     | jq '.storage.files += [{"overwrite": true,"path": "/run/NetworkManager/conf.d/delay-{{ ifname }}.conf","mode": 420,"user": {"name": "root"},"contents": {"source": "data:text/plain;charset=utf-8;base64,{{ networkdelay | b64encode }}"}}]' \
     > openshift-files/{{ item }}.json \
@@ -15,13 +16,13 @@
 
 ############ https://github.com/coreos/fedora-coreos-tracker/issues/746
 - name: "3.1 {{ item }} - Create content of boot fix (https://github.com/coreos/fedora-coreos-tracker/issues/746)"
-  set_fact:
+  ansible.builtin.set_fact:
     before_rfkill: |
       [Unit]
       Before=systemd-rfkill.service systemd-rfkill.socket
 
 - name: "3.1 {{ item }} - Add the boot fix (https://github.com/coreos/fedora-coreos-tracker/issues/746)"
-  shell: |
+  ansible.builtin.shell: |
     cat openshift-files/{{ item }}.ign \
     | jq '.storage.files += [{"overwrite": true,"path": "/etc/systemd/system/ostree-remount.service.d/before-rfkill.conf","mode": 420,"user": {"name": "root"},"contents": {"source": "data:text/plain;charset=utf-8;base64,{{ before_rfkill | b64encode }}"}}]' \
     > openshift-files/{{ item }}.json \
@@ -29,13 +30,13 @@
 
 ############ https://github.com/coreos/fedora-coreos-tracker/issues/975
 - name: "3.1 {{ item }} - Create content of boot fix (https://github.com/coreos/fedora-coreos-tracker/issues/975)"
-  set_fact:
+  ansible.builtin.set_fact:
     after_ostree: |
       [Unit]
       After=ostree-remount.service
 
 - name: "3.1 {{ item }} - Add the boot fix (https://github.com/coreos/fedora-coreos-tracker/issues/975)"
-  shell: |
+  ansible.builtin.shell: |
     cat openshift-files/{{ item }}.ign \
     | jq '.storage.files += [{"overwrite": true,"path": "/etc/systemd/system/systemd-backlight@.service.d/45-after-ostree-remount.conf","mode": 420,"user": {"name": "root"},"contents": {"source": "data:text/plain;charset=utf-8;base64,{{ after_ostree | b64encode }}"}}]' \
     > openshift-files/{{ item }}.json \

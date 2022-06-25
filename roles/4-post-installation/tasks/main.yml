@@ -1,26 +1,26 @@
 # Pathing update stream is no longer needed in 4.9+.
 # Keeping this here if it's needed later.
-#- include_tasks: "1-patch-update-stream.yml"
+# - ansible.builtin.include_tasks: "1-patch-update-stream.yml"
 
-- include_tasks: "2.0-oauth.yml"
+- ansible.builtin.include_tasks: "2.0-oauth.yml"
 
-- include_tasks: "3-cluster-admin.yml"
+- ansible.builtin.include_tasks: "3-cluster-admin.yml"
   with_items:
     - smuda
     - OscarAyoy
 
-- include_tasks: "4-nfs-storage.yml"
+- ansible.builtin.include_tasks: "4-nfs-storage.yml"
 
 - name: Pause for 20 minutes to let cluster stabilize
-  pause:
+  ansible.builtin.pause:
     minutes: 20
 
-- include_tasks: "5-machine-config.yml"
+- ansible.builtin.include_tasks: "5-machine-config.yml"
 
-- include_tasks: "6-compliance-operator.yml"
+- ansible.builtin.include_tasks: "6-compliance-operator.yml"
   when:
     - compliance_operator is defined
 
-- include_tasks: "7-argocd.yml"
+- ansible.builtin.include_tasks: "7-argocd.yml"
   when:
     - argocd is defined

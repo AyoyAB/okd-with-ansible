@@ -1,35 +1,40 @@
 # https://docs.openshift.com/container-platform/4.8/authentication/identity_providers/configuring-github-identity-provider.html
 - name: 2.1 Set variables
-  set_fact:
+  ansible.builtin.set_fact:
     ghsecretname: "github-client-secret"
     ghtempfile: "./tmp-github-cluster-config.yaml"
 
 - name: 2.1 Display the JSON file content
-  shell: cat {{ ghconfigfilename }}
+  ansible.builtin.shell: cat {{ ghconfigfilename }}
   register: ghconfigfile
 
 - name: save the Json data to a Variable as a Fact
-  set_fact:
+  ansible.builtin.set_fact:
     ghconfig: "{{ ghconfigfile.stdout | from_json }}"
 
-- debug:
+- name: Log ghconfig
+  ansible.builtin.debug:
     var: ghconfig
 
-- fail:
+- name: Validate ghconfig format
+  ansible.builtin.fail:
     msg: "Check your github configuration file"
   when: ghconfig.clientID is not defined or ghconfig.clientID == "" or ghconfig.clientSecret is not defined or ghconfig.clientSecret == ""
 
-
-- debug:
+- name: Log ghconfig.clientID
+  ansible.builtin.debug:
     var: ghconfig.clientID
-- debug:
+
+- name: Log ghconfig.clientSecret
+  ansible.builtin.debug:
     var: ghconfig.clientSecret
-- debug:
+
+- name: Log ghconfig.organizations
+  ansible.builtin.debug:
     var: ghconfig.organizations
 
-
 - name: 2.1 If secret already exist, delete
-  shell: |
+  ansible.builtin.shell: |
     KUBECONFIG=./openshift-files/auth/kubeconfig \
     ./openshift-client/oc \
     -n openshift-config \
@@ -39,7 +44,7 @@
   changed_when: result.stdout == "secret \"github-client-secret\" deleted"
 
 - name: 2.1 Add github secret
-  shell: |
+  ansible.builtin.shell: |
     KUBECONFIG=./openshift-files/auth/kubeconfig \
     ./openshift-client/oc \
     -n openshift-config \
@@ -49,19 +54,21 @@
   changed_when: '"unchanged" not in ocresult.stdout'
 
 - name: 2.1 Create temporary file
-  template:
+  ansible.builtin.template:
     src: templates/2-oauth/cluster.yaml
     dest: "{{ ghtempfile }}"
 
 - name: 2.1. Add github as oauth provider
-  shell: |
+  ansible.builtin.shell: |
     KUBECONFIG=./openshift-files/auth/kubeconfig \
     ./openshift-client/oc \
     apply -f {{ ghtempfile }}
   register: patchoutput
-  changed_when: patchoutput.stdout != "clusterversion.config.openshift.io/version patched (no change)" and patchoutput.stdout != "oauth.config.openshift.io/cluster unchanged"
+  changed_when:
+    - patchoutput.stdout != "clusterversion.config.openshift.io/version patched (no change)"
+    - patchoutput.stdout != "oauth.config.openshift.io/cluster unchanged"
 
 - name: 2.1 Delete temporary file
-  file:
+  ansible.builtin.file:
     path: "{{ ghtempfile }}"
     state: absent
