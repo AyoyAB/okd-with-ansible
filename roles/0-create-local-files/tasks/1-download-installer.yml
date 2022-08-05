@@ -1,9 +1,9 @@
-- name: Create directory openshift-install
+- name: Create local install directory
   ansible.builtin.file:
     state: directory
     path: ./openshift-install
 
-- name: Get stats of a file
+- name: Get stats of openshift-install executable
   ansible.builtin.stat:
     path: ./openshift-install/openshift-install
   register: st
