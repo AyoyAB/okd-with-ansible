@@ -8,7 +8,7 @@
 
 - name: Copy over generic ignition files
   ansible.builtin.copy:
-    src: ./openshift-files/{{ item }}.ign
+    src: "{{ openshift_files_directory }}/{{ item }}.ign"
     dest: "{{ nginx_ignition_files_dir }}/{{ item }}.ign"
   with_items:
     - "bootstrap"
@@ -18,27 +18,27 @@
 
 - name: Copy over bootstrap ignition files
   ansible.builtin.copy:
-    src: ./openshift-files/{{ item }}.ign
+    src: "{{ openshift_files_directory }}/{{ item }}.ign"
     dest: "{{ nginx_ignition_files_dir }}/{{ item }}.ign"
   loop: "{{ groups['bootstrap'] }}"
   notify: nginx restart
 
 - name: Copy over master ignition files
   ansible.builtin.copy:
-    src: ./openshift-files/{{ item }}.ign
+    src: "{{ openshift_files_directory }}/{{ item }}.ign"
     dest: "{{ nginx_ignition_files_dir }}/{{ item }}.ign"
   loop: "{{ groups['masters'] }}"
   notify: nginx restart
 
 - name: Copy over worker ignition files
   ansible.builtin.copy:
-    src: ./openshift-files/{{ item }}.ign
+    src: "{{ openshift_files_directory }}/{{ item }}.ign"
     dest: "{{ nginx_ignition_files_dir }}/{{ item }}.ign"
   loop: "{{ groups['nodes'] }}"
   notify: nginx restart
 
 - name: Copy install.sh
   ansible.builtin.copy:
-    src: ./openshift-files/install.sh
+    src: "{{ openshift_files_directory }}/install.sh"
     dest: "{{ nginx_ignition_files_dir }}/install.sh"
   notify: nginx restart

@@ -8,3 +8,6 @@ openshift_client_archive: "{{ openshift_client_directory }}/openshift-client.tar
 openshift_client_executable: "{{ openshift_client_directory }}/oc"
 
 openshift_ignition_validate_executable: "{{ openshift_client_directory }}/ignition-validate"
+
+openshift_files_directory: ./openshift-files
+openshift_files_kubeconfig: "{{ openshift_files_directory }}/auth/kubeconfig"

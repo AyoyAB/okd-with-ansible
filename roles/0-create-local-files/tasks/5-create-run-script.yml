@@ -5,5 +5,5 @@
 - name: Create installation script
   ansible.builtin.template:
     src: templates/install.sh
-    dest: ./openshift-files/install.sh
+    dest: "{{ openshift_files_directory }}/install.sh"
     mode: '0755'

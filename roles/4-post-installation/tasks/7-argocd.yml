@@ -1,6 +1,6 @@
 - name: 7.1 Create or update subscription
   kubernetes.core.k8s:
-    kubeconfig: ./openshift-files/auth/kubeconfig
+    kubeconfig: "{{ openshift_files_kubeconfig }}"
     resource_definition:
       apiVersion: operators.coreos.com/v1alpha1
       kind: Subscription
@@ -23,7 +23,7 @@
 
 - name: 7.2 Wait for operator to start
   ansible.builtin.shell: |
-    KUBECONFIG=./openshift-files/auth/kubeconfig \
+    KUBECONFIG="{{ openshift_files_kubeconfig }}" \
     "{{ openshift_client_executable }}" \
     -n openshift-operators \
     get deploy argocd-operator-controller-manager -o json \
@@ -35,7 +35,7 @@
 
 - name: 7.3 Create or update namespace argocd
   kubernetes.core.k8s:
-    kubeconfig: ./openshift-files/auth/kubeconfig
+    kubeconfig: "{{ openshift_files_kubeconfig }}"
     resource_definition:
       apiVersion: v1
       kind: Namespace
@@ -46,7 +46,7 @@
 
 - name: 7.4 Setup a basic ArgoCD cluster
   kubernetes.core.k8s:
-    kubeconfig: ./openshift-files/auth/kubeconfig
+    kubeconfig: "{{ openshift_files_kubeconfig }}"
     resource_definition:
       apiVersion: argoproj.io/v1alpha1
       kind: ArgoCD
@@ -70,7 +70,7 @@
 
 - name: 7.5 Create or update the namespace
   kubernetes.core.k8s:
-    kubeconfig: ./openshift-files/auth/kubeconfig
+    kubeconfig: "{{ openshift_files_kubeconfig }}"
     resource_definition:
       kind: Namespace
       apiVersion: v1
@@ -80,7 +80,7 @@
 
 - name: 7.6 Initiate applications from github
   kubernetes.core.k8s:
-    kubeconfig: ./openshift-files/auth/kubeconfig
+    kubeconfig: "{{ openshift_files_kubeconfig }}"
     resource_definition:
       apiVersion: v1
       kind: Secret
@@ -96,7 +96,7 @@
 
 - name: 7.7 Initiate applications from github
   kubernetes.core.k8s:
-    kubeconfig: ./openshift-files/auth/kubeconfig
+    kubeconfig: "{{ openshift_files_kubeconfig }}"
     resource_definition:
       apiVersion: argoproj.io/v1alpha1
       kind: Application

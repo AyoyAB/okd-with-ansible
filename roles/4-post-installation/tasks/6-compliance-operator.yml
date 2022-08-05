@@ -1,6 +1,6 @@
 - name: 6.1 Create or update the catalog source
   kubernetes.core.k8s:
-    kubeconfig: ./openshift-files/auth/kubeconfig
+    kubeconfig: "{{ openshift_files_kubeconfig }}"
     resource_definition:
       apiVersion: operators.coreos.com/v1alpha1
       kind: CatalogSource
@@ -15,7 +15,7 @@
 
 - name: 6.2 Create or update namespace openshift-compliance
   kubernetes.core.k8s:
-    kubeconfig: ./openshift-files/auth/kubeconfig
+    kubeconfig: "{{ openshift_files_kubeconfig }}"
     resource_definition:
       apiVersion: v1
       kind: Namespace
@@ -26,7 +26,7 @@
 
 - name: 6.3 Create or update operator-group
   kubernetes.core.k8s:
-    kubeconfig: ./openshift-files/auth/kubeconfig
+    kubeconfig: "{{ openshift_files_kubeconfig }}"
     resource_definition:
       apiVersion: operators.coreos.com/v1
       kind: OperatorGroup
@@ -39,7 +39,7 @@
 
 - name: 6.4 Create or update subscription
   kubernetes.core.k8s:
-    kubeconfig: ./openshift-files/auth/kubeconfig
+    kubeconfig: "{{ openshift_files_kubeconfig }}"
     resource_definition:
       apiVersion: operators.coreos.com/v1alpha1
       kind: Subscription
@@ -55,7 +55,7 @@
 
 - name: 6.5 Wait for operator to start
   ansible.builtin.shell: |
-    KUBECONFIG=./openshift-files/auth/kubeconfig \
+    KUBECONFIG="{{ openshift_files_kubeconfig }}" \
     "{{ openshift_client_executable }}" \
     -n openshift-compliance \
     get deployment compliance-operator -o json \
@@ -67,7 +67,7 @@
 
 - name: 6.6 Bind scanning type to profiles to initiate scanning (CIS-compliance)
   kubernetes.core.k8s:
-    kubeconfig: ./openshift-files/auth/kubeconfig
+    kubeconfig: "{{ openshift_files_kubeconfig }}"
     resource_definition:
       apiVersion: compliance.openshift.io/v1alpha1
       kind: ScanSettingBinding
@@ -88,7 +88,7 @@
 
 - name: 6.7 Bind scanning type to profiles to initiate scanning (rhcos4-moderate)
   kubernetes.core.k8s:
-    kubeconfig: ./openshift-files/auth/kubeconfig
+    kubeconfig: "{{ openshift_files_kubeconfig }}"
     resource_definition:
       apiVersion: compliance.openshift.io/v1alpha1
       kind: ScanSettingBinding

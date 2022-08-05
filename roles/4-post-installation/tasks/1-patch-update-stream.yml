@@ -1,6 +1,6 @@
 - name: 1. Patch update URL
   ansible.builtin.shell: |
-    KUBECONFIG=./openshift-files/auth/kubeconfig \
+    KUBECONFIG="{{ openshift_files_kubeconfig }}" \
     "{{ openshift_client_executable }}" \
     patch ClusterVersion version \
     --type merge \

@@ -1,6 +1,6 @@
 - name: Find ignition files
   ansible.builtin.find:
-    paths: ./openshift-files
+    paths: "{{ openshift_files_directory }}"
     patterns: '*.ign'
   register: files
 
