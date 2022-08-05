@@ -1,1 +1,4 @@
 ---
+openshift_install_directory: ./openshift-install
+openshift_install_archive: "{{ openshift_install_directory }}/openshift-install.tar.gz"
+openshift_install_executable: "{{ openshift_install_directory }}/openshift-install"

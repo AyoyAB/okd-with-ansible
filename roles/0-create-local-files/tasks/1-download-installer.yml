@@ -1,11 +1,11 @@
 - name: Create local install directory
   ansible.builtin.file:
     state: directory
-    path: ./openshift-install
+    path: "{{ openshift_install_directory }}"
 
 - name: Get stats of openshift-install executable
   ansible.builtin.stat:
-    path: ./openshift-install/openshift-install
+    path: "{{ openshift_install_executable }}"
   register: st
 
 - name: Define openshift install download url
@@ -24,14 +24,14 @@
   when: not st.stat.exists
   ansible.builtin.get_url:
     url: "{{ openshift_install_download_url }}"
-    dest: ./openshift-install/openshift-install.tar.gz
+    dest: "{{ openshift_install_archive }}"
     mode: '0440'
 
 - name: Unpack openshift-install
   when: not st.stat.exists
-  ansible.builtin.shell: tar -xvf ./openshift-install/openshift-install.tar.gz -C ./openshift-install
+  ansible.builtin.shell: tar -xvf "{{ openshift_install_archive }}" -C "{{ openshift_install_directory }}"
 
 - name: Delete openshift-install
   ansible.builtin.file:
     state: absent
-    path: ./openshift-install/openshift-install.tar.gz
+    path: "{{ openshift_install_archive }}"
