@@ -56,7 +56,7 @@
 - name: 6.5 Wait for operator to start
   ansible.builtin.shell: |
     KUBECONFIG=./openshift-files/auth/kubeconfig \
-    ./openshift-client/oc \
+    "{{ openshift_client_executable }}" \
     -n openshift-compliance \
     get deployment compliance-operator -o json \
     | jq '.status.readyReplicas'

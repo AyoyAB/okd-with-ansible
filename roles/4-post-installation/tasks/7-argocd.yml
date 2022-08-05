@@ -24,7 +24,7 @@
 - name: 7.2 Wait for operator to start
   ansible.builtin.shell: |
     KUBECONFIG=./openshift-files/auth/kubeconfig \
-    ./openshift-client/oc \
+    "{{ openshift_client_executable }}" \
     -n openshift-operators \
     get deploy argocd-operator-controller-manager -o json \
     | jq '.status.readyReplicas'

@@ -6,7 +6,7 @@
 - name: 3. {{ item }} Check if cluster admin already exists
   ansible.builtin.shell: |
     KUBECONFIG=./openshift-files/auth/kubeconfig \
-    ./openshift-client/oc \
+    "{{ openshift_client_executable }}" \
     get clusterrolebinding -o json \
     | jq --raw-output \
     '.items[] | select(.roleRef.name == "cluster-admin") | select(.subjects[].kind=="User") | select(.subjects[].name == "{{ item }}") | .metadata.name'
@@ -22,7 +22,7 @@
 - name: 3. {{ item }} Add cluster admin
   ansible.builtin.shell: |
     KUBECONFIG=./openshift-files/auth/kubeconfig \
-    ./openshift-client/oc \
+    "{{ openshift_client_executable }}" \
     apply -f ./tmp/cluster-admin.yaml
   when: result.stdout == ""
 
