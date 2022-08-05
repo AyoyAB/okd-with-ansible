@@ -23,17 +23,17 @@
   when: not st.stat.exists
   ansible.builtin.get_url:
     url: "{{ openshift_client_download_url }}"
-    dest: ./openshift-client.tar.gz
+    dest: ./openshift-client/openshift-client.tar.gz
     mode: '0440'
 
 - name: Unpack openshift-client
   when: not st.stat.exists
-  ansible.builtin.shell: tar -xvf ./openshift-client.tar.gz -C ./openshift-client
+  ansible.builtin.shell: tar -xvf ./openshift-client/openshift-client.tar.gz -C ./openshift-client
 
 - name: Delete packed openshift-client
   ansible.builtin.file:
     state: absent
-    path: ./openshift-client.tar.gz
+    path: ./openshift-client/openshift-client.tar.gz
 
 - name: Get stats of a validator file
   ansible.builtin.stat:
