@@ -1,9 +1,14 @@
+# Docs: https://docs.openshift.com/container-platform/4.10/installing/installing_bare_metal_ipi/ipi-install-installation-workflow.html#ipi-install-configuration-files
 apiVersion: v1
 baseDomain: {{ base_domain }}
 compute:
   - hyperthreading: Enabled
     name: worker
+{% if use_control_plane_nodes_for_compute %}
+    replicas: 0
+{% else %}
     replicas: {{ nrOfNodes }}
+{% endif %}
 controlPlane:
   hyperthreading: Enabled
   name: master
@@ -21,3 +26,11 @@ platform:
   none: {}
 pullSecret: "{{ pullSecret }}"
 sshKey: "{{ sshKey }}"
+{% if use_disconnected_registry == true %}
+additionalTrustBundle: |
+  {{ lookup('file', disconnected_registry_trust_bundle_file) | regex_replace('\n', '\n  ') }}
+imageContentSources:
+  - source: quay.io.openshift
+    mirrors:
+      - {{ disconnected_registry_url }}
+{% endif %}

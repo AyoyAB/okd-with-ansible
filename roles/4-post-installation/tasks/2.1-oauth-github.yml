@@ -35,8 +35,8 @@
 
 - name: 2.1 If secret already exist, delete
   ansible.builtin.shell: |
-    KUBECONFIG=./openshift-files/auth/kubeconfig \
-    ./openshift-client/oc \
+    KUBECONFIG="{{ openshift_files_kubeconfig }}" \
+    "{{ openshift_client_executable }}" \
     -n openshift-config \
     delete secret {{ ghsecretname }} \
     --ignore-not-found
@@ -45,8 +45,8 @@
 
 - name: 2.1 Add github secret
   ansible.builtin.shell: |
-    KUBECONFIG=./openshift-files/auth/kubeconfig \
-    ./openshift-client/oc \
+    KUBECONFIG="{{ openshift_files_kubeconfig }}" \
+    "{{ openshift_client_executable }}" \
     -n openshift-config \
     create secret generic {{ ghsecretname }} \
     --from-literal=clientSecret='{{ ghconfig.clientSecret }}'
@@ -60,8 +60,8 @@
 
 - name: 2.1. Add github as oauth provider
   ansible.builtin.shell: |
-    KUBECONFIG=./openshift-files/auth/kubeconfig \
-    ./openshift-client/oc \
+    KUBECONFIG="{{ openshift_files_kubeconfig }}" \
+    "{{ openshift_client_executable }}" \
     apply -f {{ ghtempfile }}
   register: patchoutput
   changed_when:

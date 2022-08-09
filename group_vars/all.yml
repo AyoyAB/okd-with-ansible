@@ -6,6 +6,16 @@ ignition_version: v2.14.0
 base_domain: example.com
 cluster_name: okd4
 
+# 'true' means that the control plane nodes will also run standard pods
+use_control_plane_nodes_for_compute: false
+
+# This public ssh key will be required to access the control plane nodes and worker nodes.
+ssh_public_key_file: ~/.ssh/id_ansible.pub
+
+#use_disconnected_registry: true
+#disconnected_registry_trust_bundle_file: ./example.crt
+#disconnected_registry_url: registry.example.com:5000/ocp4/openshift4
+
 nfs_server: 192.168.60.20
 
 # Ansible configuration

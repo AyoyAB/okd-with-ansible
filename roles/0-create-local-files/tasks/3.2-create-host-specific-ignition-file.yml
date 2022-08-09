@@ -1,10 +1,10 @@
 - name: "3.2 {{ item }} - Create the ignition file name"
   ansible.builtin.set_fact:
-    ign_file: "openshift-files/{{ item }}.ign"
+    ign_file: "{{ openshift_files_directory }}/{{ item }}.ign"
 
 - name: "Create ignition file"
   ansible.builtin.copy:
-    src: openshift-files/{{ template }}
+    src: "{{ openshift_files_directory }}/{{ template }}"
     dest: "{{ ign_file }}"
 
 - name: "3.2 {{ item }} - Set /etc/hostname in ignition file"
