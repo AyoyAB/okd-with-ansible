@@ -6,6 +6,15 @@
     ./openshift-client/oc version -o json | jq --raw-output '.openshiftVersion'
   register: okd_version
 
+- name: Wait for existing machine config pools to stabilize
+  ansible.builtin.shell: |
+    KUBECONFIG=./openshift-files/auth/kubeconfig \
+    ./openshift-client/oc get mcp -o json | jq -r '.items[] | select(.status.machineCount != .status.readyMachineCount)'
+  register: mcp_status
+  until: mcp_status.stdout == ""
+  retries: 5000
+  delay: 5 # pause for # sec b/w each call
+
 - name: 5.1 Pause machine configs
   ansible.builtin.shell: |
     KUBECONFIG=./openshift-files/auth/kubeconfig \
