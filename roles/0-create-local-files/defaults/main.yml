@@ -1,2 +1,4 @@
 ---
 set_etc_hostname_in_ignition_file: false
+
+use_disconnected_registry: false
