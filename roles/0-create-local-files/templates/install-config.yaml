@@ -3,7 +3,11 @@ baseDomain: {{ base_domain }}
 compute:
   - hyperthreading: Enabled
     name: worker
+{% if use_control_plane_nodes_for_compute %}
+    replicas: 0
+{% else %}
     replicas: {{ nrOfNodes }}
+{% endif %}
 controlPlane:
   hyperthreading: Enabled
   name: master

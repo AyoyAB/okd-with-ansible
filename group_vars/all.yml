@@ -6,6 +6,9 @@ ignition_version: v2.14.0
 base_domain: example.com
 cluster_name: okd4
 
+# 'true' means that the control plane nodes will also run standard pods
+use_control_plane_nodes_for_compute: false
+
 nfs_server: 192.168.60.20
 
 # Ansible configuration

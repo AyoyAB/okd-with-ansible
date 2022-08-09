@@ -17,10 +17,7 @@
     pullSecret: "{{ lookup('file', './pull-secret') | regex_replace('\"', '\\\"') }}"
     sshKey: "{{ lookup('file', '~/.ssh/id_ansible.pub') }}"
     nrOfMasters: "{{ groups['masters'] | length }}"
-    nrOfNodes: "0"
-# NOTE: Number of nodes=0 means that the masters will also be run standard pods
-#       Added nodes later can handle that taint but since I only will be having a single node,
-#       it seems like a good idea not to waste the three masters.
+    nrOfNodes: "{{ groups['nodes'] | length }}"
 
 - name: 3. Fetch install version
   ansible.builtin.include_tasks: "get-oc-version.yml"
