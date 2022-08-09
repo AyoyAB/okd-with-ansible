@@ -9,7 +9,7 @@
 - name: 5.1 Pause machine configs
   ansible.builtin.shell: |
     KUBECONFIG="{{ openshift_files_kubeconfig }}" \
-    "{{ openshift_client_executable }}" patch --type=merge --patch='{"spec":{"paused":true}}' machineconfigpool/master
+    "{{ openshift_client_executable }}" patch --type=merge --patch='{ "spec": { "paused": true } }' machineconfigpool/master
 
 - name: 5.2 Apply machine configs
   ansible.builtin.shell: |
@@ -24,7 +24,7 @@
 - name: 5.3 Unpause machine configs
   ansible.builtin.shell: |
     KUBECONFIG="{{ openshift_files_kubeconfig }}" \
-    "{{ openshift_client_executable }}" patch --type=merge --patch='{"spec":{"paused":false}}' machineconfigpool/master
+    "{{ openshift_client_executable }}" patch --type=merge --patch='{ "spec": { "paused": false } }' machineconfigpool/master
 
 - name: 5.4 Wait for machine config to update
   ansible.builtin.shell: |
