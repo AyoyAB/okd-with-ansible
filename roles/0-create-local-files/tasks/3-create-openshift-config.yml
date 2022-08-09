@@ -35,6 +35,13 @@
     var: oc_version_minor
 
 - name: 3. Fix ignition files
+  ansible.builtin.include_tasks: "3.1-fix-ignition-files.yml"
+  loop:
+    - "bootstrap"
+    - "master"
+    - "worker"
+
+- name: 3. Fix ignition files v4.8
   ansible.builtin.include_tasks: "3.1-fix-ignition-files-v4.8.yml"
   vars:
     ifname: "eno1"
