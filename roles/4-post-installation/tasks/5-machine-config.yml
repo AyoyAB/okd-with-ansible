@@ -2,19 +2,19 @@
 
 - name: 5 Get cluster version
   ansible.builtin.shell: |
-    KUBECONFIG=./openshift-files/auth/kubeconfig \
-    ./openshift-client/oc version -o json | jq --raw-output '.openshiftVersion'
+    KUBECONFIG="{{ openshift_files_kubeconfig }}" \
+    "{{ openshift_client_executable }}" version -o json | jq --raw-output '.openshiftVersion'
   register: okd_version
 
 - name: 5.1 Pause machine configs
   ansible.builtin.shell: |
-    KUBECONFIG=./openshift-files/auth/kubeconfig \
-    ./openshift-client/oc patch --type=merge --patch='{"spec":{"paused":true}}' machineconfigpool/master
+    KUBECONFIG="{{ openshift_files_kubeconfig }}" \
+    "{{ openshift_client_executable }}" patch --type=merge --patch='{"spec":{"paused":true}}' machineconfigpool/master
 
 - name: 5.2 Apply machine configs
   ansible.builtin.shell: |
-    KUBECONFIG=./openshift-files/auth/kubeconfig \
-    ./openshift-client/oc apply -f \
+    KUBECONFIG="{{ openshift_files_kubeconfig }}" \
+    "{{ openshift_client_executable }}" apply -f \
     {{ item }}
   with_fileglob:
     - ../templates/5-machine-config/*.yaml
@@ -23,10 +23,10 @@
 
 - name: 5.3 Unpause machine configs
   ansible.builtin.shell: |
-    KUBECONFIG=./openshift-files/auth/kubeconfig \
-    ./openshift-client/oc patch --type=merge --patch='{"spec":{"paused":false}}' machineconfigpool/master
+    KUBECONFIG="{{ openshift_files_kubeconfig }}" \
+    "{{ openshift_client_executable }}" patch --type=merge --patch='{"spec":{"paused":false}}' machineconfigpool/master
 
 - name: 5.4 Wait for machine config to update
   ansible.builtin.shell: |
-    KUBECONFIG=./openshift-files/auth/kubeconfig \
-    ./openshift-client/oc wait mcp/master --for condition=updated
+    KUBECONFIG="{{ openshift_files_kubeconfig }}" \
+    "{{ openshift_client_executable }}" wait mcp/master --for condition=updated

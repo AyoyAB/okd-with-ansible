@@ -1,17 +1,17 @@
-- name: Delete directory openshift-files
+- name: Delete directory {{ openshift_files_directory }}
   ansible.builtin.file:
     state: absent
-    path: ./openshift-files
+    path: "{{ openshift_files_directory }}"
 
-- name: Create directory openshift-files
+- name: Create directory {{ openshift_files_directory }}
   ansible.builtin.file:
     state: directory
-    path: ./openshift-files
+    path: "{{ openshift_files_directory }}"
 
 - name: 3. Create installation config
   ansible.builtin.template:
     src: templates/install-config.yaml
-    dest: ./openshift-files/install-config.yaml
+    dest: "{{ openshift_files_directory }}/install-config.yaml"
     mode: '0644'
   vars:
     pullSecret: "{{ lookup('file', './pull-secret') | regex_replace('\"', '\\\"') }}"
@@ -26,10 +26,12 @@
   ansible.builtin.include_tasks: "get-oc-version.yml"
 
 - name: 3. Create cluster manifests files
-  ansible.builtin.shell: ./openshift-install/openshift-install create manifests --dir=./openshift-files
+  ansible.builtin.shell:
+    cmd: "{{ openshift_install_executable }} create manifests --dir={{ openshift_files_directory }}"
 
 - name: 3. Create cluster ignition files
-  ansible.builtin.shell: ./openshift-install/openshift-install create ignition-configs --dir=./openshift-files
+  ansible.builtin.shell:
+    cmd: "{{ openshift_install_executable }} create ignition-configs --dir={{ openshift_files_directory }}"
 
 - name: Log oc_version_minor
   ansible.builtin.debug:

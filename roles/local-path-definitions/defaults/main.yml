@@ -1,0 +1,13 @@
+---
+openshift_install_directory: ./openshift-install
+openshift_install_archive: "{{ openshift_install_directory }}/openshift-install.tar.gz"
+openshift_install_executable: "{{ openshift_install_directory }}/openshift-install"
+
+openshift_client_directory: ./openshift-client
+openshift_client_archive: "{{ openshift_client_directory }}/openshift-client.tar.gz"
+openshift_client_executable: "{{ openshift_client_directory }}/oc"
+
+openshift_ignition_validate_executable: "{{ openshift_client_directory }}/ignition-validate"
+
+openshift_files_directory: ./openshift-files
+openshift_files_kubeconfig: "{{ openshift_files_directory }}/auth/kubeconfig"
