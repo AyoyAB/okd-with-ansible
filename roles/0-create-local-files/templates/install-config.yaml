@@ -7,12 +7,12 @@ compute:
 {% if use_control_plane_nodes_for_compute %}
     replicas: 0
 {% else %}
-    replicas: {{ nrOfNodes }}
+    replicas: {{ groups['nodes'] | length }}
 {% endif %}
 controlPlane:
   hyperthreading: Enabled
   name: master
-  replicas: {{ nrOfMasters }}
+  replicas: {{ groups['masters'] | length }}
 metadata:
   name: {{ cluster_name }}
 networking:
@@ -24,8 +24,8 @@ networking:
     - 172.30.0.0/16
 platform:
   none: {}
-pullSecret: "{{ pullSecret }}"
-sshKey: "{{ sshKey }}"
+pullSecret: "{{ lookup('file', './pull-secret') | regex_replace('\"', '\\\"') }}"
+sshKey: "{{ lookup('file', ssh_public_key_file) }}"
 {% if use_disconnected_registry == true %}
 additionalTrustBundle: |
   {{ lookup('file', disconnected_registry_trust_bundle_file) | regex_replace('\n', '\n  ') }}

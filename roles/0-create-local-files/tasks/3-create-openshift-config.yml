@@ -13,11 +13,6 @@
     src: templates/install-config.yaml
     dest: "{{ openshift_files_directory }}/install-config.yaml"
     mode: '0644'
-  vars:
-    pullSecret: "{{ lookup('file', './pull-secret') | regex_replace('\"', '\\\"') }}"
-    sshKey: "{{ lookup('file', ssh_public_key_file) }}"
-    nrOfMasters: "{{ groups['masters'] | length }}"
-    nrOfNodes: "{{ groups['nodes'] | length }}"
 
 - name: 3. Fetch install version
   ansible.builtin.include_tasks: "get-oc-version.yml"
