@@ -2,3 +2,4 @@
 set_etc_hostname_in_ignition_file: false
 
 use_disconnected_registry: false
+use_custom_container_registry: false

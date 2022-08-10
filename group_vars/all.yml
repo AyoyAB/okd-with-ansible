@@ -12,9 +12,13 @@ use_control_plane_nodes_for_compute: false
 # This public ssh key will be required to access the control plane nodes and worker nodes.
 ssh_public_key_file: ~/.ssh/id_ansible.pub
 
-#use_disconnected_registry: true
-#disconnected_registry_trust_bundle_file: ./example.crt
-#disconnected_registry_url: registry.example.com:5000/ocp4/openshift4
+# use_disconnected_registry: true
+# disconnected_registry_trust_bundle_file: ./example.crt
+# disconnected_registry_url: registry.example.com:5000/ocp4/openshift4
+
+# use_custom_container_registry: true
+# custom_container_registry_ca_file: ./example.crt
+# custom_container_registry_hostname_port: registry.example.com:5000
 
 nfs_server: 192.168.60.20
 
