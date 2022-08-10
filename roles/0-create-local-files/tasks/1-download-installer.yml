@@ -2,6 +2,7 @@
   ansible.builtin.file:
     state: directory
     path: "{{ openshift_install_directory }}"
+    mode: '0755'
 
 - name: Get stats of openshift-install executable
   ansible.builtin.stat:

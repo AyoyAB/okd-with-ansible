@@ -6,6 +6,7 @@
   ansible.builtin.copy:
     src: "{{ openshift_files_directory }}/{{ template }}"
     dest: "{{ ign_file }}"
+    mode: '0644'
 
 - name: "3.2 {{ item }} - Set /etc/hostname in ignition file"
   when: set_etc_hostname_in_ignition_file

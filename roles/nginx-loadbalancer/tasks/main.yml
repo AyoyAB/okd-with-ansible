@@ -4,4 +4,5 @@
   ansible.builtin.template:
     src: kubernetes.conf
     dest: /etc/nginx/tcpconf.d/kubernetes.conf
+    mode: '0644'
   notify: nginx restart

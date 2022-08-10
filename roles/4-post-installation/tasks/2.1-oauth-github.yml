@@ -57,6 +57,7 @@
   ansible.builtin.template:
     src: templates/2-oauth/cluster.yaml
     dest: "{{ ghtempfile }}"
+    mode: '0644'
 
 - name: 2.1. Add github as oauth provider
   ansible.builtin.shell: |
