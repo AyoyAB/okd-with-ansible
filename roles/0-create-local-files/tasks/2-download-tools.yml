@@ -29,7 +29,8 @@
 
 - name: Unpack openshift-client
   when: not st.stat.exists
-  ansible.builtin.shell: tar -xvf "{{ openshift_client_archive }}" -C "{{ openshift_client_directory }}"
+  ansible.builtin.shell:
+    cmd: tar -xvf "{{ openshift_client_archive }}" -C "{{ openshift_client_directory }}" # noqa command-instead-of-module As we're running on mac, we can't use the module as it requires GNU tar.
 
 - name: Delete packed openshift-client
   ansible.builtin.file:

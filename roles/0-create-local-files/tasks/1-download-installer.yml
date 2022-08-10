@@ -30,7 +30,8 @@
 
 - name: Unpack openshift-install
   when: not st.stat.exists
-  ansible.builtin.shell: tar -xvf "{{ openshift_install_archive }}" -C "{{ openshift_install_directory }}"
+  ansible.builtin.shell:
+    cmd: tar -xvf "{{ openshift_install_archive }}" -C "{{ openshift_install_directory }}" # noqa command-instead-of-module As we're running on mac, we can't use the module as it requires GNU tar.
 
 - name: Delete openshift-install
   ansible.builtin.file:
