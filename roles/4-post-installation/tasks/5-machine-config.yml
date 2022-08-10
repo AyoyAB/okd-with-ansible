@@ -5,6 +5,7 @@
     KUBECONFIG="{{ openshift_files_kubeconfig }}" \
     "{{ openshift_client_executable }}" version -o json | jq --raw-output '.openshiftVersion'
   register: okd_version
+  changed_when: false
 
 - name: Wait for existing machine config pools to stabilize
   ansible.builtin.shell: |
@@ -14,11 +15,13 @@
   until: mcp_status.stdout == ""
   retries: 5000
   delay: 5 # pause for # sec b/w each call
+  changed_when: false
 
 - name: 5.1 Pause machine configs
   ansible.builtin.shell: |
     KUBECONFIG="{{ openshift_files_kubeconfig }}" \
     "{{ openshift_client_executable }}" patch --type=merge --patch='{ "spec": { "paused": true } }' machineconfigpool/master
+  changed_when: true
 
 - name: 5.2 Apply machine configs
   ansible.builtin.shell: |
@@ -34,8 +37,10 @@
   ansible.builtin.shell: |
     KUBECONFIG="{{ openshift_files_kubeconfig }}" \
     "{{ openshift_client_executable }}" patch --type=merge --patch='{ "spec": { "paused": false } }' machineconfigpool/master
+  changed_when: true
 
 - name: 5.4 Wait for machine config to update
   ansible.builtin.shell: |
     KUBECONFIG="{{ openshift_files_kubeconfig }}" \
     "{{ openshift_client_executable }}" wait mcp/master --for condition=updated --timeout=600s
+  changed_when: false

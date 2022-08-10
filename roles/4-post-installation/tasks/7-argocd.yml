@@ -32,6 +32,7 @@
   retries: 60
   delay: 5
   until: ready_replicas.stdout == "1"
+  changed_when: false
 
 - name: 7.3 Create or update namespace argocd
   kubernetes.core.k8s:

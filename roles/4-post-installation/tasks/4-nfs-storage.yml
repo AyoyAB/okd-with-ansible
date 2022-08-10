@@ -109,6 +109,7 @@
     "{{ openshift_client_executable }}" \
     -n nfs-provisioner \
     adm policy add-scc-to-user hostmount-anyuid -z nfs-pod-provisioner-sa
+  changed_when: true
 
 - name: 4.9 Fetch valid UID range to use for namespace
   ansible.builtin.shell: |
@@ -120,6 +121,7 @@
   until: uidrange.stdout != "null"
   retries: 60
   delay: 30
+  changed_when: true
 
 - name: Log uidrange
   ansible.builtin.debug:
@@ -145,3 +147,4 @@
   retries: 120
   delay: 5
   until: ready_replicas.stdout == "1"
+  changed_when: false

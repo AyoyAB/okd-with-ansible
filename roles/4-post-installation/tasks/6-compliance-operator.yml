@@ -64,6 +64,7 @@
   retries: 60
   delay: 5
   until: ready_replicas.stdout == "1"
+  changed_when: false
 
 - name: 6.6 Bind scanning type to profiles to initiate scanning (CIS-compliance)
   kubernetes.core.k8s:

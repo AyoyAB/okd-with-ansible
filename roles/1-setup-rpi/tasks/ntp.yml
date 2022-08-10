@@ -44,6 +44,7 @@
 - name: Sync time initialy
   ansible.builtin.command:
     cmd: ntpd -gq
+  changed_when: false
 
 - name: Make sure NTP is started up
   ansible.builtin.service:
