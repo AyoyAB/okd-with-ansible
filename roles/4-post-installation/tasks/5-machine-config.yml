@@ -2,6 +2,7 @@
 
 - name: 5 Get cluster version
   ansible.builtin.shell: |
+    set -o pipefail && \
     KUBECONFIG="{{ openshift_files_kubeconfig }}" \
     "{{ openshift_client_executable }}" version -o json | jq --raw-output '.openshiftVersion'
   register: okd_version
@@ -9,6 +10,7 @@
 
 - name: Wait for existing machine config pools to stabilize
   ansible.builtin.shell: |
+    set -o pipefail && \
     KUBECONFIG="{{ openshift_files_kubeconfig }}" \
     "{{ openshift_client_executable }}" get mcp -o json | jq -r '.items[] | select(.status.machineCount != .status.readyMachineCount)'
   register: mcp_status

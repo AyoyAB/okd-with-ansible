@@ -6,6 +6,7 @@
 
 - name: 3. {{ item }} Check if cluster admin already exists
   ansible.builtin.shell: |
+    set -o pipefail && \
     KUBECONFIG="{{ openshift_files_kubeconfig }}" \
     "{{ openshift_client_executable }}" \
     get clusterrolebinding -o json \
