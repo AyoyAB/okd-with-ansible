@@ -5,4 +5,4 @@
     | jq '.storage.files += [ { "overwrite": true, "path": "/etc/containers/certs.d/{{ custom_container_registry_hostname_port }}/ca.crt", "mode": 420, "user": { "name": "root" }, "contents": { "source": "data:text/plain;charset=utf-8;base64,{{ lookup('file', custom_container_registry_ca_file) | b64encode }}" } } ]' \  # noqa yaml[line-length]
     > "{{ openshift_files_directory }}/{{ item }}.json" \
     && mv "{{ openshift_files_directory }}/{{ item }}.json" "{{ openshift_files_directory }}/{{ item }}.ign"
-  when: use_custom_container_registry == true
+  when: use_custom_container_registry
