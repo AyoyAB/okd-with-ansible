@@ -5,7 +5,8 @@
     ghtempfile: "./tmp-github-cluster-config.yaml"
 
 - name: 2.1 Display the JSON file content
-  ansible.builtin.shell: cat {{ ghconfigfilename }}
+  ansible.builtin.command:
+    cmd: cat {{ ghconfigfilename }}
   register: ghconfigfile
 
 - name: save the Json data to a Variable as a Fact

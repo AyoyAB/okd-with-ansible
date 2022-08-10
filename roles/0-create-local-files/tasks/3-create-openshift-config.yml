@@ -19,11 +19,11 @@
   ansible.builtin.include_tasks: "get-oc-version.yml"
 
 - name: 3. Create cluster manifests files
-  ansible.builtin.shell:
+  ansible.builtin.command:
     cmd: "{{ openshift_install_executable }} create manifests --dir={{ openshift_files_directory }}"
 
 - name: 3. Create cluster ignition files
-  ansible.builtin.shell:
+  ansible.builtin.command:
     cmd: "{{ openshift_install_executable }} create ignition-configs --dir={{ openshift_files_directory }}"
 
 - name: Log oc_version_minor
