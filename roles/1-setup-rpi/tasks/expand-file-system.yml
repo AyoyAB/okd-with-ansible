@@ -1,5 +1,7 @@
 - name: Check unpartitioned space
-  ansible.builtin.shell: /sbin/parted /dev/mmcblk0 unit gb print free | grep 'Free Space' | tail -n1 | awk '{print $3}'
+  ansible.builtin.shell: |
+    set -o pipefail && \
+    /sbin/parted /dev/mmcblk0 unit gb print free | grep 'Free Space' | tail -n1 | awk '{print $3}'
   register: unpartitioned
   changed_when: false
   failed_when: unpartitioned.stderr != ""

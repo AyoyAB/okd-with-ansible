@@ -2,6 +2,7 @@
   ansible.builtin.file:
     state: directory
     path: "{{ openshift_install_directory }}"
+    mode: '0755'
 
 - name: Get stats of openshift-install executable
   ansible.builtin.stat:
@@ -10,7 +11,7 @@
 
 - name: Define openshift install download url
   ansible.builtin.set_fact:
-    openshift_install_download_url: "https://github.com/openshift/okd/releases/download/{{ okd_version }}/openshift-install-{{ okd_tools_arch }}-{{ okd_version }}.tar.gz"
+    openshift_install_download_url: "https://github.com/openshift/okd/releases/download/{{ okd_version }}/openshift-install-{{ okd_tools_arch }}-{{ okd_version }}.tar.gz" # noqa yaml[line-length]
   when: not st.stat.exists
 
 - name: Inform user about download location
@@ -29,7 +30,9 @@
 
 - name: Unpack openshift-install
   when: not st.stat.exists
-  ansible.builtin.shell: tar -xvf "{{ openshift_install_archive }}" -C "{{ openshift_install_directory }}"
+  ansible.builtin.command:
+    # As we're running on mac, we can't use the module as it requires GNU tar.
+    cmd: tar -xvf "{{ openshift_install_archive }}" -C "{{ openshift_install_directory }}" # noqa command-instead-of-module
 
 - name: Delete openshift-install
   ansible.builtin.file:

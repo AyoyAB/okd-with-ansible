@@ -18,6 +18,7 @@
   ansible.builtin.template:
     src: nginx.conf
     dest: /etc/nginx/nginx.conf
+    mode: '0644'
   notify: nginx restart
 
 - name: Delete default site
@@ -30,6 +31,7 @@
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
+    mode: '0755'
   with_items:
     - /etc/nginx/sites-enabled
     - /etc/nginx/tcpconf.d

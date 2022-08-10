@@ -109,9 +109,11 @@
     "{{ openshift_client_executable }}" \
     -n nfs-provisioner \
     adm policy add-scc-to-user hostmount-anyuid -z nfs-pod-provisioner-sa
+  changed_when: true
 
 - name: 4.9 Fetch valid UID range to use for namespace
   ansible.builtin.shell: |
+    set -o pipefail && \
     KUBECONFIG="{{ openshift_files_kubeconfig }}" \
     "{{ openshift_client_executable }}" \
     get ns nfs-provisioner -o json \
@@ -120,6 +122,7 @@
   until: uidrange.stdout != "null"
   retries: 60
   delay: 30
+  changed_when: true
 
 - name: Log uidrange
   ansible.builtin.debug:
@@ -136,6 +139,7 @@
 
 - name: 4.11 Wait for NFS provisioner to start
   ansible.builtin.shell: |
+    set -o pipefail && \
     KUBECONFIG="{{ openshift_files_kubeconfig }}" \
     "{{ openshift_client_executable }}" \
     -n nfs-provisioner \
@@ -145,3 +149,4 @@
   retries: 120
   delay: 5
   until: ready_replicas.stdout == "1"
+  changed_when: false

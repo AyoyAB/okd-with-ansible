@@ -55,6 +55,7 @@
 
 - name: 6.5 Wait for operator to start
   ansible.builtin.shell: |
+    set -o pipefail && \
     KUBECONFIG="{{ openshift_files_kubeconfig }}" \
     "{{ openshift_client_executable }}" \
     -n openshift-compliance \
@@ -64,6 +65,7 @@
   retries: 60
   delay: 5
   until: ready_replicas.stdout == "1"
+  changed_when: false
 
 - name: 6.6 Bind scanning type to profiles to initiate scanning (CIS-compliance)
   kubernetes.core.k8s:

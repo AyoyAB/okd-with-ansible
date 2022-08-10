@@ -4,12 +4,14 @@
   ansible.builtin.template:
     src: ignition.conf
     dest: /etc/nginx/sites-enabled/ignition.conf
+    mode: '0644'
   notify: nginx restart
 
 - name: Copy over generic ignition files
   ansible.builtin.copy:
     src: "{{ openshift_files_directory }}/{{ item }}.ign"
     dest: "{{ nginx_ignition_files_dir }}/{{ item }}.ign"
+    mode: '0644'
   with_items:
     - "bootstrap"
     - "master"
@@ -20,6 +22,7 @@
   ansible.builtin.copy:
     src: "{{ openshift_files_directory }}/{{ item }}.ign"
     dest: "{{ nginx_ignition_files_dir }}/{{ item }}.ign"
+    mode: '0644'
   loop: "{{ groups['bootstrap'] }}"
   notify: nginx restart
 
@@ -27,6 +30,7 @@
   ansible.builtin.copy:
     src: "{{ openshift_files_directory }}/{{ item }}.ign"
     dest: "{{ nginx_ignition_files_dir }}/{{ item }}.ign"
+    mode: '0644'
   loop: "{{ groups['masters'] }}"
   notify: nginx restart
 
@@ -34,6 +38,7 @@
   ansible.builtin.copy:
     src: "{{ openshift_files_directory }}/{{ item }}.ign"
     dest: "{{ nginx_ignition_files_dir }}/{{ item }}.ign"
+    mode: '0644'
   loop: "{{ groups['nodes'] }}"
   notify: nginx restart
 
@@ -41,4 +46,5 @@
   ansible.builtin.copy:
     src: "{{ openshift_files_directory }}/install.sh"
     dest: "{{ nginx_ignition_files_dir }}/install.sh"
+    mode: '0644'
   notify: nginx restart

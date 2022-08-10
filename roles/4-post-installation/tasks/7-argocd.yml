@@ -23,6 +23,7 @@
 
 - name: 7.2 Wait for operator to start
   ansible.builtin.shell: |
+    set -o pipefail && \
     KUBECONFIG="{{ openshift_files_kubeconfig }}" \
     "{{ openshift_client_executable }}" \
     -n openshift-operators \
@@ -32,6 +33,7 @@
   retries: 60
   delay: 5
   until: ready_replicas.stdout == "1"
+  changed_when: false
 
 - name: 7.3 Create or update namespace argocd
   kubernetes.core.k8s:

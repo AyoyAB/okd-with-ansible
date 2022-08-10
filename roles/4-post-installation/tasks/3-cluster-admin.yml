@@ -2,9 +2,11 @@
   ansible.builtin.file:
     state: directory
     path: ./tmp
+    mode: '0755'
 
 - name: 3. {{ item }} Check if cluster admin already exists
   ansible.builtin.shell: |
+    set -o pipefail && \
     KUBECONFIG="{{ openshift_files_kubeconfig }}" \
     "{{ openshift_client_executable }}" \
     get clusterrolebinding -o json \
@@ -17,6 +19,7 @@
   ansible.builtin.template:
     src: templates/3-cluster-admin.yaml
     dest: ./tmp/cluster-admin.yaml
+    mode: '0644'
   when: result.stdout == ""
 
 - name: 3. {{ item }} Add cluster admin

@@ -3,6 +3,7 @@
     cmd: "{{ openshift_install_executable }} version | head -1"
   delegate_to: localhost
   register: install_version
+  changed_when: false
 
 - name: 2. Publish install version as fact
   ansible.builtin.set_fact:
