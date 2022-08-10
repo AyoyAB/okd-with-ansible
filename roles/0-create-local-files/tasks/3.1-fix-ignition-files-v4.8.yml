@@ -10,7 +10,7 @@
 - name: "3.1 {{ item }} - Add the network delay configuration"
   ansible.builtin.shell: |
     cat "{{ openshift_files_directory }}/{{ item }}.ign" \
-    | jq '.storage.files += [ { "overwrite": true, "path": "/run/NetworkManager/conf.d/delay-{{ ifname }}.conf", "mode": 420, "user": { "name": "root" }, "contents": { "source": "data:text/plain;charset=utf-8;base64,{{ networkdelay | b64encode }}" } } ]' \
+    | jq '.storage.files += [ { "overwrite": true, "path": "/run/NetworkManager/conf.d/delay-{{ ifname }}.conf", "mode": 420, "user": { "name": "root" }, "contents": { "source": "data:text/plain;charset=utf-8;base64,{{ networkdelay | b64encode }}" } } ]' \  # noqa yaml[line-length]
     > "{{ openshift_files_directory }}/{{ item }}.json" \
     && mv "{{ openshift_files_directory }}/{{ item }}.json" "{{ openshift_files_directory }}/{{ item }}.ign"
 
@@ -24,7 +24,7 @@
 - name: "3.1 {{ item }} - Add the boot fix (https://github.com/coreos/fedora-coreos-tracker/issues/746)"
   ansible.builtin.shell: |
     cat "{{ openshift_files_directory }}/{{ item }}.ign" \
-    | jq '.storage.files += [ { "overwrite": true, "path": "/etc/systemd/system/ostree-remount.service.d/before-rfkill.conf", "mode": 420, "user": { "name": "root" }, "contents": { "source": "data:text/plain;charset=utf-8;base64,{{ before_rfkill | b64encode }}" } } ]' \
+    | jq '.storage.files += [ { "overwrite": true, "path": "/etc/systemd/system/ostree-remount.service.d/before-rfkill.conf", "mode": 420, "user": { "name": "root" }, "contents": { "source": "data:text/plain;charset=utf-8;base64,{{ before_rfkill | b64encode }}" } } ]' \  # noqa yaml[line-length]
     > "{{ openshift_files_directory }}/{{ item }}.json" \
     && mv "{{ openshift_files_directory }}/{{ item }}.json" "{{ openshift_files_directory }}/{{ item }}.ign"
 
@@ -38,6 +38,6 @@
 - name: "3.1 {{ item }} - Add the boot fix (https://github.com/coreos/fedora-coreos-tracker/issues/975)"
   ansible.builtin.shell: |
     cat "{{ openshift_files_directory }}/{{ item }}.ign" \
-    | jq '.storage.files += [ { "overwrite": true, "path": "/etc/systemd/system/systemd-backlight@.service.d/45-after-ostree-remount.conf", "mode": 420, "user": { "name": "root" }, "contents": { "source": "data:text/plain;charset=utf-8;base64,{{ after_ostree | b64encode }}" } } ]' \
+    | jq '.storage.files += [ { "overwrite": true, "path": "/etc/systemd/system/systemd-backlight@.service.d/45-after-ostree-remount.conf", "mode": 420, "user": { "name": "root" }, "contents": { "source": "data:text/plain;charset=utf-8;base64,{{ after_ostree | b64encode }}" } } ]' \  # noqa yaml[line-length]
     > "{{ openshift_files_directory }}/{{ item }}.json" \
     && mv "{{ openshift_files_directory }}/{{ item }}.json" "{{ openshift_files_directory }}/{{ item }}.ign"
