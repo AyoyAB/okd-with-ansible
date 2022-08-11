@@ -5,13 +5,16 @@
     mode: '0755'
 
 - name: 3. {{ item }} Check if cluster admin already exists
-  ansible.builtin.shell: |
-    set -o pipefail && \
-    KUBECONFIG="{{ openshift_files_kubeconfig }}" \
-    "{{ openshift_client_executable }}" \
-    get clusterrolebinding -o json \
-    | jq --raw-output \
-    '.items[] | select(.roleRef.name == "cluster-admin") | select(.subjects[].kind=="User") | select(.subjects[].name == "{{ item }}") | .metadata.name'
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail && \
+      KUBECONFIG="{{ openshift_files_kubeconfig }}" \
+      "{{ openshift_client_executable }}" \
+      get clusterrolebinding -o json \
+      | jq --raw-output \
+      '.items[] | select(.roleRef.name == "cluster-admin") | select(.subjects[].kind=="User") | select(.subjects[].name == "{{ item }}") | .metadata.name'
+    args:
+      executable: /bin/bash
   register: result
   changed_when: false
 

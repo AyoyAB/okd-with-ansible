@@ -22,13 +22,16 @@
               value: argocd
 
 - name: 7.2 Wait for operator to start
-  ansible.builtin.shell: |
-    set -o pipefail && \
-    KUBECONFIG="{{ openshift_files_kubeconfig }}" \
-    "{{ openshift_client_executable }}" \
-    -n openshift-operators \
-    get deploy argocd-operator-controller-manager -o json \
-    | jq '.status.readyReplicas'
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail && \
+      KUBECONFIG="{{ openshift_files_kubeconfig }}" \
+      "{{ openshift_client_executable }}" \
+      -n openshift-operators \
+      get deploy argocd-operator-controller-manager -o json \
+      | jq '.status.readyReplicas'
+    args:
+      executable: /bin/bash
   register: ready_replicas
   retries: 60
   delay: 5

@@ -112,12 +112,15 @@
   changed_when: true
 
 - name: 4.9 Fetch valid UID range to use for namespace
-  ansible.builtin.shell: |
-    set -o pipefail && \
-    KUBECONFIG="{{ openshift_files_kubeconfig }}" \
-    "{{ openshift_client_executable }}" \
-    get ns nfs-provisioner -o json \
-    | jq --raw-output '.metadata.annotations."openshift.io/sa.scc.uid-range"'
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail && \
+      KUBECONFIG="{{ openshift_files_kubeconfig }}" \
+      "{{ openshift_client_executable }}" \
+      get ns nfs-provisioner -o json \
+      | jq --raw-output '.metadata.annotations."openshift.io/sa.scc.uid-range"'
+    args:
+      executable: /bin/bash
   register: uidrange
   until: uidrange.stdout != "null"
   retries: 60
@@ -138,13 +141,16 @@
     template: 'templates/4-nfs-pod-provisioner.yaml'
 
 - name: 4.11 Wait for NFS provisioner to start
-  ansible.builtin.shell: |
-    set -o pipefail && \
-    KUBECONFIG="{{ openshift_files_kubeconfig }}" \
-    "{{ openshift_client_executable }}" \
-    -n nfs-provisioner \
-    get deployment nfs-pod-provisioner -o json \
-    | jq '.status.readyReplicas'
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail && \
+      KUBECONFIG="{{ openshift_files_kubeconfig }}" \
+      "{{ openshift_client_executable }}" \
+      -n nfs-provisioner \
+      get deployment nfs-pod-provisioner -o json \
+      | jq '.status.readyReplicas'
+    args:
+      executable: /bin/bash
   register: ready_replicas
   retries: 120
   delay: 5
