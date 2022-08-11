@@ -54,13 +54,16 @@
         sourceNamespace: openshift-marketplace
 
 - name: 6.5 Wait for operator to start
-  ansible.builtin.shell: |
-    set -o pipefail && \
-    KUBECONFIG="{{ openshift_files_kubeconfig }}" \
-    "{{ openshift_client_executable }}" \
-    -n openshift-compliance \
-    get deployment compliance-operator -o json \
-    | jq '.status.readyReplicas'
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail && \
+      KUBECONFIG="{{ openshift_files_kubeconfig }}" \
+      "{{ openshift_client_executable }}" \
+      -n openshift-compliance \
+      get deployment compliance-operator -o json \
+      | jq '.status.readyReplicas'
+    args:
+      executable: /bin/bash
   register: ready_replicas
   retries: 60
   delay: 5

@@ -1,18 +1,24 @@
 # https://docs.okd.io/latest/nodes/nodes/nodes-nodes-resources-configuring.html
 
 - name: 5 Get cluster version
-  ansible.builtin.shell: |
-    set -o pipefail && \
-    KUBECONFIG="{{ openshift_files_kubeconfig }}" \
-    "{{ openshift_client_executable }}" version -o json | jq --raw-output '.openshiftVersion'
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail && \
+      KUBECONFIG="{{ openshift_files_kubeconfig }}" \
+      "{{ openshift_client_executable }}" version -o json | jq --raw-output '.openshiftVersion'
+    args:
+      executable: /bin/bash
   register: okd_version
   changed_when: false
 
 - name: Wait for existing machine config pools to stabilize
-  ansible.builtin.shell: |
-    set -o pipefail && \
-    KUBECONFIG="{{ openshift_files_kubeconfig }}" \
-    "{{ openshift_client_executable }}" get mcp -o json | jq -r '.items[] | select(.status.machineCount != .status.readyMachineCount)'
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail && \
+      KUBECONFIG="{{ openshift_files_kubeconfig }}" \
+      "{{ openshift_client_executable }}" get mcp -o json | jq -r '.items[] | select(.status.machineCount != .status.readyMachineCount)'
+    args:
+      executable: /bin/bash
   register: mcp_status
   until: mcp_status.stdout == ""
   retries: 5000
