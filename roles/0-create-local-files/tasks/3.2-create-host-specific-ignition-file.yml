@@ -10,9 +10,19 @@
 
 - name: "3.2 {{ item }} - Set /etc/hostname in ignition file"
   when: set_etc_hostname_in_ignition_file
-  ansible.builtin.shell: |
-    jq '.storage.files += [ { "overwrite": true, "path": "/etc/hostname", "mode": 420, "user": { "name": "root" }, "contents": { "source": "data:text/plain;charset=utf-8;base64,{{ item | b64encode }}" } } ]' \  # noqa yaml[line-length]
-    {{ ign_file }} > {{ ign_file }}.tmp \
+  ansible.builtin.shell: >-
+    jq '.storage.files += [{
+      "overwrite": true,
+      "path": "/etc/hostname",
+      "mode": 420,
+      "user": {
+        "name": "root"
+      },
+      "contents": {
+        "source": "data:text/plain;charset=utf-8;base64,{{ item | b64encode }}"
+      }
+    }]'
+    {{ ign_file }} > {{ ign_file }}.tmp
     && mv {{ ign_file }}.tmp {{ ign_file }}
   register: host_result
   failed_when: host_result.stderr != ""
