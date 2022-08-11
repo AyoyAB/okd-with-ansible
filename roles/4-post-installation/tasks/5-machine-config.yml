@@ -6,8 +6,7 @@
       set -o pipefail && \
       KUBECONFIG="{{ openshift_files_kubeconfig }}" \
       "{{ openshift_client_executable }}" version -o json | jq --raw-output '.openshiftVersion'
-    args:
-      executable: /bin/bash
+    executable: /bin/bash
   register: okd_version
   changed_when: false
 
@@ -17,8 +16,7 @@
       set -o pipefail && \
       KUBECONFIG="{{ openshift_files_kubeconfig }}" \
       "{{ openshift_client_executable }}" get mcp -o json | jq -r '.items[] | select(.status.machineCount != .status.readyMachineCount)'
-    args:
-      executable: /bin/bash
+    executable: /bin/bash
   register: mcp_status
   until: mcp_status.stdout == ""
   retries: 5000

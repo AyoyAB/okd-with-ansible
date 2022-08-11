@@ -13,8 +13,7 @@
       get clusterrolebinding -o json \
       | jq --raw-output \
       '.items[] | select(.roleRef.name == "cluster-admin") | select(.subjects[].kind=="User") | select(.subjects[].name == "{{ item }}") | .metadata.name'
-    args:
-      executable: /bin/bash
+    executable: /bin/bash
   register: result
   changed_when: false
 

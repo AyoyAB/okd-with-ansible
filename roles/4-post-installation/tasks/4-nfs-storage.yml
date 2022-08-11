@@ -119,8 +119,7 @@
       "{{ openshift_client_executable }}" \
       get ns nfs-provisioner -o json \
       | jq --raw-output '.metadata.annotations."openshift.io/sa.scc.uid-range"'
-    args:
-      executable: /bin/bash
+    executable: /bin/bash
   register: uidrange
   until: uidrange.stdout != "null"
   retries: 60
@@ -149,8 +148,7 @@
       -n nfs-provisioner \
       get deployment nfs-pod-provisioner -o json \
       | jq '.status.readyReplicas'
-    args:
-      executable: /bin/bash
+    executable: /bin/bash
   register: ready_replicas
   retries: 120
   delay: 5
