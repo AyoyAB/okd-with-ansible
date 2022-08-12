@@ -33,6 +33,16 @@
   ansible.builtin.fail:
     msg: "Aborting. System or architecture is not supported at the moment."
 
+  # https://docs.openshift.com/container-platform/4.10/installing/installing_bare_metal_ipi/ipi-install-installation-workflow.html#configuring-the-install-config-file_ipi-install-installation-workflow
+- name: Fail if only one worker and not use_control_plane_nodes_for_compute
+  ansible.builtin.fail:
+    msg: |
+      Running with only one worker is not a supported configuration of OpenShift/OKD.
+      Set use_control_plane_nodes_for_compute to true to circumvent.
+  when:
+    - not use_control_plane_nodes_for_compute
+    - groups['nodes'] | length == 1
+
 - ansible.builtin.include_tasks: "1-download-installer.yml"
 - ansible.builtin.include_tasks: "2-download-tools.yml"
 - ansible.builtin.include_tasks: "3-create-openshift-config.yml"
