@@ -1,0 +1,30 @@
+# Docs https://docs.openshift.com/container-platform/4.11/networking/enable-cluster-wide-proxy.html
+- name: 1.1 Create or update proxy configuration
+  kubernetes.core.k8s:
+    kubeconfig: "{{ openshift_files_kubeconfig }}"
+    resource_definition:
+      apiVersion: config.openshift.io/v1
+      kind: Proxy
+      metadata:
+        name: cluster
+      spec:
+        httpProxy: "{{ cluster_proxy_http_proxy }}"
+        httpsProxy: "{{ cluster_proxy_https_proxy }}"
+        noProxy: "{{ cluster_proxy_no_proxy }}"
+        readinessEndpoints: "{{ cluster_proxy_readiness_endpoints }}"
+        trustedCA:
+          name: ""
+  when: use_cluster_proxy
+
+- name: 1.2 Remove proxy configuration
+  kubernetes.core.k8s:
+    kubeconfig: "{{ openshift_files_kubeconfig }}"
+    resource_definition:
+      apiVersion: config.openshift.io/v1
+      kind: Proxy
+      metadata:
+        name: cluster
+      spec:
+        trustedCA:
+          name: ""
+  when: not use_cluster_proxy

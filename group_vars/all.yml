@@ -20,6 +20,18 @@ ssh_public_key_file: ~/.ssh/id_ansible.pub
 # custom_container_registry_ca_file: ./example.crt
 # custom_container_registry_hostname_port: registry.example.com:5000
 
+#
+# Post Installation Configuration
+#
+
+# use_cluster_proxy: true
+# cluster_proxy_http_proxy: http://proxy.example.com:6080
+# cluster_proxy_https_proxy: http://proxy.example.com:6080
+# cluster_proxy_no_proxy: internal.example.com,192.168.0.0/24
+# cluster_proxy_readiness_endpoints:
+#   - http://www.google.com
+#   - https://www.google.com
+
 nfs_server: 192.168.60.20
 
 # Ansible configuration

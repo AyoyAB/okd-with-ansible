@@ -12,6 +12,7 @@ jobs:
 
       - name: Run ansible-lint
         # https://github.com/ansible-community/ansible-lint-action
+        # List of lint rules: https://ansible-lint.readthedocs.io/en/latest/
         uses: ansible-community/ansible-lint-action@v6.2.1
         with:
           path: "./roles"
