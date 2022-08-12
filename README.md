@@ -77,8 +77,8 @@ ansible-playbook -i hosts -v deploy-okd.yml --extra-vars "compliance_operator=tr
    - thanos-querier-openshift-monitoring.apps.okd4.example.com
 
 4. Create a new image for the rasperry pi with enabled ssh and boot it up.
-5. Create a bootable USB from the correct version of Fedora coreos.
-   (At the time of writing, the current working release is [34.20210626.3.1](https://builds.coreos.fedoraproject.org/prod/streams/stable/builds/34.20210626.3.1/x86_64/fedora-coreos-34.20210626.3.1-live.x86_64.iso)
+5. Create a bootable USB from the correct version of Fedora CoreOS.
+   (At the time of writing, the current working release is [35.20220327.3.0](https://builds.coreos.fedoraproject.org/prod/streams/stable/builds/35.20220327.3.0/x86_64/fedora-coreos-35.20220327.3.0-live.x86_64.iso)
    ```shell
    ./openshift-install/openshift-install coreos print-stream-json | jq -r '.architectures.x86_64.artifacts.metal.formats.iso.disk.location'
    ```
@@ -97,7 +97,7 @@ ansible-playbook -i hosts -v deploy-okd.yml --extra-vars "compliance_operator=tr
 ```
 
 Once the playbook tell you to, boot the masters on
-Fedora coreos USB and start the installation process. 
+Fedora CoreOS USB and start the installation process. 
 The NUCs are a bit slow on the network side so a number of kernel arguments are needed.
 ```shell
 $ curl --output install.sh http://infra1.okd4.example.com:8080/install.sh
@@ -114,7 +114,7 @@ Verify that the master is trying to pull the secondary ignition from `https://ap
 
 Once all masters are waiting for the secondary ignition, continue the playbook
 which tell you to boot the first worker machine on
-Fedora coreos USB and start the installation for the bootstrap process:
+Fedora CoreOS USB and start the installation for the bootstrap process:
 ```shell
 $ curl --output install.sh http://infra1.okd4.example.com:8080/install.sh
 $ chmod 755 ./install.sh
