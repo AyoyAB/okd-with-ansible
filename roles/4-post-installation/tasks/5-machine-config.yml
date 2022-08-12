@@ -48,5 +48,5 @@
 - name: 5.4 Wait for machine config to update
   ansible.builtin.shell: |
     KUBECONFIG="{{ openshift_files_kubeconfig }}" \
-    "{{ openshift_client_executable }}" wait mcp/master --for condition=updated --timeout=600s
+    "{{ openshift_client_executable }}" wait mcp/master --for condition=updated --timeout=1800s
   changed_when: false
