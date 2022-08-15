@@ -105,10 +105,7 @@ $ chmod 755 ./install.sh
 $ ./install.sh master[1-3]
 ```
 
-Once the installation has finished, remove the USB and reboot.
-```shell
-$ sudo reboot now
-```
+Once the installation has finished, remove the bootable media and reboot.
 
 Verify that the master is trying to pull the secondary ignition from `https://api-int.okd4.example.com:22623`.
 
@@ -121,10 +118,7 @@ $ chmod 755 ./install.sh
 $ ./install.sh bootstrap
 ```
 
-Once the installation has finished, remove the USB and reboot.
-```shell
-$ sudo reboot now
-```
+Once the installation has finished, remove the bootable media and reboot.
 
 After some time, you will be able to login via ssh to the bootstrap machine
 and follow the installation:
