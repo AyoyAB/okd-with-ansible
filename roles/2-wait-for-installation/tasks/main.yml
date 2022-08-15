@@ -14,20 +14,51 @@
   delegate_to: localhost
   run_once: true
 
-- name: Pause for starting coreos installation on masters
+- name: Pause for downloading CoreOS iso
   ansible.builtin.pause:
     prompt: |
-      Download and create a bootable USB for Fedora CoreOS:
+      --------------------------------------------------------------------
+      - Download (and create a bootable USB if needed) for Fedora CoreOS -
+      --------------------------------------------------------------------
+
       {{ coreos_iso_url }}
-      Manually run sudo coreos-installer on masters according to README.md and reboot.
-      Verify they are trying to retrieve the second stage ignition file.
-      Press return to continue
+
+      ----------------------------
+      - Press return to continue -
+      ----------------------------
+
+- name: Pause for starting CoreOS installation on masters
+  ansible.builtin.pause:
+    prompt: |
+      -----------------------------------
+      - Do the following on all masters -
+      -----------------------------------
+      1. Boot CoreOS
+      2. Run the following command to install CoreOS:
+
+      bash -c "$(curl -fsSL http://{{ groups['infras'][0] }}:8080/install.sh)"
+
+      3. Reboot and verify they are trying to retrieve the second stage ignition file.
+
+      ----------------------------
+      - Press return to continue -
+      ----------------------------
 
 - name: Pause for starting CoreOS installation on bootstrap
   ansible.builtin.pause:
     prompt: |
-      Manually run sudo coreos-installer on bootstrap according to README.md and reboot.
-      Press return to continue
+      ---------------------------------
+      - Do the following on bootstrap -
+      ---------------------------------
+
+      1. Boot CoreOS
+      2. Run the following command:
+
+      bash -c "$(curl -fsSL http://{{ groups['infras'][0] }}:8080/install.sh)"
+
+      ----------------------------
+      - Press return to continue -
+      ----------------------------
 
 - name: Wait for API server to start on all masters
   ansible.builtin.uri:
