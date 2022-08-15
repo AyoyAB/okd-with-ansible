@@ -2,7 +2,11 @@
   any_errors_fatal: true
   gather_facts: false
   tasks:
-    - name: make sure module community.kubernetes is installed
+    - name: Make sure module community.kubernetes is installed and up to date
       ansible.builtin.shell:
         cmd: ansible-galaxy collection install community.kubernetes
+      delegate_to: localhost
+    - name: Make sure module community.general is installed and up to date
+      ansible.builtin.shell:
+        cmd: ansible-galaxy collection install community.general
       delegate_to: localhost

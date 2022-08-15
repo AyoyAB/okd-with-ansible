@@ -1,0 +1,12 @@
+---
+
+- name: Configure UFW to allow access access to tcp ports 80,443,6443,22623
+  community.general.ufw:
+    rule: allow
+    port: "'{{ item }}'"
+    proto: tcp
+  loop:
+    - 80
+    - 443
+    - 6443
+    - 22623

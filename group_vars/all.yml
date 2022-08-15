@@ -21,6 +21,13 @@ ssh_public_key_file: ~/.ssh/id_ansible.pub
 # custom_container_registry_hostname_port: registry.example.com:5000
 
 #
+# Infra Configuration
+#
+
+# Configure UFW port openings for nginx
+# configure_ufw: true
+
+#
 # Post Installation Configuration
 #
 
