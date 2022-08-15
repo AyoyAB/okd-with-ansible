@@ -30,7 +30,7 @@ sshKey: "{{ lookup('file', ssh_public_key_file) }}"
 additionalTrustBundle: |
   {{ lookup('file', disconnected_registry_trust_bundle_file) | regex_replace('\n', '\n  ') }}
 imageContentSources:
-  - source: quay.io.openshift
+  - source: quay.io/openshift
     mirrors:
       - {{ disconnected_registry_url }}
 {% endif %}
