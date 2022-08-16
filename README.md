@@ -96,9 +96,15 @@ This is how to run the playbook:
 ansible-playbook -i hosts -v deploy-okd.yml --extra-vars "compliance_operator=true argocd=true"
 ```
 
-Once the playbook tell you to, boot the masters on
-Fedora CoreOS USB and start the installation process. 
-The NUCs are a bit slow on the network side so a number of kernel arguments are needed.
+Once the playbook tell you to, boot the masters on Fedora CoreOS USB.
+
+To switch keyboard mapping on CoreOS, do the following:
+
+```shell
+$ sudo localectl set-keymap se
+```
+
+Then start the installation process.
 
 ```shell
 # Use hostname from DHCP or DNS
