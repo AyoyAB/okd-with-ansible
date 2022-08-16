@@ -99,32 +99,36 @@ ansible-playbook -i hosts -v deploy-okd.yml --extra-vars "compliance_operator=tr
 Once the playbook tell you to, boot the masters on
 Fedora CoreOS USB and start the installation process. 
 The NUCs are a bit slow on the network side so a number of kernel arguments are needed.
+
 ```shell
-$ curl --output install.sh http://infra1.okd4.example.com:8080/install.sh
-$ chmod 755 ./install.sh
-$ ./install.sh master[1-3]
+# Use hostname from DHCP or DNS
+$ bash -c "$(curl -fsSL http://infra1.okd4.example.com:8080/install.sh)"
 ```
 
-Once the installation has finished, remove the USB and reboot.
 ```shell
-$ sudo reboot now
+# Manually set hostname
+$ bash -c "$(curl -fsSL http://infra1.okd4.example.com:8080/install.sh)" -s master[1-3]
 ```
+
+Once the installation has finished, remove the bootable media and reboot.
 
 Verify that the master is trying to pull the secondary ignition from `https://api-int.okd4.example.com:22623`.
 
 Once all masters are waiting for the secondary ignition, continue the playbook
 which tell you to boot the first worker machine on
 Fedora CoreOS USB and start the installation for the bootstrap process:
+
 ```shell
-$ curl --output install.sh http://infra1.okd4.example.com:8080/install.sh
-$ chmod 755 ./install.sh
-$ ./install.sh bootstrap
+# Use hostname from DHCP or DNS
+$ bash -c "$(curl -fsSL http://infra1.okd4.example.com:8080/install.sh)"
 ```
 
-Once the installation has finished, remove the USB and reboot.
 ```shell
-$ sudo reboot now
+# Manually set hostname
+$ bash -c "$(curl -fsSL http://infra1.okd4.example.com:8080/install.sh)" -s bootstrap
 ```
+
+Once the installation has finished, remove the bootable media and reboot.
 
 After some time, you will be able to login via ssh to the bootstrap machine
 and follow the installation:
