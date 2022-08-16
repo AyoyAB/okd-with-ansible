@@ -15,10 +15,6 @@
 
 - ansible.builtin.include_tasks: "4-nfs-storage.yml"
 
-- name: Pause for 20 minutes to let cluster stabilize
-  ansible.builtin.pause:
-    minutes: 20
-
 - ansible.builtin.include_tasks: "5-machine-config.yml"
 
 - ansible.builtin.include_tasks: "6-compliance-operator.yml"
