@@ -24,7 +24,7 @@ networking:
     - 172.30.0.0/16
 platform:
   none: {}
-pullSecret: "{{ lookup('file', './pull-secret') | regex_replace('\"', '\\\"') }}"
+pullSecret: "{{ lookup('file', '{{ openshift_files_directory }}/pull-secret') | regex_replace('\"', '\\\"') }}"
 sshKey: "{{ lookup('file', ssh_public_key_file) }}"
 {% if use_disconnected_registry == true %}
 additionalTrustBundle: |

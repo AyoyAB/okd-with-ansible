@@ -1,13 +1,3 @@
-- name: Check status of pull secret
-  ansible.builtin.stat:
-    path: ./pull-secret
-  register: secret
-
-- name: Verify pull secret exists
-  when: not secret.stat.exists
-  ansible.builtin.fail:
-    msg: there has to be a secret at ./pull-secret. Download secret from https://console.redhat.com/openshift/install/pull-secret to ./pull-secret
-
 - name: Gathering facts
   ansible.builtin.setup:
 
