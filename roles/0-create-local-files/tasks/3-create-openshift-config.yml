@@ -9,6 +9,9 @@
     path: "{{ openshift_files_directory }}"
     mode: '0755'
 
+- name: 3. Create pull secret
+  ansible.builtin.include_tasks: "3.0-pull-secret.yml"
+
 - name: 3. Create installation config
   ansible.builtin.template:
     src: templates/install-config.yaml
