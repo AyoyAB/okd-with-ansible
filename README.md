@@ -25,11 +25,12 @@ ansible variables. These are defined on the command line:
 ansible-playbook -i hosts -v deploy-okd.yml --extra-vars "compliance_operator=true argocd=true"
 ```
 
-| variable            | description                                                                                                                     |
-|---------------------|---------------------------------------------------------------------------------------------------------------------------------|
-| compliance_operator | Whether to install the [OKD compliance operator](https://docs.okd.io/latest/security/compliance_operator/compliance-scans.html) |
-| argocd              | whether to install the argocd operator                                                                                          |                                                                                       
-
+| variable                            | description                                                                                                                     |
+|-------------------------------------|---------------------------------------------------------------------------------------------------------------------------------|
+| argocd                              | whether to install the argocd operator                                                                                          |
+| compliance_operator                 | Whether to install the [OKD compliance operator](https://docs.okd.io/latest/security/compliance_operator/compliance-scans.html) |
+| use_control_plane_nodes_for_compute | Whether to allow masters to be used for regular pods                                                                            |
+| set_etc_hostname_in_ignition_file   | Whether to set the hostname in /etc/hostname                                                                                    |
 
 # Preparation
 1. Pull your [RedHat pull secret](https://console.redhat.com/openshift/install/metal/user-provisioned) and place in file `pull-secret`.
