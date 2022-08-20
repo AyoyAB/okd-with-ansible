@@ -1,26 +1,15 @@
 # https://docs.okd.io/latest/nodes/nodes/nodes-nodes-resources-configuring.html
 
-- name: 5 Get cluster version
-  ansible.builtin.shell:
+- name: 5 Wait for existing machine config pools to stabilize
+  ansible.builtin.command:
     cmd: |
-      set -o pipefail && \
-      KUBECONFIG="{{ openshift_files_kubeconfig }}" \
-      "{{ openshift_client_executable }}" version -o json | jq --raw-output '.openshiftVersion'
-    executable: /bin/bash
-  register: okd_version
-  changed_when: false
-
-- name: Wait for existing machine config pools to stabilize
-  ansible.builtin.shell:
-    cmd: |
-      set -o pipefail && \
-      KUBECONFIG="{{ openshift_files_kubeconfig }}" \
-      "{{ openshift_client_executable }}" get mcp -o json | jq -r '.items[] | select(.status.machineCount != .status.readyMachineCount)'
-    executable: /bin/bash
+      "{{ openshift_client_executable }}"
+      --kubeconfig "{{ openshift_files_kubeconfig }}"
+      wait mcp/master --for condition=updated --timeout=1800s
   register: mcp_status
-  until: mcp_status.stdout == ""
-  retries: 5000
-  delay: 5 # pause for # sec b/w each call
+  until: mcp_status.rc == 0
+  retries: 6000
+  delay: 1 # pause for # sec b/w each call
   changed_when: false
 
 - name: 5.1 Pause machine configs
@@ -46,7 +35,13 @@
   changed_when: true
 
 - name: 5.4 Wait for machine config to update
-  ansible.builtin.shell: |
-    KUBECONFIG="{{ openshift_files_kubeconfig }}" \
-    "{{ openshift_client_executable }}" wait mcp/master --for condition=updated --timeout=1800s
+  ansible.builtin.command:
+    cmd: |
+      "{{ openshift_client_executable }}"
+      --kubeconfig "{{ openshift_files_kubeconfig }}"
+      wait mcp/master --for condition=updated --timeout=1800s
+  register: mcp_status
+  until: mcp_status.rc == 0
+  retries: 6000
+  delay: 1 # pause for # sec b/w each call
   changed_when: false
