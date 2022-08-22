@@ -2,6 +2,9 @@
   any_errors_fatal: true
   gather_facts: false
   tasks:
+    - name: Make sure Kubernetes Python Library is installed
+      ansible.builtin.shell:
+        cmd: pip3 install kubernetes
     - name: Make sure module kubernetes.core is installed and up to date
       ansible.builtin.shell:
         cmd: ansible-galaxy collection install kubernetes.core
