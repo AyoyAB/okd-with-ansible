@@ -32,5 +32,11 @@ additionalTrustBundle: |
 imageContentSources:
   - source: quay.io/openshift
     mirrors:
-      - {{ disconnected_registry_url }}
+      - {{ disconnected_registry_qyay_io }}
+  - source: registry.access.redhat.com/redhat
+    mirrors:
+      - {{ disconnected_registry_registry_access_redhat_com }}
+  - source: registry.redhat.io/redhat
+    mirrors:
+      - {{ disconnected_registry_registry_redhat_io }}
 {% endif %}
