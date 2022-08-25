@@ -1,5 +1,3 @@
-- ansible.builtin.include_tasks: "0-verify-workers.yml"
-
 # Pathing update stream is no longer needed in 4.9+.
 # Keeping this here if it's needed later.
 # - ansible.builtin.include_tasks: "1-patch-update-stream.yml"

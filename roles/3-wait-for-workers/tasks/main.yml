@@ -1,3 +1,5 @@
+---
+
 - name: Verify there is at least one worker
   ansible.builtin.shell:
     cmd: |
@@ -10,6 +12,7 @@
       --kubeconfig "{{ openshift_files_kubeconfig }}" \
       get nodes -o json | jq '.items | length'
     executable: /bin/bash
+  delegate_to: localhost
   when:
     - not use_control_plane_nodes_for_compute
     - groups['workers'] | length > 0

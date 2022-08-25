@@ -1,7 +1,7 @@
 galaxy_info:
-  role_name: 2-wait-for-installation
+  role_name: 3-wait-for-workers
   author: John Allberg
-  description: Setup control plane nodes and wait for OKD installation.
+  description: Setup worker nodes.
   company: Ayoy AB
 
   # If the issue tracker for your role is not on github, uncomment the
