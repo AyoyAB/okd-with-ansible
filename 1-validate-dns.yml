@@ -1,0 +1,5 @@
+- hosts: localhost
+  any_errors_fatal: true
+  gather_facts: false
+  roles:
+    - role: 1-validate-dns
