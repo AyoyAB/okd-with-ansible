@@ -2,7 +2,7 @@
 infras
 bootstrap
 masters
-nodes
+workers
 
 [infras]
 infra1.okd4.example.com ansible_user=pi ansible_ssh_pass=raspberry
@@ -19,6 +19,6 @@ master1.okd4.example.com ansible_user=core
 master2.okd4.example.com ansible_user=core
 master3.okd4.example.com ansible_user=core
 
-# The first node is also the bootstrap machine
-[nodes]
+# The first worker is also the bootstrap machine
+[workers]
 worker1.okd4.example.com ansible_user=core

@@ -39,7 +39,7 @@
     src: "{{ openshift_files_directory }}/{{ item }}.ign"
     dest: "{{ nginx_ignition_files_dir }}/{{ item }}.ign"
     mode: '0644'
-  loop: "{{ groups['nodes'] }}"
+  loop: "{{ groups['workers'] }}"
   notify: nginx restart
 
 - name: Copy install.sh
