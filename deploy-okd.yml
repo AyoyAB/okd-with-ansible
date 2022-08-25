@@ -26,6 +26,10 @@
   vars:
     hosts: all
 
+- ansible.builtin.import_playbook: 3-wait-for-workers.yml
+  vars:
+    hosts: all
+
 - ansible.builtin.import_playbook: 4-post-installation.yml
   vars:
     hosts: all
