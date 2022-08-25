@@ -1,22 +1,6 @@
 ---
 
-- name: Verify there is at least one worker
-  ansible.builtin.shell:
-    cmd: |
-      set -o pipefail && \
-      "{{ openshift_client_executable }}" \
-      --kubeconfig "{{ openshift_files_kubeconfig }}" \
-      get nodes -l node-role.kubernetes.io/master -o json | jq '.items | length' \
-      && \
-      "{{ openshift_client_executable }}" \
-      --kubeconfig "{{ openshift_files_kubeconfig }}" \
-      get nodes -o json | jq '.items | length'
-    executable: /bin/bash
-  delegate_to: localhost
+- name: Enroll workers
+  ansible.builtin.include_tasks: "enroll-workers.yml"
   when:
     - not use_control_plane_nodes_for_compute
-    - groups['workers'] | length > 0
-  register: check_for_workers
-  until: check_for_workers.stdout_lines[0] != check_for_workers.stdout_lines[1]
-  retries: 5000
-  delay: 30

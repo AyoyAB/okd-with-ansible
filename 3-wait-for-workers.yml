@@ -1,4 +1,4 @@
-- hosts: all
+- hosts: workers
   any_errors_fatal: true
   gather_facts: false
   roles:
