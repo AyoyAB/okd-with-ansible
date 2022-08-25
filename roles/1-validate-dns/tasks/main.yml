@@ -2,7 +2,7 @@
 
 - name: Validate node DNS
   ansible.builtin.include_tasks: "validate-dns.yml"
-  loop: "{{ groups['masters'] + groups['nodes'] }}"
+  loop: "{{ groups['masters'] + groups['workers'] }}"
 
 - name: Validate Load Balancer DNS
   ansible.builtin.include_tasks: "validate-dns.yml"

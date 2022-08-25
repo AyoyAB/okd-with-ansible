@@ -60,7 +60,7 @@
 
 - name: 3. Workers - Create host specific ignition files
   ansible.builtin.include_tasks: "3.2-create-host-specific-ignition-file.yml"
-  loop: "{{ groups['nodes'] }}"
+  loop: "{{ groups['workers'] }}"
   vars:
     template: worker.ign
 

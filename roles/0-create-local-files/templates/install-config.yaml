@@ -7,7 +7,7 @@ compute:
 {% if use_control_plane_nodes_for_compute %}
     replicas: 0
 {% else %}
-    replicas: {{ groups['nodes'] | length }}
+    replicas: {{ groups['workers'] | length }}
 {% endif %}
 controlPlane:
   hyperthreading: Enabled

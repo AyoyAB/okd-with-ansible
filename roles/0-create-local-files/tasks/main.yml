@@ -31,7 +31,7 @@
       Set use_control_plane_nodes_for_compute to true to circumvent.
   when:
     - not use_control_plane_nodes_for_compute
-    - groups['nodes'] | length == 1
+    - groups['workers'] | length == 1
 
 - ansible.builtin.include_tasks: "1-download-installer.yml"
 - ansible.builtin.include_tasks: "2-download-tools.yml"
