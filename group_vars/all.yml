@@ -49,6 +49,8 @@ ssh_public_key_file: ~/.ssh/id_ansible.pub
 
 # nfs_server: 192.168.60.20
 
+# compliance_operator: true
+
 # Ansible configuration
 ansible_ssh_private_key_file: ~/.ssh/id_ansible
 ansible_python_interpreter: auto
