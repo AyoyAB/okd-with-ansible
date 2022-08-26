@@ -47,7 +47,7 @@ ssh_public_key_file: ~/.ssh/id_ansible.pub
 #   - example_user_1
 #   - example_user_2
 
-nfs_server: 192.168.60.20
+# nfs_server: 192.168.60.20
 
 # Ansible configuration
 ansible_ssh_private_key_file: ~/.ssh/id_ansible
