@@ -52,6 +52,8 @@ ssh_public_key_file: ~/.ssh/id_ansible.pub
 # compliance_operator: true
 
 # argocd: true
+# argocd_repository: https://github.com/smuda/home-cluster-argo.git
+# argocd_repository_revision: main
 
 # Ansible configuration
 ansible_ssh_private_key_file: ~/.ssh/id_ansible
