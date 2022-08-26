@@ -51,6 +51,8 @@ ssh_public_key_file: ~/.ssh/id_ansible.pub
 
 # compliance_operator: true
 
+# argocd: true
+
 # Ansible configuration
 ansible_ssh_private_key_file: ~/.ssh/id_ansible
 ansible_python_interpreter: auto
