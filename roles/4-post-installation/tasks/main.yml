@@ -7,11 +7,11 @@
 - ansible.builtin.include_tasks: "2.0-oauth.yml"
 
 - ansible.builtin.include_tasks: "3-cluster-admin.yml"
-  with_items:
-    - smuda
-    - OscarAyoy
+  loop: "{{ cluster_admins }}"
+  when: cluster_admins is defined
 
 - ansible.builtin.include_tasks: "4-nfs-storage.yml"
+  when: nfs_server is defined
 
 - ansible.builtin.include_tasks: "5-machine-config.yml"
 

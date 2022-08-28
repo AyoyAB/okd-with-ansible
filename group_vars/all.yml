@@ -43,7 +43,17 @@ ssh_public_key_file: ~/.ssh/id_ansible.pub
 #   - http://www.google.com
 #   - https://www.google.com
 
-nfs_server: 192.168.60.20
+# cluster_admins:
+#   - example_user_1
+#   - example_user_2
+
+# nfs_server: 192.168.60.20
+
+# compliance_operator: true
+
+# argocd: true
+# argocd_repository: https://github.com/smuda/home-cluster-argo.git
+# argocd_repository_revision: main
 
 # Ansible configuration
 ansible_ssh_private_key_file: ~/.ssh/id_ansible

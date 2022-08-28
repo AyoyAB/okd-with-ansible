@@ -81,7 +81,6 @@
       metadata:
         name: argo-apps
 
-
 - name: 7.6 Initiate applications from github
   kubernetes.core.k8s:
     kubeconfig: "{{ openshift_files_kubeconfig }}"
@@ -95,8 +94,7 @@
           argocd.argoproj.io/secret-type: repository
       stringData:
         type: git
-        url: https://github.com/smuda/home-cluster-argo.git
-
+        url: "{{ argocd_repository }}"
 
 - name: 7.7 Initiate applications from github
   kubernetes.core.k8s:
@@ -121,8 +119,8 @@
             valueFiles:
               - values-okd.yaml
           path: start/
-          repoURL: https://github.com/smuda/home-cluster-argo.git
-          targetRevision: main
+          repoURL: "{{ argocd_repository }}"
+          targetRevision: "{{ argocd_repository_revision }}"
         syncPolicy:
           syncOptions:
             - CreateNamespace=true
