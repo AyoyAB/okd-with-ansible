@@ -10,7 +10,7 @@
   register: ghconfigfile
   changed_when: false
 
-- name: save the Json data to a Variable as a Fact
+- name: Save the Json data to a Variable as a Fact
   ansible.builtin.set_fact:
     ghconfig: "{{ ghconfigfile.stdout | from_json }}"
 
