@@ -6,3 +6,4 @@ pull-secret
 openshift-client/
 openshift-files/
 openshift-install/
+sealed-secrets-secret.yml
