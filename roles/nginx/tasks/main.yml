@@ -19,13 +19,13 @@
     src: nginx.conf
     dest: /etc/nginx/nginx.conf
     mode: '0644'
-  notify: nginx restart
+  notify: Nginx restart
 
 - name: Delete default site
   ansible.builtin.file:
     state: absent
     path: /etc/nginx/sites-enabled/default
-  notify: nginx restart
+  notify: Nginx restart
 
 - name: Create configuration directories
   ansible.builtin.file:
@@ -35,4 +35,4 @@
   with_items:
     - /etc/nginx/sites-enabled
     - /etc/nginx/tcpconf.d
-  notify: nginx restart
+  notify: Nginx restart

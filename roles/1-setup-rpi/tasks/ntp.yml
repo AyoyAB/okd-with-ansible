@@ -1,4 +1,4 @@
-- name: set timezone to Central Europe
+- name: Set timezone to Central Europe
   timezone:
     name: Europe/Stockholm
 
