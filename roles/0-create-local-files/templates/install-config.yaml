@@ -30,13 +30,10 @@ sshKey: "{{ lookup('file', ssh_public_key_file) }}"
 additionalTrustBundle: |
   {{ lookup('file', disconnected_registry_trust_bundle_file) | regex_replace('\n', '\n  ') }}
 imageContentSources:
-  - source: quay.io/openshift
+  - source: quay.io/openshift/okd
     mirrors:
-      - {{ disconnected_registry_qyay_io }}
-  - source: registry.access.redhat.com/redhat
+      - {{ disconnected_registry_quay_io_openshift_okd }}
+  - source: quay.io/openshift/okd-content
     mirrors:
-      - {{ disconnected_registry_registry_access_redhat_com }}
-  - source: registry.redhat.io/redhat
-    mirrors:
-      - {{ disconnected_registry_registry_redhat_io }}
+      - {{ disconnected_registry_quay_io_openshift_okd_content }}
 {% endif %}
