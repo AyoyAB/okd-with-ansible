@@ -118,6 +118,9 @@
             releaseName: argo-apps
             valueFiles:
               - values-okd.yaml
+            parameters:
+              - name: argo.target_revision
+                value: "{{ argocd_repository_revision }}"
           path: start/
           repoURL: "{{ argocd_repository }}"
           targetRevision: "{{ argocd_repository_revision }}"
