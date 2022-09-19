@@ -26,7 +26,7 @@
   vars:
     hosts: all
 
-- ansible.builtin.import_playbook: 3-wait-for-workers.yml
+- ansible.builtin.import_playbook: wait-for-workers.yml
   vars:
     hosts: all
 
