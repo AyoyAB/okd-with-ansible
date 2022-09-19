@@ -10,7 +10,7 @@
   vars:
     hosts: all
 
-- ansible.builtin.import_playbook: 1-validate-dns.yml
+- ansible.builtin.import_playbook: validate-dns.yml
   vars:
     hosts: all
 
