@@ -22,7 +22,7 @@
   vars:
     hosts: all
 
-- ansible.builtin.import_playbook: 3-remove-bootstrap-from-infra.yml
+- ansible.builtin.import_playbook: remove-bootstrap-from-infra.yml
   vars:
     hosts: all
 
