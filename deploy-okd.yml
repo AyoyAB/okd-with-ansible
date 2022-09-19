@@ -18,7 +18,7 @@
   vars:
     hosts: all
 
-- ansible.builtin.import_playbook: 2-wait-for-installation.yml
+- ansible.builtin.import_playbook: wait-for-installation.yml
   vars:
     hosts: all
 
