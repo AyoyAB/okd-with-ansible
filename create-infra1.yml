@@ -2,7 +2,7 @@
   any_errors_fatal: true
   gather_facts: false
   roles:
-    - role: 1-setup-rpi
+    - role: setup-rpi
       become: true
 
 - hosts: infras
