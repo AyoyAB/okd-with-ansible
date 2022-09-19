@@ -6,7 +6,7 @@
   vars:
     hosts: localhost
 
-- ansible.builtin.import_playbook: 0-create-local-files.yml
+- ansible.builtin.import_playbook: create-local-files.yml
   vars:
     hosts: all
 
