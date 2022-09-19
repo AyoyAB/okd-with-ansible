@@ -30,6 +30,6 @@
   vars:
     hosts: all
 
-- ansible.builtin.import_playbook: 4-post-installation.yml
+- ansible.builtin.import_playbook: post-installation.yml
   vars:
     hosts: all
