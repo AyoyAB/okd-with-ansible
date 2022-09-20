@@ -35,6 +35,7 @@
     update_cache: true
   vars:
     packages:
+      - dnsutils
       - iputils-*
       - jq
       - tcpdump
