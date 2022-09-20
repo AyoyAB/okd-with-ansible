@@ -9,13 +9,6 @@
 - ansible.builtin.include_tasks: "4-nfs-storage.yml"
   when: nfs_server is defined
 
-- ansible.builtin.include_tasks: "5-machine-config.yml"
-
-- ansible.builtin.include_tasks: "6-compliance-operator.yml"
-  when:
-    - compliance_operator is defined
-
-
 - ansible.builtin.include_tasks: "sealed_secrets.yml"
   when:
     - sealed_secrets is defined

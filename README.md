@@ -22,13 +22,12 @@ There are optional components to install which are controlled by
 ansible variables. These are defined on the command line:
 
 ```shell
-ansible-playbook -i hosts -v deploy-okd.yml --extra-vars "compliance_operator=true argocd=true"
+ansible-playbook -i hosts -v deploy-okd.yml --extra-vars "use_control_plane_nodes_for_compute=true argocd=true"
 ```
 
 | variable                            | description                                                                                                                     |
 |-------------------------------------|---------------------------------------------------------------------------------------------------------------------------------|
 | argocd                              | whether to install the argocd operator                                                                                          |
-| compliance_operator                 | Whether to install the [OKD compliance operator](https://docs.okd.io/latest/security/compliance_operator/compliance-scans.html) |
 | sealed_secrets                      | Whether to pre-install a secret for sealed_secret to make sure git sealed secrets can be decrypted                              | 
 | set_etc_hostname_in_ignition_file   | Whether to set the hostname in /etc/hostname                                                                                    |
 | use_control_plane_nodes_for_compute | Whether to allow masters to be used for regular pods                                                                            |
@@ -95,7 +94,7 @@ that will be completed:
 
 This is how to run the playbook:
 ```shell
-ansible-playbook -i hosts -v deploy-okd.yml --extra-vars "compliance_operator=true argocd=true"
+ansible-playbook -i hosts -v deploy-okd.yml --extra-vars "use_control_plane_nodes_for_compute=true argocd=true"
 ```
 
 Once the playbook tell you to, boot the masters on Fedora CoreOS USB.
