@@ -43,7 +43,7 @@
 
 - name: Sync time initialy
   ansible.builtin.command:
-    cmd: ntpd -gq
+    cmd: ntpdate -t 10 se.pool.ntp.org
   changed_when: false
 
 - name: Make sure NTP is started up
