@@ -5,7 +5,7 @@
     - role: setup-rpi
       become: true
 
-- hosts: infras
+- hosts: lbs
   any_errors_fatal: true
   gather_facts: false
   roles:

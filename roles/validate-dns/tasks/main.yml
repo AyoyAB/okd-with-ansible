@@ -6,7 +6,7 @@
 
 - name: Validate Load Balancer DNS
   ansible.builtin.include_tasks: "validate-dns.yml"
-  loop: "{{ groups['infras'] }}"
+  loop: "{{ groups['lbs'] }}"
   vars:
     additional_domains:
       - api.{{ cluster_name }}.{{ base_domain }}

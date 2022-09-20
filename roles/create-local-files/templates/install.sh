@@ -27,7 +27,7 @@ else
 fi
 
 # Create full url for ignition file
-IGNITION_FILE_URL="http://{{ groups['infras'][0] }}:8080/${IGNITION_FILENAME}.ign"
+IGNITION_FILE_URL="http://{{ groups['lbs'][0] }}:8080/${IGNITION_FILENAME}.ign"
 
 echo ""
 echo "Installation will use the following ignition file:"
