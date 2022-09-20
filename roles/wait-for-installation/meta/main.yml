@@ -1,5 +1,5 @@
 galaxy_info:
-  role_name: 2-wait-for-installation
+  role_name: wait-for-installation
   author: John Allberg
   description: Setup control plane nodes and wait for OKD installation.
   company: Ayoy AB

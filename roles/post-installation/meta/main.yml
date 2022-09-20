@@ -1,7 +1,7 @@
 galaxy_info:
-  role_name: 0-create-local-files
+  role_name: post-installation
   author: John Allberg
-  description: Creates the local files to prepare for OKD installation.
+  description: Do the twist again, like we normally do after the cluster is up and running.
   company: Ayoy AB
 
   # If the issue tracker for your role is not on github, uncomment the

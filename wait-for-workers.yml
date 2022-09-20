@@ -1,5 +1,5 @@
-- hosts: localhost
+- hosts: workers
   any_errors_fatal: true
   gather_facts: false
   roles:
-    - role: 0-create-local-files
+    - role: wait-for-workers
