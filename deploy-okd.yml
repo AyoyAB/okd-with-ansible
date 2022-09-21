@@ -14,7 +14,7 @@
   vars:
     hosts: all
 
-- ansible.builtin.import_playbook: create-infra1.yml
+- ansible.builtin.import_playbook: create-lbs.yml
   vars:
     hosts: all
 
