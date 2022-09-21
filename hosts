@@ -1,10 +1,10 @@
 [all:children]
-infras
+lbs
 bootstrap
 masters
 workers
 
-[infras]
+[lbs]
 infra1.okd4.example.com ansible_user=pi ansible_ssh_pass=raspberry
 
 [rpis]
