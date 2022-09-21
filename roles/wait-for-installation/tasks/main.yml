@@ -76,7 +76,7 @@
   register: result
   when: inventory_hostname in groups['masters']
   until: result.status == 200
-  retries: 5000 # retry X times
+  retries: 1000 # retry X times
   delay: 5 # pause for X sec b/w each call
 
 - name: Check bootstrap status
