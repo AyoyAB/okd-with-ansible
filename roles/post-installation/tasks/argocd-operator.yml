@@ -65,6 +65,9 @@
         server:
           route:
             enabled: true
+          env:
+            - name: ARGOCD_SYNC_WAVE_DELAY
+              value: "{{ argocd_sync_wave_delay | default('2') }}"
         rbac:
           defaultPolicy: 'role:readonly'
           policy: |
