@@ -26,6 +26,12 @@ platform:
   none: {}
 pullSecret: "{{ lookup('file', '{{ openshift_files_directory }}/pull-secret') | regex_replace('\"', '\\\"') }}"
 sshKey: "{{ lookup('file', ssh_public_key_file) }}"
+{% if use_cluster_proxy == true %}
+proxy:
+  httpProxy: "{{ cluster_proxy_http_proxy }}"
+  httpsProxy: "{{ cluster_proxy_https_proxy }}"
+  noProxy: "{{ cluster_proxy_no_proxy }}"
+{% endif %}
 {% if use_disconnected_registry == true %}
 additionalTrustBundle: |
   {{ lookup('file', disconnected_registry_trust_bundle_file) | regex_replace('\n', '\n  ') }}
