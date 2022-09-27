@@ -17,7 +17,7 @@
       kind: Secret
       metadata:
         name: github-smuda
-        namespace: argocd
+        namespace: "{{ argocd_namespace }}"
         labels:
           argocd.argoproj.io/secret-type: repository
       stringData:
@@ -32,12 +32,12 @@
       kind: Application
       metadata:
         name: argo-apps
-        namespace: argocd
+        namespace: "{{ argocd_namespace }}"
         finalizers:
           - resources-finalizer.argocd.argoproj.io
       spec:
         destination:
-          namespace: argocd
+          namespace: "{{ argocd_namespace }}"
           server: https://kubernetes.default.svc
         project: default
         source:

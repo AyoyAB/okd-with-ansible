@@ -1,4 +1,5 @@
 ---
 use_cluster_proxy: false
 
+argocd_namespace: argocd
 argocd_operator_starting_cluster_service_version: v0.4.0

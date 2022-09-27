@@ -19,7 +19,7 @@
         config:
           env:
             - name: ARGOCD_CLUSTER_CONFIG_NAMESPACES
-              value: argocd
+              value: "{{ argocd_namespace }}"
 
 - name: Wait for Argo CD Operator to start
   ansible.builtin.shell:
@@ -37,14 +37,14 @@
   until: ready_replicas.stdout == "1"
   changed_when: false
 
-- name: Create or update namespace argocd
+- name: Create or update namespace {{ argocd_namespace }}
   kubernetes.core.k8s:
     kubeconfig: "{{ openshift_files_kubeconfig }}"
     resource_definition:
       apiVersion: v1
       kind: Namespace
       metadata:
-        name: argocd
+        name: "{{ argocd_namespace }}"
         annotations:
           openshift.io/node-selector: ""
 
@@ -56,7 +56,7 @@
       kind: ArgoCD
       metadata:
         name: argocd
-        namespace: argocd
+        namespace: "{{ argocd_namespace }}"
       spec:
         dex:
           openShiftOAuth: true
