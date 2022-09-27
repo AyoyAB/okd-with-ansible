@@ -11,6 +11,10 @@
   when:
     - sealed_secrets is defined
 
-- ansible.builtin.include_tasks: "7-argocd.yml"
+- ansible.builtin.include_tasks: "argocd-operator.yml"
+  when:
+    - argocd is defined
+
+- ansible.builtin.include_tasks: "argocd-applications.yml"
   when:
     - argocd is defined
