@@ -42,6 +42,7 @@ ssh_public_key_file: ~/.ssh/id_ansible.pub
 # nfs_server: 192.168.60.20
 
 # argocd: true
+# argocd_operator_starting_cluster_service_version: 0.4.0
 # argocd_repository: https://github.com/smuda/home-cluster-argo.git
 # argocd_repository_revision: main
 

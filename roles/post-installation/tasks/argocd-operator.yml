@@ -15,7 +15,7 @@
         name: argocd-operator
         source: community-operators
         sourceNamespace: openshift-marketplace
-        startingCSV: argocd-operator.v0.3.0
+        startingCSV: argocd-operator.{{ argocd_operator_starting_cluster_service_version }}
         config:
           env:
             - name: ARGOCD_CLUSTER_CONFIG_NAMESPACES
