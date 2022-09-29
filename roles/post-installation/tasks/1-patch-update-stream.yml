@@ -1,9 +1,0 @@
-- name: 1. Patch update URL
-  ansible.builtin.shell: |
-    KUBECONFIG="{{ openshift_files_kubeconfig }}" \
-    "{{ openshift_client_executable }}" \
-    patch ClusterVersion version \
-    --type merge \
-    --patch '{ "spec": { "upstream": "https://amd64.origin.releases.ci.openshift.org/graph" } }'
-  register: patchoutput
-  changed_when: patchoutput.stdout != "clusterversion.config.openshift.io/version patched (no change)"
