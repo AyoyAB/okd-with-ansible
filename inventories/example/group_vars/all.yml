@@ -34,7 +34,7 @@ ssh_public_key_file: ~/.ssh/id_ansible.pub
 # Post Installation Configuration
 #
 
-use_cluster_proxy: false
+# use_cluster_proxy: true
 # cluster_proxy_http_proxy: http://proxy.example.com:6080
 # cluster_proxy_https_proxy: http://proxy.example.com:6080
 # cluster_proxy_no_proxy: internal.example.com,192.168.0.0/24

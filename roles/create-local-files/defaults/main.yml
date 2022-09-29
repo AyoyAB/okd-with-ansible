@@ -3,5 +3,6 @@ opt_out_of_remote_health_reporting: false
 
 set_etc_hostname_in_ignition_file: false
 
+use_cluster_proxy: false
 use_disconnected_registry: false
 use_custom_container_registry: false
