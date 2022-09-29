@@ -39,13 +39,13 @@ use_cluster_proxy: false
 # cluster_proxy_https_proxy: http://proxy.example.com:6080
 # cluster_proxy_no_proxy: internal.example.com,192.168.0.0/24
 
-# nfs_server: 192.168.60.20
+nfs_server: 192.168.60.20
 
-# argocd: true
-# argocd_namespace: argocd
-# argocd_operator_starting_cluster_service_version: 0.4.0
-# argocd_repository: https://github.com/smuda/home-cluster-argo.git
-# argocd_repository_revision: main
+argocd: true
+argocd_namespace: argocd
+argocd_operator_starting_cluster_service_version: 0.4.0
+argocd_repository: https://github.com/smuda/home-cluster-argo.git
+argocd_repository_revision: main
 argocd_sync_wave_delay: 60
 
 # Ansible configuration
