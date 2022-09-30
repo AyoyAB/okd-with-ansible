@@ -10,7 +10,7 @@
 - name: Copy over generic ignition files
   ansible.builtin.copy:
     src: "{{ openshift_files_directory }}/{{ item }}.ign"
-    dest: "{{ nginx_ignition_files_dir }}/{{ item }}.ign"
+    dest: "{{ nginx_ignition_files_dir }}/{{ item }}.{{ cluster_name }}.{{ base_domain }}.ign"
     mode: '0644'
   with_items:
     - "bootstrap"

@@ -167,45 +167,34 @@ opening https://console-openshift-console.apps.okd4.example.com.
 
 Have fun with your cluster!
 
-## Adding the bootstrap node as a worker
+## Adding the bootstrap or any other node to the cluster
 
 Once the cluster has been correctly installed, shutdown the
 bootstrap node, remove the partitions and reinstall using
 this command:
 
 ```shell
-# Use hostname from DHCP or DNS
-$ bash -c "$(curl -fsSL http://infra1.okd4.example.com:8080/install.sh)"
-```
-
-```shell
-# Manually set hostname
-$ bash -c "$(curl -fsSL http://infra1.okd4.example.com:8080/install.sh)" -s worker1
+# Use the generic ignition file for the role, "master" or "worker"
+$ bash -c "$(curl -fsSL http://infra1.okd4.example.com:8080/install.sh)" -s worker
 ```
 
 Since this has not been prepared in the cluster earlier,
 you need to approve the certificate requests.
-This is how you list and approve them:
+
+This is easiest done with the `issueCertificates.sh` script. Note that there is normally three certificate per node.
 
 ```shell
-$ KUBECONFIG=./openshift-files/auth/kubeconfig \
-    ./openshift-client/oc get csr | grep -i pending
-NAME        AGE     SIGNERNAME                                    REQUESTOR                                                                   CONDITION
-csr-4n948   36m     kubernetes.io/kube-apiserver-client-kubelet   system:serviceaccount:openshift-machine-config-operator:node-bootstrapper   Pending
-csr-7n8zl   51m     kubernetes.io/kube-apiserver-client-kubelet   system:serviceaccount:openshift-machine-config-operator:node-bootstrapper   Pending
-csr-c8nhz   20m     kubernetes.io/kube-apiserver-client-kubelet   system:serviceaccount:openshift-machine-config-operator:node-bootstrapper   Pending
-csr-f4vvb   5m41s   kubernetes.io/kube-apiserver-client-kubelet   system:serviceaccount:openshift-machine-config-operator:node-bootstrapper   Pending
-csr-fz8sk   66m     kubernetes.io/kube-apiserver-client-kubelet   system:serviceaccount:openshift-machine-config-operator:node-bootstrapper   Pending
-
-$ KUBECONFIG=./openshift-files/auth/kubeconfig \
-    ./openshift-client/oc adm certificate approve csr-fz8sk
-certificatesigningrequest.certificates.k8s.io/csr-fz8sk approved
-
-$ KUBECONFIG=./openshift-files/auth/kubeconfig \
-    ./openshift-client/oc get nodes
-NAME                       STATUS     ROLES           AGE    VERSION
-master0.okd4.example.com   Ready      master,worker   116m   v1.20.0+01994f4-1091
-master1.okd4.example.com   Ready      master,worker   116m   v1.20.0+01994f4-1091
-master2.okd4.example.com   Ready      master,worker   113m   v1.20.0+01994f4-1091
-worker1.okd4.example.com   NotReady   worker          73s    v1.20.0+01994f4-1091
+$ ./issueCertificates.sh
+./issueCertificates.sh                                                                                           
+No pending certificate requests
+...
+No pending certificate requests
+No pending certificate requests
+Approving pending certificate requests...
+certificatesigningrequest.certificates.k8s.io/csr-qmkv6 approved
+No pending certificate requests
+Approving pending certificate requests...
+certificatesigningrequest.certificates.k8s.io/csr-wfnjq approved
+certificatesigningrequest.certificates.k8s.io/csr-qftjq approved
+No pending certificate requests
 ```
