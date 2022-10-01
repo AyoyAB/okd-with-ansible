@@ -7,3 +7,5 @@ openshift-client/
 openshift-files/
 openshift-install/
 sealed-secrets-secret.yml
+
+install-*.log
