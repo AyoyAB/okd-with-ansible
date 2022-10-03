@@ -14,7 +14,7 @@ masters
 workers
 
 [bootstrap]
-# Only first machine in bootstrap group will be used as boostrap machine
+# Only first machine in bootstrap group will be used as bootstrap machine
 bootstrap.okd4.example.com
 
 [masters]
