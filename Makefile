@@ -14,5 +14,9 @@ endif
 cluster: env-check
 	ansible-playbook -i inventories/${CLUSTER_NAME} -v deploy-okd.yml | tee install-$$(date +%s).log
 
+.PHONY: cluster-ask-pass
+cluster-ask-pass: env-check
+	ansible-playbook -i inventories/${CLUSTER_NAME} -v deploy-okd.yml --ask-become-pass | tee install-$$(date +%s).log
+
 clean:
 	rm -rf openshift-client openshift-files openshift-install
