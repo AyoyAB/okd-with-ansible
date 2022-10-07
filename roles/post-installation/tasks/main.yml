@@ -1,4 +1,4 @@
-- ansible.builtin.include_tasks: "4-nfs-storage.yml"
+- ansible.builtin.include_tasks: "nfs-storage.yml"
   when: nfs_server is defined
 
 - ansible.builtin.include_tasks: "sealed_secrets.yml"
