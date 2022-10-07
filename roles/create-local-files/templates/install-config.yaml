@@ -33,8 +33,10 @@ proxy:
   noProxy: "{{ cluster_proxy_no_proxy }}"
 {% endif %}
 {% if use_disconnected_registry == true %}
+{% if disconnected_registry_trust_bundle_file is defined %}
 additionalTrustBundle: |
   {{ lookup('file', disconnected_registry_trust_bundle_file) | indent(2) }}
+{% endif %}
 imageContentSources:
   - source: quay.io/openshift/okd
     mirrors:
