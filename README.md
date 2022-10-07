@@ -32,6 +32,36 @@ ansible-playbook -i inventories/example -v deploy-okd.yml --extra-vars "use_cont
 | set_etc_hostname_in_ignition_file   | Whether to set the hostname in /etc/hostname                                                                                    |
 | use_control_plane_nodes_for_compute | Whether to allow masters to be used for regular pods                                                                            |
 
+
+# Disconnected registry
+In disconnected environments you normally have a docker registry which will supply all the OKD images. 
+
+To use a disconnected registry, set the following parameters:
+
+| variable                                            | description                                                                                                          |
+|-----------------------------------------------------|----------------------------------------------------------------------------------------------------------------------|
+| use_disconnected_registry                           | Indicating a registry should be used. Example: true                                                                  |
+| disconnected_registry_trust_bundle_file             | Filename of the root CA for the registry. Example: ./openshift-ca/example.crt                                        |
+| disconnected_registry_quay_io_openshift_okd         | URL to the registry for quay.io/openshift/okd. Example: registry.okd4.example.com:5011/openshift/okd                 |
+| disconnected_registry_quay_io_openshift_okd_content | URL to the registry for quay.io/openshift/okd-content. Example: registry.okd4.example.com:5011/openshift/okd-content |                                           
+
+
+# Pull-through-cache
+In disconnected environments you normally have a docker registry which will supply all the OKD images. The 
+pull-through-cache will simulate that and should also, if you have a faster cache than your Internet connection,
+improve your installation time.
+
+There is a `Makefile` under `hack/docker-proxy` that can create the certificates and docker containers needed for that.
+The certificates will be placed under `openshift-ca` and will need to be copied to the docker machine. Note that
+the hostname `registry.okd4.example.com` needs to be setup in DNS.
+
+| Usage          | description                                     |
+|----------------|-------------------------------------------------|
+| make ca        | creates both CA and registry certificates       |
+| make quay.io   | creates the docker proxy registry for quay.io   |
+| make docker.io | creates the docker proxy registry for docker.io |
+ 
+
 # Preparation
 1. Pull your [RedHat pull secret](https://console.redhat.com/openshift/install/metal/user-provisioned) and place in file `pull-secret`.
 2. [If you want github integration](https://docs.openshift.com/container-platform/4.8/authentication/identity_providers/configuring-github-identity-provider.html),

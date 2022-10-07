@@ -6,6 +6,7 @@ pull-secret
 openshift-client/
 openshift-files/
 openshift-install/
+openshift-ca/
 sealed-secrets-secret.yml
 
 install-*.log
