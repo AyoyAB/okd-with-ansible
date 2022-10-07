@@ -22,6 +22,10 @@ cluster: env-check
 cluster-ask-pass: env-check
 	ansible-playbook -i inventories/${CLUSTER_NAME} -v deploy-okd.yml --ask-become-pass | tee install-$$(date +%s).log
 
+.PHONY: cluster-masters
+cluster-masters: env-check
+	ansible-playbook -i inventories/${CLUSTER_NAME} -v deploy-okd.yml --extra-vars="use_control_plane_nodes_for_compute=true"
+
 .PHONY: clean
 clean:
 	rm -rf openshift-client openshift-files openshift-install
