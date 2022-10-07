@@ -39,7 +39,7 @@ login-check:
 #
 
 # Check and assert a good cluster state
-.PHONY: assert-healty-cluster
+.PHONY: assert-healthy-cluster
 assert-healthy-cluster: login-check assert-healthy-openshift-pods assert-healthy-app-pods
 
 # Check that all OpenShift PODs are in a good state
