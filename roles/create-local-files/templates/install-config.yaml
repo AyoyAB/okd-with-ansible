@@ -34,7 +34,7 @@ proxy:
 {% endif %}
 {% if use_disconnected_registry == true %}
 additionalTrustBundle: |
-  {{ lookup('file', disconnected_registry_trust_bundle_file) | regex_replace('\n', '\n  ') }}
+  {{ lookup('file', disconnected_registry_trust_bundle_file) | indent(2) }}
 imageContentSources:
   - source: quay.io/openshift/okd
     mirrors:
