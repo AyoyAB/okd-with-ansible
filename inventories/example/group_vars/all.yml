@@ -14,6 +14,11 @@ use_control_plane_nodes_for_compute: false
 # This public ssh key will be required to access the control plane nodes and worker nodes.
 ssh_public_key_file: ~/.ssh/id_ansible.pub
 
+# use_cluster_proxy: true
+# cluster_proxy_http_proxy: http://proxy.example.com:6080
+# cluster_proxy_https_proxy: http://proxy.example.com:6080
+# cluster_proxy_no_proxy: internal.example.com,192.168.0.0/24
+
 # use_disconnected_registry: true
 # disconnected_registry_trust_bundle_file: ./example.crt
 # disconnected_registry_quay_io_openshift_okd: registry.example.com:5000/openshift/okd
@@ -35,11 +40,6 @@ ssh_public_key_file: ~/.ssh/id_ansible.pub
 #
 
 # disable_default_operator_hub: true
-
-# use_cluster_proxy: true
-# cluster_proxy_http_proxy: http://proxy.example.com:6080
-# cluster_proxy_https_proxy: http://proxy.example.com:6080
-# cluster_proxy_no_proxy: internal.example.com,192.168.0.0/24
 
 nfs_server: 192.168.60.20
 
