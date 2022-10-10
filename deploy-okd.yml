@@ -37,6 +37,10 @@
   vars:
     hosts: all
 
+- ansible.builtin.import_playbook: configure-cluster.yml
+  vars:
+    hosts: all
+
 - ansible.builtin.import_playbook: post-installation.yml
   vars:
     hosts: all

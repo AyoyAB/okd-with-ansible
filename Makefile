@@ -26,6 +26,10 @@ cluster-ask-pass: env-check
 cluster-masters: env-check
 	ansible-playbook -i inventories/${CLUSTER_NAME} -v deploy-okd.yml --extra-vars="use_control_plane_nodes_for_compute=true"
 
+.PHONY: cluster-config
+cluster-config: env-check
+	ansible-playbook -i inventories/${CLUSTER_NAME} -v configure-cluster.yml
+
 .PHONY: clean
 clean:
 	rm -rf openshift-client openshift-files openshift-install

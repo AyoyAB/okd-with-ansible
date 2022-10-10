@@ -31,8 +31,10 @@ ssh_public_key_file: ~/.ssh/id_ansible.pub
 # configure_ufw: true
 
 #
-# Post Installation Configuration
+# Cluster Configuration
 #
+
+# disable_default_operator_hub: true
 
 # use_cluster_proxy: true
 # cluster_proxy_http_proxy: http://proxy.example.com:6080

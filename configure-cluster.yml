@@ -1,0 +1,12 @@
+---
+#
+# Configure OKD cluster
+#
+
+- name: Configure cluster
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  any_errors_fatal: true
+  roles:
+    - role: okd/operator-lifecycle-manager
