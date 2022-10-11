@@ -9,4 +9,5 @@
   gather_facts: false
   any_errors_fatal: true
   roles:
-    - role: okd/operator-lifecycle-manager
+    - role: okd/operator_lifecycle_manager
+    - role: okd/additional_repository_mirrors
