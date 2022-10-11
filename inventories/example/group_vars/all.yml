@@ -50,10 +50,13 @@ argocd_repository: https://github.com/smuda/home-cluster-argo.git
 argocd_repository_revision: main
 argocd_sync_wave_delay: 60
 
-# Ansible configuration
-ansible_ssh_private_key_file: ~/.ssh/id_ansible
-ansible_python_interpreter: auto
-
 # Sealed secrets
 sealed_secrets: true
 sealed_secret_secret: ./sealed-secrets-secret.yml
+
+#
+# Ansible configuration
+#
+
+ansible_ssh_private_key_file: ~/.ssh/id_ansible
+ansible_python_interpreter: auto
