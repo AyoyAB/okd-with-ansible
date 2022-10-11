@@ -1,0 +1,18 @@
+---
+
+- name: Configure Image Content Source Policy with additional repository mirrors
+  kubernetes.core.k8s:
+    kubeconfig: "{{ openshift_files_kubeconfig }}"
+    template: templates/additional-mirrors.yaml.j2
+  when: additional_repository_mirrors | length > 0
+
+- name: Remove Image Content Source Policy with additional repository mirrors
+  kubernetes.core.k8s:
+    kubeconfig: "{{ openshift_files_kubeconfig }}"
+    state: absent
+    resource_definition:
+      apiVersion: operator.openshift.io/v1alpha1
+      kind: ImageContentSourcePolicy
+      metadata:
+        name: additional-mirrors
+  when: additional_repository_mirrors | length <= 0

@@ -1,0 +1,13 @@
+apiVersion: operator.openshift.io/v1alpha1
+kind: ImageContentSourcePolicy
+metadata:
+  name: additional-mirrors
+spec:
+  repositoryDigestMirrors:
+{% for repo_mirror in additional_repository_mirrors %}
+    - source: {{ repo_mirror.source }}
+      mirrors:
+{% for mirror in repo_mirror.mirrors %}
+        - {{ mirror }}
+{% endfor %}
+{% endfor %}

@@ -41,6 +41,11 @@ ssh_public_key_file: ~/.ssh/id_ansible.pub
 
 # disable_default_operator_hub: true
 
+# additional_repository_mirrors:
+#   - source: docker.io
+#     mirrors:
+#       - registry.example.com:5000
+
 nfs_server: 192.168.60.20
 
 argocd: true

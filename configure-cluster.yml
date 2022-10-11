@@ -10,3 +10,4 @@
   any_errors_fatal: true
   roles:
     - role: okd/operator_lifecycle_manager
+    - role: okd/additional_repository_mirrors
