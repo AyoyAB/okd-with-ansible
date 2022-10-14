@@ -21,7 +21,8 @@
 
 - name: Enroll workers by approving certificate requests
   ansible.builtin.command:
-    cmd: ./issueCertificates.sh "{{ inventory_hostname }}"
+    cmd: |
+      "{{ playbook_dir }}/issueCertificates.sh" "{{ inventory_hostname }}"
   when: inventory_hostname in groups['workers']
   delegate_to: localhost
   register: result
