@@ -5,6 +5,7 @@
   register: files
 
 - name: Validate ignition files
-  ansible.builtin.shell: "{{ openshift_ignition_validate_executable }} {{ item.path }}"
+  ansible.builtin.command:
+    cmd: "{{ openshift_ignition_validate_executable }} {{ item.path }}"
   loop: "{{ files.files }}"
   changed_when: false
