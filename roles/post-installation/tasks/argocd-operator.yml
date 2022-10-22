@@ -64,12 +64,24 @@
             openShiftOAuth: true
             groups:
               - "system:authenticated"
+            resources:
+              limits:
+                memory: 256Mi
+              requests:
+                cpu: 250m
+                memory: 128Mi
         server:
           route:
             enabled: true
           env:
             - name: ARGOCD_SYNC_WAVE_DELAY
               value: "{{ argocd_sync_wave_delay | default('2') }}"
+          resources:
+            limits:
+              memory: 256Mi
+            requests:
+              cpu: 125m
+              memory: 128Mi
         rbac:
           defaultPolicy: 'role:readonly'
           policy: |
@@ -78,3 +90,30 @@
           scopes: '[groups]'
         redis:
           image: registry.okd4.example.com:5010/library/redis
+          resources:
+            limits:
+              memory: 256Mi
+            requests:
+              cpu: 250m
+              memory: 128Mi
+        applicationSet:
+          resources:
+            limits:
+              memory: 1Gi
+            requests:
+              cpu: 250m
+              memory: 512Mi
+        repo:
+          resources:
+            limits:
+              memory: 512Mi
+            requests:
+              cpu: 250m
+              memory: 256Mi
+        controller:
+          resources:
+            limits:
+              memory: 2Gi
+            requests:
+              cpu: 250m
+              memory: 1Gi
