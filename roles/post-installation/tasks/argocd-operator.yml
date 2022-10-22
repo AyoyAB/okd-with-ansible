@@ -74,3 +74,5 @@
             g, cluster-admins, role:admin
             g, system:authenticated, role:admin
           scopes: '[groups]'
+        redis:
+          image: registry.okd4.example.com:5010/library/redis
