@@ -58,10 +58,12 @@
         name: argocd
         namespace: "{{ argocd_namespace }}"
       spec:
-        dex:
-          openShiftOAuth: true
-          groups:
-            - "system:authenticated"
+        sso:
+          provider: dex
+          dex:
+            openShiftOAuth: true
+            groups:
+              - "system:authenticated"
         server:
           route:
             enabled: true
