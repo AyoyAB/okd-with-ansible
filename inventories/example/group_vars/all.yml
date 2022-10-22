@@ -19,10 +19,10 @@ ssh_public_key_file: ~/.ssh/id_ansible.pub
 # cluster_proxy_https_proxy: http://proxy.example.com:6080
 # cluster_proxy_no_proxy: internal.example.com,192.168.0.0/24
 
-# use_disconnected_registry: true
-# disconnected_registry_trust_bundle_file: "{{ playbook_dir }}/example.crt"
-# disconnected_registry_quay_io_openshift_okd: registry.example.com:5000/openshift/okd
-# disconnected_registry_quay_io_openshift_okd_content: registry.example.com:5000/openshift/okd-content
+use_disconnected_registry: true
+disconnected_registry_trust_bundle_file: "{{ playbook_dir }}/openshift-ca/ca.pem"
+disconnected_registry_quay_io_openshift_okd: registry.okd4.example.com:5011/openshift/okd
+disconnected_registry_quay_io_openshift_okd_content: registry.okd4.example.com:5011/openshift/okd-content
 
 # use_custom_container_registry: true
 # custom_container_registry_ca_file: "{{ playbook_dir }}/example.crt"
