@@ -105,7 +105,7 @@ endif
 		-p 55010:5000 \
 		--restart=unless-stopped \
 		--name=proxy-docker.io \
-		-e REGISTRY_PROXY_REMOTEURL="https://docker.io" \
+		-e REGISTRY_PROXY_REMOTEURL="https://registry-1.docker.io" \
 		-e REGISTRY_PROXY_USERNAME=$(DOCKER_HUB_USERNAME) \
 		-e REGISTRY_PROXY_PASSWORD=$(DOCKER_HUB_ACCESS_TOKEN) \
 		-e REGISTRY_HTTP_ADDR=0.0.0.0:443 \
