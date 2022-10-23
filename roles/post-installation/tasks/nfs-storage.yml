@@ -5,7 +5,7 @@
       kind: Namespace
       apiVersion: v1
       metadata:
-        name: nfs-provisioner
+        name: addon-nfs-provisioner
 
 - name: 4.2 Create or update the service account
   kubernetes.core.k8s:
@@ -15,13 +15,13 @@
       apiVersion: v1
       metadata:
         name: nfs-pod-provisioner-sa
-        namespace: nfs-provisioner
+        namespace: addon-nfs-provisioner
 
 - name: 4.3 Fix rights to use NFS
   ansible.builtin.shell: |
     KUBECONFIG="{{ openshift_files_kubeconfig }}" \
     "{{ openshift_client_executable }}" \
-    -n nfs-provisioner \
+    -n addon-nfs-provisioner \
     adm policy add-scc-to-user hostmount-anyuid -z nfs-pod-provisioner-sa
   changed_when: true
 

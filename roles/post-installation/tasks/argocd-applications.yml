@@ -49,7 +49,7 @@
             parameters:
               - name: argo.target_revision
                 value: "{{ argocd_repository_revision }}"
-          path: start/
+          path: _start/
           repoURL: "{{ argocd_repository }}"
           targetRevision: "{{ argocd_repository_revision }}"
         syncPolicy:
