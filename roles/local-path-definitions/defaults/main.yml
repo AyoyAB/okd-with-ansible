@@ -11,3 +11,4 @@ openshift_ignition_validate_executable: "{{ openshift_client_directory }}/igniti
 
 openshift_files_directory: "{{ playbook_dir }}/openshift-files"
 openshift_files_kubeconfig: "{{ openshift_files_directory }}/auth/kubeconfig"
+openshift_files_kubeadmin_password: "{{ openshift_files_directory }}/auth/kubeadmin-password"

@@ -31,6 +31,14 @@
     cmd: "{{ openshift_install_executable }} create ignition-configs --dir={{ openshift_files_directory }}"
   changed_when: false
 
+- name: Set restrictive permission on kubeconfig and kubeadmin-password files
+  ansible.builtin.file:
+    path: "{{ item }}"
+    mode: '0600'
+  with_items:
+    - "{{ openshift_files_kubeconfig }}"
+    - "{{ openshift_files_kubeadmin_password }}"
+
 - name: Log oc_version_minor
   ansible.builtin.debug:
     var: oc_version_minor
