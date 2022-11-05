@@ -6,7 +6,7 @@ ignition_version: v2.14.0
 base_domain: example.com
 cluster_name: okd4
 
-# opt_out_of_remote_health_reporting: true
+opt_out_of_remote_health_reporting: true
 
 # 'true' means that the control plane nodes will also run standard pods
 use_control_plane_nodes_for_compute: true
