@@ -17,6 +17,13 @@ This is how to renew the certificate on the masters.
 For certain versions of OKD the API-server on masters still boots up correctly and responds to kubectl. That makes
 it easy to renew the certificates using the script `issueCertificates.sh`.
 
+After that you normally need to restart a number of pod, either by restarting all nodes (`reboot.sh`) or
+by restarting the actual deployments:
+
+```
+oc get ns -o json | jq --raw-output '.items[].metadata.name' | tr '\n' '\0' | xargs -0 -n1 oc rollout restart deploy -n
+```
+
 ## If the API-server does not respond
 
 However, there are situations when the API server does not respond due to expired certificates and
