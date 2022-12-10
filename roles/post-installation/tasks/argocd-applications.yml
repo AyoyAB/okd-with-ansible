@@ -7,7 +7,7 @@
       kind: Namespace
       apiVersion: v1
       metadata:
-        name: argo-apps
+        name: "{{ argocd_namespace }}"
 
 - name: Initiate applications from github
   kubernetes.core.k8s:
@@ -49,6 +49,8 @@
             parameters:
               - name: argo.target_revision
                 value: "{{ argocd_repository_revision }}"
+              - name: argo.apps_namespace
+                value: "{{ argocd_namespace }}"
           path: _start/
           repoURL: "{{ argocd_repository }}"
           targetRevision: "{{ argocd_repository_revision }}"
