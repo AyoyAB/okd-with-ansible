@@ -1,3 +1,5 @@
+---
+
 - name: Wait for Cluster to report "available"
   ansible.builtin.shell:
     cmd: |
@@ -9,10 +11,10 @@
       | jq '.status.conditions[] | select(.type=="Available")' \
       | jq -r '.status'
     executable: /bin/bash
-  register: ready_replicas
+  register: available_status
   retries: 60
   delay: 5
-  until: ready_replicas.stdout == "True"
+  until: available_status.stdout == "True"
   changed_when: false
 
 - name: Wait for Cluster to not report "Progressing"
@@ -26,8 +28,8 @@
       | jq '.status.conditions[] | select(.type=="Progressing")' \
       | jq -r '.status'
     executable: /bin/bash
-  register: ready_replicas
+  register: progressing_status
   retries: 60
   delay: 5
-  until: ready_replicas.stdout == "False"
+  until: progressing_status.stdout == "False"
   changed_when: false
