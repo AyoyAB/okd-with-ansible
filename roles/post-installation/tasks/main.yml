@@ -1,5 +1,3 @@
-- ansible.builtin.include_tasks: "wait-for-cluster-ready.yml"
-
 - ansible.builtin.include_tasks: "nfs-storage.yml"
   when: nfs_server is defined
 
