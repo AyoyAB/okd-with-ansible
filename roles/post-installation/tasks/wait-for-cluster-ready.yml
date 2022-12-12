@@ -1,0 +1,33 @@
+- name: Wait for Cluster to report "available"
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail && \
+      KUBECONFIG="{{ openshift_files_kubeconfig }}" \
+      "{{ openshift_client_executable }}" \
+      -n openshift-operators \
+      get clusterversion version -o json \
+      | jq '.status.conditions[] | select(.type=="Available")' \
+      | jq -r '.status'
+    executable: /bin/bash
+  register: ready_replicas
+  retries: 60
+  delay: 5
+  until: ready_replicas.stdout == "True"
+  changed_when: false
+
+- name: Wait for Cluster to not report "Progressing"
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail && \
+      KUBECONFIG="{{ openshift_files_kubeconfig }}" \
+      "{{ openshift_client_executable }}" \
+      -n openshift-operators \
+      get clusterversion version -o json \
+      | jq '.status.conditions[] | select(.type=="Progressing")' \
+      | jq -r '.status'
+    executable: /bin/bash
+  register: ready_replicas
+  retries: 60
+  delay: 5
+  until: ready_replicas.stdout == "False"
+  changed_when: false
