@@ -13,7 +13,7 @@
     executable: /bin/bash
   register: available_status
   retries: 60
-  delay: 5
+  delay: 30
   until: available_status.stdout == "True"
   changed_when: false
 
@@ -30,6 +30,6 @@
     executable: /bin/bash
   register: progressing_status
   retries: 60
-  delay: 5
+  delay: 30
   until: progressing_status.stdout == "False"
   changed_when: false
