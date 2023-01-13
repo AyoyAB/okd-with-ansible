@@ -9,9 +9,11 @@
   any_errors_fatal: true
   gather_facts: false
   roles:
-    - role: nginx-ignition-files
+    - role: lbs_install
       become: true
-    - role: nginx-loadbalancer
+    - role: lbs_ignition_files
+      become: true
+    - role: lbs_loadbalancer
       become: true
       vars:
         bootstrap_enabled: true

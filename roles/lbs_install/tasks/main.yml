@@ -1,3 +1,5 @@
+---
+
 - name: Install nginx
   retries: 5
   delay: 10

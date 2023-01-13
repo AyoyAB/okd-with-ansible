@@ -2,7 +2,7 @@
   any_errors_fatal: true
   gather_facts: false
   roles:
-    - role: nginx-loadbalancer
+    - role: lbs_loadbalancer
       become: true
       vars:
         bootstrap_enabled: false

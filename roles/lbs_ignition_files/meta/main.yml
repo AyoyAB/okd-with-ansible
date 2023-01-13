@@ -1,5 +1,4 @@
 galaxy_info:
-  role_name: nginx-ignition-files
   author: John Allberg
   description: Copies all the ignition files to the nginx host.
   company: Ayoy AB
@@ -47,5 +46,5 @@ galaxy_info:
     #       Maximum 20 tags per role.
 
 dependencies:
-  - role: nginx
+  - role: lbs_handlers
   - role: local-path-definitions
