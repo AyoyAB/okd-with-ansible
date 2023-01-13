@@ -1,0 +1,30 @@
+---
+
+- name: Install dnsmasq
+  retries: 5
+  delay: 10
+  ansible.builtin.apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: true
+  vars:
+    packages:
+      - dnsmasq
+
+- name: Enable dnsmasq service
+  ansible.builtin.service:
+    name: dnsmasq
+    enabled: true
+
+- name: Copy over dnsmasq configuration
+  ansible.builtin.template:
+    src: okd.conf.j2
+    dest: /etc/dnsmasq.d/okd.conf
+    mode: '0644'
+  notify: dnsmasq restart
+
+- name: Use dnsmasq
+  ansible.builtin.lineinfile:
+    path: /etc/resolv.conf
+    insertbefore: '^nameserver .*'
+    line: 'nameserver 127.0.0.1'

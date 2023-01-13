@@ -1,0 +1,3 @@
+---
+- name: Include Deploy playbook
+  import_playbook: ../../create-lbs.yml

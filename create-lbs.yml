@@ -10,6 +10,9 @@
   any_errors_fatal: true
   gather_facts: false
   roles:
+    - role: lbs_dnsmasq_local
+      become: true
+      when: (local_install is defined) and local_install
     - role: lbs_install
       become: true
     - role: lbs_ignition_files
