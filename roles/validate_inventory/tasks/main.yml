@@ -1,0 +1,35 @@
+---
+
+- name: Validate inventory is not empty.
+  ansible.builtin.fail:
+    msg: "[ERROR] Empty inventory. No host available."
+  when: (groups.all is not defined) or (groups.all|length == 0)
+  delegate_to: localhost
+  run_once: true
+
+- name: Validate inventory has load balancers.
+  ansible.builtin.fail:
+    msg: "[ERROR] Inventory does not have at least one load balancer."
+  when: (groups.lbs is not defined) or (groups.lbs|length < 1)
+  delegate_to: localhost
+  run_once: true
+
+# This installation script does not support single node
+- name: Validate inventory has three masters.
+  ansible.builtin.fail:
+    msg: "[ERROR] Inventory does not have at least three masters."
+  when: (groups.masters is not defined) or (groups.masters|length < 3)
+  delegate_to: localhost
+  run_once: true
+
+# https://docs.openshift.com/container-platform/4.10/installing/installing_bare_metal_ipi/ipi-install-installation-workflow.html#configuring-the-install-config-file_ipi-install-installation-workflow
+- name: Validate inventory has at least two workers or use_control_plane_nodes_for_compute
+  ansible.builtin.fail:
+    msg: |
+      Running with only one worker is not a supported configuration of OpenShift/OKD.
+      Set use_control_plane_nodes_for_compute to true to circumvent.
+  when:
+    - (groups.workers is not defined) or (groups.workers|length < 2)
+    - not use_control_plane_nodes_for_compute
+  delegate_to: localhost
+  run_once: true

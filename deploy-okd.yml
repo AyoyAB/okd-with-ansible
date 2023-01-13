@@ -1,9 +1,4 @@
-- hosts: localhost
-  tasks:
-    - name: Validate inventory is not empty.
-      fail:
-        msg: "[ERROR] Empty inventory. No host available."
-      when: groups.all|length == 0
+---
 
 - hosts: all
   any_errors_fatal: true
