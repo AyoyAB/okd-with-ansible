@@ -1,3 +1,4 @@
+---
 - hosts: rpis
   any_errors_fatal: true
   gather_facts: false
