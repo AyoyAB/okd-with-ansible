@@ -3,8 +3,6 @@
   any_errors_fatal: true
   gather_facts: false
 
-- ansible.builtin.import_playbook: install-ansible-dependencies.yml
-
 - ansible.builtin.import_playbook: create-local-files.yml
 
 - ansible.builtin.import_playbook: validate-dns.yml
