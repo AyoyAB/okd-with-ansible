@@ -8,6 +8,11 @@ KUBECONFIG ?= ./openshift-files/auth/kubeconfig
 all:
 	$(error Please specify a make target)
 
+.PHONY: dependencies
+dependencies:
+	pip3 install -r requirements.txt
+	ansible-galaxy install -r requirements.yml
+
 .PHONY: env-check
 env-check:
 ifndef CLUSTER_NAME

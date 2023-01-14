@@ -6,12 +6,11 @@ OKD using Ansible on hardware.
 [Installing a user-provisioned cluster on bare metal](https://docs.okd.io/latest/installing/installing_bare_metal/installing-bare-metal.html)
 
 It assumes you have the following hardware:
-1. Raspberry PI for infrastructure (nginx load balancing
-   and serving the ignition files)
-2. An intel machine that will first serve as bootstrap and then later worker1.
+1. A debian server (e.g. Raspberry PI) for infrastructure (load balancing and serving the ignition files)
+2. An intel machine that will first serve as bootstrap (can be the same as the amchine that will later serve as worker1).
 3. 3 master intel machines.
 
-If you have more hardware, adjust the hosts file accordingly.
+If you have more hardware, adjust the inventory file accordingly.
 
 NOTE: If you want to run a different version of OKD, extract
 the installer under ./openshift-install which will stop retrieving the installer.
@@ -19,11 +18,7 @@ The exact command to extract the installer is available per beta version at
 [OKD Nightly Releases](https://amd64.origin.releases.ci.openshift.org/#4.8.0-0.okd).
 
 There are optional components to install which are controlled by
-ansible variables. These are defined on the command line:
-
-```shell
-ansible-playbook -i inventories/example -v deploy-okd.yml --extra-vars "use_control_plane_nodes_for_compute=true argocd=true"
-```
+ansible variables. These are defined in the inventory group vars.
 
 | variable                            | description                                                                                                                     |
 |-------------------------------------|---------------------------------------------------------------------------------------------------------------------------------|
@@ -123,6 +118,12 @@ that will be completed:
 2. The infrastructure node (RPI) will be setup.
 
 This is how to run the playbook:
+```shell
+make dependencies
+CLUSTER_NAME=example make cluster
+```
+
+Or if you wish to run the playbook directly:
 ```shell
 ansible-playbook -i inventories/example -v deploy-okd.yml --extra-vars "use_control_plane_nodes_for_compute=true argocd=true"
 ```

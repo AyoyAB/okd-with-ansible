@@ -1,46 +1,20 @@
-- hosts: localhost
-  tasks:
-    - name: Validate inventory is not empty.
-      fail:
-        msg: "[ERROR] Empty inventory. No host available."
-      when: groups.all|length == 0
-
+---
 - hosts: all
   any_errors_fatal: true
   gather_facts: false
 
-- ansible.builtin.import_playbook: install-ansible-dependencies.yml
-  vars:
-    hosts: localhost
-
 - ansible.builtin.import_playbook: create-local-files.yml
-  vars:
-    hosts: all
 
 - ansible.builtin.import_playbook: validate-dns.yml
-  vars:
-    hosts: all
 
 - ansible.builtin.import_playbook: create-lbs.yml
-  vars:
-    hosts: all
 
 - ansible.builtin.import_playbook: wait-for-installation.yml
-  vars:
-    hosts: all
 
 - ansible.builtin.import_playbook: remove-bootstrap-from-infra.yml
-  vars:
-    hosts: all
 
 - ansible.builtin.import_playbook: wait-for-workers.yml
-  vars:
-    hosts: all
 
 - ansible.builtin.import_playbook: configure-cluster.yml
-  vars:
-    hosts: all
 
 - ansible.builtin.import_playbook: post-installation.yml
-  vars:
-    hosts: all

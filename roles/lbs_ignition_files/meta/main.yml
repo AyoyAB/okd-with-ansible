@@ -1,7 +1,6 @@
 galaxy_info:
-  role_name: create-local-files
   author: John Allberg
-  description: Creates the local files to prepare for OKD installation.
+  description: Copies all the ignition files to the nginx host.
   company: Ayoy AB
 
   # If the issue tracker for your role is not on github, uncomment the
@@ -47,5 +46,5 @@ galaxy_info:
     #       Maximum 20 tags per role.
 
 dependencies:
-  - role: validate_inventory
+  - role: lbs_handlers
   - role: local-path-definitions

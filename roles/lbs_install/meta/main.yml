@@ -1,8 +1,6 @@
 galaxy_info:
-  role_name: create-local-files
-  author: John Allberg
-  description: Creates the local files to prepare for OKD installation.
-  company: Ayoy AB
+  author: Jakob Petersson
+  description: Install load balancer dependencies.
 
   # If the issue tracker for your role is not on github, uncomment the
   # next line and provide a value
@@ -47,5 +45,4 @@ galaxy_info:
     #       Maximum 20 tags per role.
 
 dependencies:
-  - role: validate_inventory
-  - role: local-path-definitions
+  - role: lbs_handlers
