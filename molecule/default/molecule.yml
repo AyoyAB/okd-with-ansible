@@ -1,0 +1,42 @@
+---
+dependency:
+  name: galaxy
+  options:
+    requirements-file: requirements.yml
+driver:
+  name: vagrant
+  provider:
+    name: virtualbox
+platforms:
+  - name: lbs.okd4.local.com
+    groups:
+      - lbs
+    box: debian/bullseye64
+    box_version: 11.20221219.1
+    memory: 2048
+    cpu: 2
+    interfaces:
+      # `network_name` is the required identifier, other keys map to arguments.
+      - network_name: private_network
+        ip: 172.16.32.90
+#    # List of raw Vagrant `config` options.
+#    provider_raw_config_args:
+#      - "customize [ 'modifyvm', :id, '--natdnshostresolver1', 'on' ]"
+#    # Dictionary of `config` options.
+#    config_options:
+#      ssh.keep_alive: yes
+#      ssh.remote_user: "'vagrant'"
+provisioner:
+  name: ansible
+  options:
+    v: True
+  inventory:
+    links:
+      hosts: ../../inventories/local/hosts.yml
+      group_vars: ../../inventories/local/group_vars/
+#lint: |
+#  set -e
+#  yamllint .
+#  ansible-lint
+verifier:
+  name: ansible

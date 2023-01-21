@@ -1,0 +1,3 @@
+---
+- name: Setup local files before, (will always create changes, therefore good to have in prepare)
+  import_playbook: ../../create-local-files.yml

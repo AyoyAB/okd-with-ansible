@@ -1,0 +1,7 @@
+address=/api.{{ cluster_name }}.{{ base_domain }}/{{ hostvars[groups.lbs[0]]['vagrant_ip'] }}
+address=/api-int.{{ cluster_name }}.{{ base_domain }}/{{ hostvars[groups.lbs[0]]['vagrant_ip'] }}
+address=/apps.{{ cluster_name }}.{{ base_domain }}/{{ hostvars[groups.lbs[0]]['vagrant_ip'] }}
+{% for node in groups.nodes %}
+# "Fake" that the hostnames exists by pointing to lbs
+address=/{{ node }}/{{ hostvars[groups.lbs[0]]['vagrant_ip'] }}
+{% endfor %}
