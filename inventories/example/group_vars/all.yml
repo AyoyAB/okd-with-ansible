@@ -1,5 +1,5 @@
 ---
-okd_version: 4.11.0-0.okd-2022-12-02-145640
+okd_version: 4.11.0-0.okd-2023-01-14-152430
 ignition_version: v2.14.0
 
 # The full domain is <cluster_name>.<base_domain> (e.g. okd4.example.com)
