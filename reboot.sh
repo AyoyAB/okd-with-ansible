@@ -38,7 +38,7 @@ _cycle_node() {
 
   echo ""
   echo "Waiting for node to be restarted"
-  sleep 30 || exit 1
+  sleep 90
 
   # Wait forever until node is Ready again
   while : ; do
