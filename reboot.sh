@@ -44,7 +44,7 @@ _cycle_node() {
   while : ; do
     echo ""
     sleep 5
-    status=$(oc get node "${_NODE_NAME}" -o json | jq -r '.status.conditions[] | select(.type=="Ready") | .status')
+    status=$(oc get node "${_NODE_NAME}" -o json | jq -r '.status.conditions[] | select(.type=="Ready") | .status') || status="Error from oc: $?"
     echo "Node ready status is: $status"
     [[ $status != "True" ]] || break
   done
