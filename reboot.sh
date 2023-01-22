@@ -37,12 +37,12 @@ _cycle_node() {
     || echo "Returned error: $?"
 
   echo ""
-  echo "Waiting for node to be restarted"
+  echo "Waiting for node ${_NODE_NAME} to be restarted"
   sleep 90
 
   # Wait forever until node is Ready again
+  echo "Waiting for node ${_NODE_NAME} to be Ready"
   while : ; do
-    echo ""
     sleep 5
     status=$(oc get node "${_NODE_NAME}" -o json | jq -r '.status.conditions[] | select(.type=="Ready") | .status') || status="Error from oc: $?"
     echo "Node ready status is: $status"
