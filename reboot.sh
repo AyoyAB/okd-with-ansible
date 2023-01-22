@@ -20,8 +20,8 @@ _cycle_node() {
 
   echo ""
   echo "Draining node ${_NODE_NAME}"
-  oc adm drain "${_NODE_NAME}" --ignore-daemonsets --delete-emptydir-data
-  oc adm drain "${_NODE_NAME}" --ignore-daemonsets --delete-emptydir-data --force || exit 1
+  oc adm drain "${_NODE_NAME}" --ignore-daemonsets --delete-emptydir-data || echo Failed to drain. Forcing
+  oc adm drain "${_NODE_NAME}" --ignore-daemonsets --delete-emptydir-data --force
 
   echo ""
   if [ "${_SHUTDOWN}" == "Y" ]; then
