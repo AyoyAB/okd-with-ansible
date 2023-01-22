@@ -6,6 +6,7 @@
 set -euo pipefail
 
 #
+SSH_KEY=~/.ssh/id_ansible
 
 #
 # Gracefully cycle a node
@@ -25,12 +26,15 @@ _cycle_node() {
 
   echo ""
   if [ "${_SHUTDOWN}" == "Y" ]; then
+    ACTION="--poweroff"
     echo "Shutting down node ${_NODE_NAME}"
-    ssh -n "${_NODE_NAME}" 'sudo shutdown -h now'
   else
+    ACTION="--reboot"
     echo "Rebooting node ${_NODE_NAME}"
-    ssh -n "${_NODE_NAME}" 'sudo reboot 5'
   fi
+
+  ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i ${SSH_KEY} -n "core@${_NODE_NAME}" "sudo shutdown +0 ${ACTION} && exit" \
+    || echo "Returned error: $?"
 
   echo ""
   echo "Waiting for node to be restarted"
