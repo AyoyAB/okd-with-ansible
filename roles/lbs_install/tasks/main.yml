@@ -3,6 +3,10 @@
 - name: Install nginx
   ansible.builtin.include_tasks: "nginx.yml"
 
+- name: Install haproxy
+  ansible.builtin.include_tasks: "haproxy.yml"
+  when: loadbalancer_use_haproxy
+
 - name: Configure UFW port openings
   ansible.builtin.include_tasks: "ufw.yml"
   when: configure_ufw

@@ -1,3 +1,4 @@
 ---
 
+loadbalancer_use_haproxy: false
 configure_ufw: false

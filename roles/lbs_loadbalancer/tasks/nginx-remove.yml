@@ -1,0 +1,10 @@
+---
+
+- name: Remove nginx loadbalancer configuration.
+  ansible.builtin.file:
+    path: /etc/nginx/tcpconf.d/kubernetes.conf
+    state: absent
+  notify: restart nginx
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers

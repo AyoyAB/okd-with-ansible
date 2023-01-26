@@ -1,4 +1,17 @@
 ---
 
-- name: Configure nginx as load balancer
+- name: Disable nginx as load balancer.
+  ansible.builtin.include_tasks: "nginx-remove.yml"
+  when: loadbalancer_use_haproxy
+
+- name: Disable HAProxy as load balancer.
+  ansible.builtin.include_tasks: "haproxy-remove.yml"
+  when: not loadbalancer_use_haproxy
+
+- name: Configure nginx as load balancer.
   ansible.builtin.include_tasks: "nginx.yml"
+  when: not loadbalancer_use_haproxy
+
+- name: Configure HAProxy as load balancer.
+  ansible.builtin.include_tasks: "haproxy.yml"
+  when: loadbalancer_use_haproxy

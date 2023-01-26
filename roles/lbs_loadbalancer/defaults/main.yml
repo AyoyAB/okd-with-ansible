@@ -1,0 +1,6 @@
+---
+
+loadbalancer_use_haproxy: false
+
+haproxy_stats_username: admin
+haproxy_stats_password: password
