@@ -38,3 +38,7 @@
     - /etc/nginx/sites-enabled
     - /etc/nginx/tcpconf.d
   notify: Nginx restart
+
+- name: Configure UFW port openings
+  ansible.builtin.include_tasks: "ufw.yml"
+  when: configure_ufw

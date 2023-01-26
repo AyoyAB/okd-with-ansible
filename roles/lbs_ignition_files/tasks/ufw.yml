@@ -1,7 +1,0 @@
----
-
-- name: Configure UFW to allow access access to tcp port 8080
-  community.general.ufw:
-    rule: allow
-    port: '8080'
-    proto: tcp

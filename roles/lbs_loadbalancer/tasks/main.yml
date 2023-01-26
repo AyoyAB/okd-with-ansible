@@ -6,7 +6,3 @@
     dest: /etc/nginx/tcpconf.d/kubernetes.conf
     mode: '0644'
   notify: Nginx restart
-
-- name: Configure UFW port openings
-  ansible.builtin.include_tasks: "ufw.yml"
-  when: configure_ufw

@@ -48,7 +48,3 @@
     dest: "{{ nginx_ignition_files_dir }}/install.sh"
     mode: '0644'
   notify: Nginx restart
-
-- name: Configure UFW port openings
-  ansible.builtin.include_tasks: "ufw.yml"
-  when: configure_ufw
