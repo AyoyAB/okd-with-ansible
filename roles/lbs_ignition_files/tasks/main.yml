@@ -5,7 +5,7 @@
     src: ignition.conf
     dest: /etc/nginx/sites-enabled/ignition.conf
     mode: '0644'
-  notify: Nginx restart
+  notify: restart nginx
 
 - name: Copy over generic ignition files
   ansible.builtin.copy:
@@ -16,7 +16,7 @@
     - "bootstrap"
     - "master"
     - "worker"
-  notify: Nginx restart
+  notify: restart nginx
 
 - name: Copy over bootstrap ignition files
   ansible.builtin.copy:
@@ -24,7 +24,7 @@
     dest: "{{ nginx_ignition_files_dir }}/{{ item }}.ign"
     mode: '0644'
   loop: "{{ groups['bootstrap'] }}"
-  notify: Nginx restart
+  notify: restart nginx
 
 - name: Copy over master ignition files
   ansible.builtin.copy:
@@ -32,7 +32,7 @@
     dest: "{{ nginx_ignition_files_dir }}/{{ item }}.ign"
     mode: '0644'
   loop: "{{ groups['masters'] }}"
-  notify: Nginx restart
+  notify: restart nginx
 
 - name: Copy over worker ignition files
   ansible.builtin.copy:
@@ -40,11 +40,11 @@
     dest: "{{ nginx_ignition_files_dir }}/{{ item }}.ign"
     mode: '0644'
   loop: "{{ groups['workers'] }}"
-  notify: Nginx restart
+  notify: restart nginx
 
 - name: Copy install.sh
   ansible.builtin.copy:
     src: "{{ openshift_files_directory }}/install.sh"
     dest: "{{ nginx_ignition_files_dir }}/install.sh"
     mode: '0644'
-  notify: Nginx restart
+  notify: restart nginx
