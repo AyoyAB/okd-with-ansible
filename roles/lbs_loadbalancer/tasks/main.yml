@@ -1,8 +1,4 @@
 ---
 
-- name: Copy over nginx loadbalancer configuration
-  ansible.builtin.template:
-    src: kubernetes.conf
-    dest: /etc/nginx/tcpconf.d/kubernetes.conf
-    mode: '0644'
-  notify: Nginx restart
+- name: Configure nginx as load balancer
+  ansible.builtin.include_tasks: "nginx.yml"
