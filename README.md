@@ -28,6 +28,22 @@ ansible variables. These are defined in the inventory group vars.
 | set_etc_hostname_in_ignition_file   | Whether to set the hostname in /etc/hostname                                                       |
 | use_control_plane_nodes_for_compute | Whether to allow masters to be used for regular pods                                               |
 
+# Load Balancer
+
+The load balancer can be installed on a debian server (e.g. Raspberry PI) and is used for infrastructure (load balancing and serving the ignition files).
+
+Nginx is used for static hosting (ignition files) and either nginx or HAProxy can be used for load balancing.
+If you choose to use HAProxy, the status interface is found at [infra1.okd4.example.com:1936/stats](infra1.okd4.example.com:1936/stats) with default credentials `admin:password`.
+
+The load balancer installation can be controlled with the following parameters:
+
+| Variable                 | Description                                    | Default    |
+|--------------------------|------------------------------------------------|------------|
+| loadbalancer_use_haproxy | Use HAProxy as load balancer instead of nginx. | false      |
+| haproxy_stats_username   | HAProxy status page username.                  | `admin`    |
+| haproxy_stats_password   | HAProxy status page password.                  | `password` |
+| configure_ufw            | Configure UFW port openings.                   | `false`    |
+
 # Disconnected registry
 
 In disconnected environments you normally have a docker registry which will supply all the OKD images.
