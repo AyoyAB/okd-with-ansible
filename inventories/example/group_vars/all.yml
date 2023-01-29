@@ -32,7 +32,14 @@ disconnected_registry_quay_io_openshift_okd_content: registry.okd4.example.com:5
 # Infra Configuration
 #
 
-# Configure UFW port openings for nginx
+# Use HAProxy for load balancing
+# loadbalancer_use_haproxy: true
+
+# Configure HAProxy stats login
+# haproxy_stats_username: admin
+# haproxy_stats_password: password
+
+# Configure UFW port openings for load balancer
 # configure_ufw: true
 
 #

@@ -1,0 +1,40 @@
+---
+
+- name: Install nginx
+  retries: 5
+  delay: 10
+  ansible.builtin.apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: true
+  vars:
+    packages:
+      - nginx
+
+- name: Enable nginx service
+  ansible.builtin.service:
+    name: nginx
+    enabled: true
+
+- name: Copy over nginx main configuration
+  ansible.builtin.template:
+    src: nginx.conf
+    dest: /etc/nginx/nginx.conf
+    mode: '0644'
+  notify: restart nginx
+
+- name: Delete default site
+  ansible.builtin.file:
+    state: absent
+    path: /etc/nginx/sites-enabled/default
+  notify: restart nginx
+
+- name: Create configuration directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  with_items:
+    - /etc/nginx/sites-enabled
+    - /etc/nginx/tcpconf.d
+  notify: restart nginx

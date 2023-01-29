@@ -6,8 +6,9 @@ OKD using Ansible on hardware.
 [Installing a user-provisioned cluster on bare metal](https://docs.okd.io/latest/installing/installing_bare_metal/installing-bare-metal.html)
 
 It assumes you have the following hardware:
+
 1. A debian server (e.g. Raspberry PI) for infrastructure (load balancing and serving the ignition files)
-2. An intel machine that will first serve as bootstrap (can be the same as the amchine that will later serve as worker1).
+2. An intel machine that will first serve as bootstrap (can be the same as the machine that will later serve as worker1).
 3. 3 master intel machines.
 
 If you have more hardware, adjust the inventory file accordingly.
@@ -20,16 +21,32 @@ The exact command to extract the installer is available per beta version at
 There are optional components to install which are controlled by
 ansible variables. These are defined in the inventory group vars.
 
-| variable                            | description                                                                                                                     |
-|-------------------------------------|---------------------------------------------------------------------------------------------------------------------------------|
-| argocd                              | whether to install the argocd operator                                                                                          |
-| sealed_secrets                      | Whether to pre-install a secret for sealed_secret to make sure git sealed secrets can be decrypted                              | 
-| set_etc_hostname_in_ignition_file   | Whether to set the hostname in /etc/hostname                                                                                    |
-| use_control_plane_nodes_for_compute | Whether to allow masters to be used for regular pods                                                                            |
+| variable                            | description                                                                                        |
+|-------------------------------------|----------------------------------------------------------------------------------------------------|
+| argocd                              | whether to install the argocd operator                                                             |
+| sealed_secrets                      | Whether to pre-install a secret for sealed_secret to make sure git sealed secrets can be decrypted | 
+| set_etc_hostname_in_ignition_file   | Whether to set the hostname in /etc/hostname                                                       |
+| use_control_plane_nodes_for_compute | Whether to allow masters to be used for regular pods                                               |
 
+# Load Balancer
+
+The load balancer can be installed on a debian server (e.g. Raspberry PI) and is used for infrastructure (load balancing and serving the ignition files).
+
+Nginx is used for static hosting (ignition files) and either nginx or HAProxy can be used for load balancing.
+If you choose to use HAProxy, the status interface is found at [infra1.okd4.example.com:1936/stats](infra1.okd4.example.com:1936/stats) with default credentials `admin:password`.
+
+The load balancer installation can be controlled with the following parameters:
+
+| Variable                 | Description                                    | Default    |
+|--------------------------|------------------------------------------------|------------|
+| loadbalancer_use_haproxy | Use HAProxy as load balancer instead of nginx. | false      |
+| haproxy_stats_username   | HAProxy status page username.                  | `admin`    |
+| haproxy_stats_password   | HAProxy status page password.                  | `password` |
+| configure_ufw            | Configure UFW port openings.                   | `false`    |
 
 # Disconnected registry
-In disconnected environments you normally have a docker registry which will supply all the OKD images. 
+
+In disconnected environments you normally have a docker registry which will supply all the OKD images.
 
 To use a disconnected registry, set the following parameters:
 
@@ -40,9 +57,9 @@ To use a disconnected registry, set the following parameters:
 | disconnected_registry_quay_io_openshift_okd         | URL to the registry for quay.io/openshift/okd. Example: registry.okd4.example.com:5011/openshift/okd                 |
 | disconnected_registry_quay_io_openshift_okd_content | URL to the registry for quay.io/openshift/okd-content. Example: registry.okd4.example.com:5011/openshift/okd-content |                                           
 
-
 # Pull-through-cache
-In disconnected environments you normally have a docker registry which will supply all the OKD images. The 
+
+In disconnected environments you normally have a docker registry which will supply all the OKD images. The
 pull-through-cache will simulate that and should also, if you have a faster cache than your Internet connection,
 improve your installation time.
 
@@ -55,9 +72,9 @@ the hostname `registry.okd4.example.com` needs to be setup in DNS.
 | make ca        | creates both CA and registry certificates       |
 | make quay.io   | creates the docker proxy registry for quay.io   |
 | make docker.io | creates the docker proxy registry for docker.io |
- 
 
 # Preparation
+
 1. Pull your [RedHat pull secret](https://console.redhat.com/openshift/install/metal/user-provisioned) and place in file `pull-secret`.
 2. [If you want github integration](https://docs.openshift.com/container-platform/4.8/authentication/identity_providers/configuring-github-identity-provider.html),
    create a file called "github-config.json" with similar content as this:
@@ -85,12 +102,12 @@ the hostname `registry.okd4.example.com` needs to be setup in DNS.
    | master3.okd4.example.com	    | 192.168.60.183                 |
    | worker1.okd4.example.com       | 192.168.60.184                 |
 
-   If you're using pihole (as I do), increase rate limiting, create `/etc/dnsmasq.d/99-openshift.conf` 
+   If you're using pihole (as I do), increase rate limiting, create `/etc/dnsmasq.d/99-openshift.conf`
    with the following content and restart dns (`pihole restartdns`)
    ```
    address=/.apps.okd4.example.com/192.168.60.180
    ```
-    
+
    If your DNS cannot handle wildcards, add these entries as CNAME, pointing to app.okd4.example.com:
 
    - alertmanager-main-openshift-monitoring.apps.okd4.example.com 
@@ -103,27 +120,33 @@ the hostname `registry.okd4.example.com` needs to be setup in DNS.
    - thanos-querier-openshift-monitoring.apps.okd4.example.com
 
 4. Create a new image for the rasperry pi with enabled ssh and boot it up.
-5. Create a bootable USB from the correct version of Fedora CoreOS.
-   (At the time of writing, the current working release is [35.20220327.3.0](https://builds.coreos.fedoraproject.org/prod/streams/stable/builds/35.20220327.3.0/x86_64/fedora-coreos-35.20220327.3.0-live.x86_64.iso)
+5. Create a bootable USB from the correct version of Fedora CoreOS.  
+   (At the time of writing, the current working release is
+   [36.20220716.3.1](https://builds.coreos.fedoraproject.org/prod/streams/stable/builds/36.20220716.3.1/x86_64/fedora-coreos-36.20220716.3.1-live.x86_64.iso))
+
    ```shell
    ./openshift-install/openshift-install coreos print-stream-json | jq -r '.architectures.x86_64.artifacts.metal.formats.iso.disk.location'
    ```
 6. Set up static DHCP entries for the machines, matching IP addresses above.
 
 # Run playbook
+
 It's time to run the playbook. There are a number of steps
 that will be completed:
+
 1. Cluster configuration will be created and added into
    ignition files.
 2. The infrastructure node (RPI) will be setup.
 
 This is how to run the playbook:
+
 ```shell
 make dependencies
 CLUSTER_NAME=example make cluster
 ```
 
 Or if you wish to run the playbook directly:
+
 ```shell
 ansible-playbook -i inventories/example -v deploy-okd.yml --extra-vars "use_control_plane_nodes_for_compute=true argocd=true"
 ```

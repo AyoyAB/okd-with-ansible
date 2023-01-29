@@ -1,0 +1,11 @@
+---
+
+- name: Populate service facts
+  ansible.builtin.service_facts:
+
+- name: Ensure HAProxy is stopped and disabled on boot.
+  ansible.builtin.service:
+    name: haproxy
+    state: stopped
+    enabled: false
+  when: "'haproxy' in services"

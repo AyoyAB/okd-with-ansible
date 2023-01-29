@@ -1,12 +1,17 @@
 ---
 
-- name: Copy over nginx loadbalancer configuration
-  ansible.builtin.template:
-    src: kubernetes.conf
-    dest: /etc/nginx/tcpconf.d/kubernetes.conf
-    mode: '0644'
-  notify: Nginx restart
+- name: Disable nginx as load balancer.
+  ansible.builtin.include_tasks: "nginx-remove.yml"
+  when: loadbalancer_use_haproxy
 
-- name: Configure UFW port openings
-  ansible.builtin.include_tasks: "ufw.yml"
-  when: configure_ufw
+- name: Disable HAProxy as load balancer.
+  ansible.builtin.include_tasks: "haproxy-remove.yml"
+  when: not loadbalancer_use_haproxy
+
+- name: Configure nginx as load balancer.
+  ansible.builtin.include_tasks: "nginx.yml"
+  when: not loadbalancer_use_haproxy
+
+- name: Configure HAProxy as load balancer.
+  ansible.builtin.include_tasks: "haproxy.yml"
+  when: loadbalancer_use_haproxy
