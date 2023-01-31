@@ -252,3 +252,72 @@ certificatesigningrequest.certificates.k8s.io/csr-wfnjq approved
 certificatesigningrequest.certificates.k8s.io/csr-qftjq approved
 No pending certificate requests
 ```
+
+## Local testing using molecule
+
+Test the ansible scripts locally using molecule.  
+Molecule uses vagrant and virtualbox to create virtual machines to perform the installation on.
+
+### Dependencies
+
+* Virtualbox
+* Vagrant
+* Molecule
+
+#### VirtualBox
+
+https://www.virtualbox.org/wiki/Downloads
+
+###### macOS
+
+```shell
+brew install --cask virtualbox
+```
+
+#### Vagrant
+
+https://developer.hashicorp.com/vagrant/downloads
+
+###### macOS
+
+```shell
+brew install hashicorp/tap/hashicorp-vagrant
+```
+
+#### Molecule (and python dependencies)
+
+https://molecule.readthedocs.io/en/latest/
+
+```shell
+pip3 install -r requirements.txt
+```
+
+### Usage
+
+#### Test
+
+To perform a full test, run:
+
+```shell
+molecule test --all
+```
+
+### Manual testing
+
+These are the commands used for testing manually:
+
+```shell
+molecule create
+molecule converge
+molecule verify
+molecule destroy
+```
+
+To run a specific scenario:
+
+```shell
+molecule create -s <scenario name>
+molecule converge -s <scenario name>
+molecule verify -s <scenario name>
+molecule destroy -s <scenario name>
+```
