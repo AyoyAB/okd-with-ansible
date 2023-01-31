@@ -19,6 +19,10 @@ ifndef CLUSTER_NAME
 	$(error Environment variable CLUSTER_NAME is not set)
 endif
 
+#
+# Cluster
+#
+
 .PHONY: cluster
 cluster: env-check
 	ansible-playbook -i inventories/${CLUSTER_NAME} -v deploy-okd.yml | tee install-$$(date +%s).log
@@ -34,6 +38,30 @@ cluster-masters: env-check
 .PHONY: cluster-config
 cluster-config: env-check
 	ansible-playbook -i inventories/${CLUSTER_NAME} -v configure-cluster.yml
+
+#
+# Load Balancer (lbs)
+#
+
+.PHONY: lbs
+lbs: env-check
+	ansible-playbook -i inventories/${CLUSTER_NAME} -v create-lbs.yml
+
+.PHONY: lbs-config-ignition-files
+lbs-config-ignition-files: env-check
+	ansible-playbook -i inventories/${CLUSTER_NAME} -v configure-lbs-ignition-files.yml
+
+.PHONY: lbs-config-bootstrap-enabled
+lbs-config-bootstrap-enabled: env-check
+	ansible-playbook -i inventories/${CLUSTER_NAME} -v configure-lbs-bootstrap-enabled.yml
+
+.PHONY: lbs-config-bootstrap-disabled
+lbs-config-bootstrap-disabled: env-check
+	ansible-playbook -i inventories/${CLUSTER_NAME} -v configure-lbs-bootstrap-disabled.yml
+
+#
+# Clean
+#
 
 .PHONY: clean
 clean:

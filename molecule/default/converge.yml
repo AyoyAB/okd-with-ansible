@@ -1,3 +1,6 @@
 ---
-- name: Include Deploy playbook
-  import_playbook: ../../create-lbs.yml
+- ansible.builtin.import_playbook: ../../create-lbs.yml
+
+- ansible.builtin.import_playbook: ../../configure-lbs-ignition-files.yml
+
+- ansible.builtin.import_playbook: ../../configure-lbs-bootstrap-enabled.yml

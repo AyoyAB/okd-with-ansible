@@ -9,9 +9,13 @@
 
 - ansible.builtin.import_playbook: create-lbs.yml
 
+- ansible.builtin.import_playbook: configure-lbs-ignition-files.yml
+
+- ansible.builtin.import_playbook: configure-lbs-bootstrap-enabled.yml
+
 - ansible.builtin.import_playbook: wait-for-installation.yml
 
-- ansible.builtin.import_playbook: remove-bootstrap-from-infra.yml
+- ansible.builtin.import_playbook: configure-lbs-bootstrap-disabled.yml
 
 - ansible.builtin.import_playbook: wait-for-workers.yml
 
