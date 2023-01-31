@@ -20,6 +20,14 @@ ifndef CLUSTER_NAME
 endif
 
 #
+# Local
+#
+
+.PHONY: local-files
+local-files: env-check
+	ansible-playbook -i inventories/${CLUSTER_NAME} -v create-local-files.yml
+
+#
 # Cluster
 #
 
