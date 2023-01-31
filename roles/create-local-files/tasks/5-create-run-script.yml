@@ -1,9 +1,0 @@
-- name: Log first host in lbs group
-  ansible.builtin.debug:
-    var: groups['lbs'][0]
-
-- name: Create installation script
-  ansible.builtin.template:
-    src: templates/install.sh
-    dest: "{{ openshift_files_directory }}/install.sh"
-    mode: '0755'

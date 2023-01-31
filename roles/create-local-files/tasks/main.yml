@@ -27,4 +27,3 @@
 - ansible.builtin.include_tasks: "2-download-tools.yml"
 - ansible.builtin.include_tasks: "3-create-openshift-config.yml"
 - ansible.builtin.include_tasks: "4-validate-ignition-files.yml"
-- ansible.builtin.include_tasks: "5-create-run-script.yml"
