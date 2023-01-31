@@ -7,6 +7,12 @@
     mode: '0644'
   notify: restart nginx
 
+- name: Create ignition file directory
+  ansible.builtin.file:
+    state: directory
+    path: "{{ nginx_ignition_files_dir }}"
+    mode: '0755'
+
 - name: Copy over generic ignition files
   ansible.builtin.copy:
     src: "{{ openshift_files_directory }}/{{ item }}.ign"
@@ -45,5 +51,6 @@
 - name: Copy install.sh
   ansible.builtin.template:
     src: install.sh.j2
-    dest: "{{ nginx_ignition_files_dir }}/install.sh"
+    dest: "{{ nginx_static_hosting_root_dir }}/install.sh"
     mode: '0644'
+  notify: restart nginx
