@@ -1,0 +1,27 @@
+---
+dependency:
+  name: galaxy
+  options:
+    requirements-file: requirements.yml
+driver:
+  name: delegated
+  options:
+    managed: False
+    ansible_connection_options:
+      ansible_connection: local
+platforms:
+  - name: localhost
+provisioner:
+  name: ansible
+  options:
+    v: True
+  inventory:
+    links:
+      hosts: ../../inventories/local/hosts.yml
+      group_vars: ../../inventories/local/group_vars/
+#lint: |
+#  set -e
+#  yamllint .
+#  ansible-lint
+verifier:
+  name: ansible
