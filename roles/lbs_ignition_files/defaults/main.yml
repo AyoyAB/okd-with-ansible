@@ -1,2 +1,3 @@
 ---
-nginx_ignition_files_dir: /usr/share/nginx/html
+nginx_static_hosting_root_dir: /usr/share/nginx/html
+nginx_ignition_files_dir: "{{ nginx_static_hosting_root_dir }}/ignition"

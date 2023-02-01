@@ -1,3 +1,14 @@
 ---
-- name: Setup local files before, (will always create changes, therefore good to have in prepare)
-  import_playbook: ../../create-local-files.yml
+
+- hosts: localhost
+  any_errors_fatal: true
+  gather_facts: false
+  tasks:
+    - name: Cleanup local files before
+      ansible.builtin.command:
+        cmd: "make clean"
+        chdir: ../../
+
+- ansible.builtin.import_playbook: ../../install-local-tools.yml
+
+- ansible.builtin.import_playbook: ../../create-local-files.yml

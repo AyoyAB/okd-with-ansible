@@ -3,15 +3,21 @@
   any_errors_fatal: true
   gather_facts: false
 
+- ansible.builtin.import_playbook: install-local-tools.yml
+
 - ansible.builtin.import_playbook: create-local-files.yml
 
 - ansible.builtin.import_playbook: validate-dns.yml
 
 - ansible.builtin.import_playbook: create-lbs.yml
 
+- ansible.builtin.import_playbook: configure-lbs-ignition-files.yml
+
+- ansible.builtin.import_playbook: configure-lbs-bootstrap-enabled.yml
+
 - ansible.builtin.import_playbook: wait-for-installation.yml
 
-- ansible.builtin.import_playbook: remove-bootstrap-from-infra.yml
+- ansible.builtin.import_playbook: configure-lbs-bootstrap-disabled.yml
 
 - ansible.builtin.import_playbook: wait-for-workers.yml
 
