@@ -1,5 +1,5 @@
-ansible-core
-kubernetes
-molecule
-molecule-plugins
-python-vagrant
+ansible-core==2.14.2
+kubernetes==24.2.0
+molecule==4.0.4
+molecule-plugins==23.0.0
+python-vagrant==1.0.0
