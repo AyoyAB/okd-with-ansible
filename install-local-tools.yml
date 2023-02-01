@@ -1,0 +1,6 @@
+---
+- hosts: localhost
+  any_errors_fatal: true
+  gather_facts: false
+  roles:
+    - role: local_install

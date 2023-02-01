@@ -23,6 +23,10 @@ endif
 # Local
 #
 
+.PHONY: local-tools
+local-tools: env-check
+	ansible-playbook -i inventories/${CLUSTER_NAME} -v install-local-tools.yml
+
 .PHONY: local-files
 local-files: env-check
 	ansible-playbook -i inventories/${CLUSTER_NAME} -v create-local-files.yml
