@@ -39,6 +39,9 @@ disconnected_registry_quay_io_openshift_okd_content: registry.okd4.example.com:5
 # haproxy_stats_username: admin
 # haproxy_stats_password: password
 
+# Configure network booting for nodes
+# network_boot_enabled: true
+
 # Configure UFW port openings for load balancer
 # configure_ufw: true
 

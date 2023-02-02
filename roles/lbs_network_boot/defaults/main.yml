@@ -1,0 +1,9 @@
+---
+network_boot_enabled: false
+
+network_boot_nginx_root_dir: /usr/share/nginx/html
+network_boot_nginx_ipxe_files_dir: "{{ network_boot_nginx_root_dir }}/ipxe"
+network_boot_nginx_ipxe_port: 8081
+
+network_boot_tftpd_config_path: /etc/default/tftpd-hpa
+network_boot_tftpd_root_dir: /srv/tftp

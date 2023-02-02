@@ -1,0 +1,8 @@
+#!ipxe
+
+set BASEURL http://{{ groups.lbs[0] }}:{{ network_boot_nginx_ipxe_port }}
+
+dhcp
+
+# Load IP-specific iPXE config
+chain ${BASEURL}/ipxe/${hostname}.${domain}.ipxe

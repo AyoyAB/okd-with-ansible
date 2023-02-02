@@ -1,7 +1,32 @@
-address=/api.{{ cluster_name }}.{{ base_domain }}/{{ hostvars[groups.lbs[0]]['vagrant_ip'] }}
-address=/api-int.{{ cluster_name }}.{{ base_domain }}/{{ hostvars[groups.lbs[0]]['vagrant_ip'] }}
-address=/apps.{{ cluster_name }}.{{ base_domain }}/{{ hostvars[groups.lbs[0]]['vagrant_ip'] }}
-{% for node in groups.nodes %}
-# "Fake" that the hostnames exists by pointing to lbs
-address=/{{ node }}/{{ hostvars[groups.lbs[0]]['vagrant_ip'] }}
+# Settings
+dhcp-range=192.168.62.210,192.168.62.230,12h
+dhcp-option=option:router,10.0.2.2
+domain={{ cluster_name }}.{{ base_domain }}
+no-hosts
+
+# DNS LBS
+{% for machine in groups.lbs %}
+address=/{{ machine }}/{{ hostvars[machine].vagrant_ip }}
 {% endfor %}
+
+# DNS OKD api
+address=/api.{{ cluster_name }}.{{ base_domain }}/{{ hostvars[groups.lbs[0]].vagrant_ip }}
+address=/api-int.{{ cluster_name }}.{{ base_domain }}/{{ hostvars[groups.lbs[0]].vagrant_ip }}
+
+# DNS OKD apps
+address=/apps.{{ cluster_name }}.{{ base_domain }}/{{ hostvars[groups.lbs[0]].vagrant_ip }}
+
+# DNS Nodes
+# "Fake" that the hostnames exists by pointing to lbs
+{% for node in groups.nodes %}
+address=/{{ node }}/{{ hostvars[groups.lbs[0]].vagrant_ip }}
+{% endfor %}
+
+# DHCP Nodes - Static IP
+{% for node in groups.nodes %}
+dhcp-host={{ hostvars[node].vagrant_mac }},{{ node }},{{ hostvars[node].vagrant_ip }},12h
+{% endfor %}
+
+# iPXE Boot
+dhcp-userclass=set:ipxe,iPXE
+dhcp-boot=tag:ipxe,http://{{ groups.lbs[0] }}:8081/ipxe/autoexec.ipxe

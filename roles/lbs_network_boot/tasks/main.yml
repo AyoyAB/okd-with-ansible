@@ -1,0 +1,106 @@
+---
+
+#
+# CoreOS variables
+#
+- name: Get CoreOS pxe kernel url
+  ansible.builtin.shell:
+    cmd: >-
+      "{{ openshift_install_executable }}" coreos print-stream-json
+      | jq -r '.architectures.x86_64.artifacts.metal.formats.pxe.kernel.location'
+  delegate_to: localhost
+  run_once: true
+  become: false
+  register: coreos_pxe_kernel_location_cmd
+  changed_when: false
+
+- name: Get CoreOS pxe rootfs url
+  ansible.builtin.shell:
+    cmd: >-
+      "{{ openshift_install_executable }}" coreos print-stream-json
+      | jq -r '.architectures.x86_64.artifacts.metal.formats.pxe.rootfs.location'
+  delegate_to: localhost
+  run_once: true
+  become: false
+  register: coreos_pxe_rootfs_location_cmd
+  changed_when: false
+
+- name: Get CoreOS pxe initramfs url
+  ansible.builtin.shell:
+    cmd: >-
+      "{{ openshift_install_executable }}" coreos print-stream-json
+      | jq -r '.architectures.x86_64.artifacts.metal.formats.pxe.initramfs.location'
+  delegate_to: localhost
+  run_once: true
+  become: false
+  register: coreos_pxe_initramfs_location_cmd
+  changed_when: false
+
+- name: Set CoreOS variables
+  ansible.builtin.set_fact:
+    network_boot_coreos_kernel_url: "{{ coreos_pxe_kernel_location_cmd.stdout }}"
+    network_boot_coreos_kernel_path: "{{ coreos_pxe_kernel_location_cmd.stdout | ansible.builtin.urlsplit('path') }}"
+    network_boot_coreos_rootfs_url: "{{ coreos_pxe_rootfs_location_cmd.stdout }}"
+    network_boot_coreos_rootfs_path: "{{ coreos_pxe_rootfs_location_cmd.stdout | ansible.builtin.urlsplit('path') }}"
+    network_boot_coreos_initramfs_url: "{{ coreos_pxe_initramfs_location_cmd.stdout }}"
+    network_boot_coreos_initramfs_path: "{{ coreos_pxe_initramfs_location_cmd.stdout | ansible.builtin.urlsplit('path') }}"
+  delegate_to: localhost
+  run_once: true
+  become: false
+
+- name: Set CoreOS proxy variables if not manually set
+  ansible.builtin.set_fact:
+    network_boot_coreos_proxy_scheme: "{{ coreos_pxe_kernel_location_cmd.stdout | ansible.builtin.urlsplit('scheme') }}"
+    network_boot_coreos_proxy_hostname: "{{ coreos_pxe_kernel_location_cmd.stdout | ansible.builtin.urlsplit('hostname') }}"
+    network_boot_coreos_proxy_port: "{{ coreos_pxe_kernel_location_cmd.stdout | ansible.builtin.urlsplit('port') }}"
+  delegate_to: localhost
+  run_once: true
+  become: false
+  when:
+    - network_boot_coreos_proxy_scheme is not defined
+    - network_boot_coreos_proxy_hostname is not defined
+    - network_boot_coreos_proxy_port is not defined
+
+- name: Log CoreOS variables
+  ansible.builtin.debug:
+    msg:
+      - "kernel:"
+      - "url: {{ network_boot_coreos_kernel_url }}"
+      - "path: {{ network_boot_coreos_kernel_path }}"
+      - "rootfs:"
+      - "url: {{ network_boot_coreos_rootfs_url }}"
+      - "path: {{ network_boot_coreos_rootfs_path }}"
+      - "initramfs:"
+      - "url: {{ network_boot_coreos_initramfs_url }}"
+      - "path: {{ network_boot_coreos_initramfs_path }}"
+      - "Proxy:"
+      - "scheme: {{ network_boot_coreos_proxy_scheme }}"
+      - "hostname: {{ network_boot_coreos_proxy_hostname }}"
+      - "port: {{ network_boot_coreos_proxy_port }}"
+
+#
+# iPXE (nginx)
+#
+
+- name: Copy over nginx static hosting configuration
+  ansible.builtin.template:
+    src: network-boot.conf.j2
+    dest: /etc/nginx/sites-enabled/network-boot.conf
+    mode: '0644'
+  notify: restart nginx
+
+- name: Create iPXE directory
+  ansible.builtin.file:
+    state: directory
+    path: "{{ network_boot_nginx_ipxe_files_dir }}"
+    mode: '0755'
+
+- name: Copy iPXE autoexec
+  ansible.builtin.template:
+    src: autoexec.ipxe.j2
+    dest: "{{ network_boot_nginx_ipxe_files_dir }}/autoexec.ipxe"
+    mode: '0644'
+
+- name: Copy host specific ipxe config files
+  ansible.builtin.include_tasks: "ipxe-config.yml"
+  loop: "{{ groups.nodes }}"

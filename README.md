@@ -253,6 +253,53 @@ certificatesigningrequest.certificates.k8s.io/csr-qftjq approved
 No pending certificate requests
 ```
 
+## Network booting nodes
+
+The OKD nodes can be booted over the network with iPXE.
+
+| Variable                           | Description                                | Default |
+|------------------------------------|--------------------------------------------|---------|
+| network_boot_enabled               | Enable configuration for network booting.  | false   |
+| network_boot_coreos_proxy_scheme   | Override coreos proxy scheme (http/https). |         |
+| network_boot_coreos_proxy_hostname | Override coreos proxy hostname.            |         |
+| network_boot_coreos_proxy_port     | Override coreos proxy port.                |         |
+
+### Boot order
+
+Configure the following boot order for the machines:
+
+1. Hard Disk (Boot from disk after install)
+2. Optical (e.g. boot from iPXE iso)
+3. USB (e.g. boot from iPXE USB stick)
+
+### Required DHCP configuration
+
+Required DHCP information:
+
+| DHCP field | Description                  | Example                                        |
+|------------|------------------------------|------------------------------------------------|
+| Hostname   | Provide hostname using DHCP. | `bootstrap`                                    |
+| Domain     | Provide domain using DHCP.   | `okd4.example.com`                             |
+| Filename   | Default BIOS file name.      | `lbs.okd4.example.com:8081/ipxe/autoexec.ipxe` |
+
+### How it works
+
+#### PXE
+
+PXE network booting is not supported at the moment.
+
+#### iPXE
+
+iPXE can be booted from an iso, USB drive, etc.
+
+More information: https://ipxe.org/
+
+1. iPXE will start and get a DHCP assignment.
+2. iPXE will first load `http://lbs.okd4.example.com:8081/ipxe/autoexec.ipxe`
+3. Which will load `http://lbs.okd4.example.com:8081/ipxe/$hostname.$domain.ipxe`
+   - Hostname and domain values are taken from DHCP.
+4. Which will load CoreOS with the nodes ignition file. e.g. `http://lbs.okd4.example.com:8080/ignition/bootstrap.okd4.example.com.ign`
+
 ## Local testing using molecule
 
 Test the ansible scripts locally using molecule.  
