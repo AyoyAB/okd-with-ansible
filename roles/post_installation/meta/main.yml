@@ -1,6 +1,5 @@
 ---
 galaxy_info:
-  role_name: post-installation
   author: John Allberg
   description: Do the twist again, like we normally do after the cluster is up and running.
   company: Ayoy AB

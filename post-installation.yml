@@ -4,4 +4,4 @@
   any_errors_fatal: true
   gather_facts: false
   roles:
-    - role: post-installation
+    - role: post_installation
