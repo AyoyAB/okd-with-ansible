@@ -1,3 +1,4 @@
+---
 - name: Remove a number of packages
   ansible.builtin.apt:
     name: "{{ packages }}"

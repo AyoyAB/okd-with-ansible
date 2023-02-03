@@ -1,3 +1,4 @@
+---
 - name: Set timezone to Central Europe
   timezone:
     name: Europe/Stockholm

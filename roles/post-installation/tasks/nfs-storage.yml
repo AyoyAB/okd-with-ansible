@@ -1,3 +1,4 @@
+---
 - name: 4.1 Create or update the namespace
   kubernetes.core.k8s:
     kubeconfig: "{{ openshift_files_kubeconfig }}"

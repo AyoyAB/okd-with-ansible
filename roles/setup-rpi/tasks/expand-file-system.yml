@@ -1,3 +1,4 @@
+---
 - name: Check unpartitioned space
   ansible.builtin.shell:
     cmd: |

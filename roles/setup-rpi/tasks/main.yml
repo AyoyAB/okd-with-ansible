@@ -1,3 +1,4 @@
+---
 - name: Wait 300 seconds for target connection to become reachable/usable
   ansible.builtin.wait_for_connection:
     delay: 0

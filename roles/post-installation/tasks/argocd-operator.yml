@@ -1,3 +1,4 @@
+---
 - name: Create or update Argo CD Operator subscription
   kubernetes.core.k8s:
     kubeconfig: "{{ openshift_files_kubeconfig }}"

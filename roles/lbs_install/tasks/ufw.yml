@@ -6,10 +6,10 @@
     port: "'{{ item }}'"
     proto: tcp
   loop:
-    - 80 # okd apps
-    - 443 # okd apps
-    - 1936 # HAProxy status
-    - 6443 # okd api
-    - 8080 # ignition file hosting
-    - 8081 # network boot hosting
-    - 22623 # okd machine config
+    - 80  # okd apps
+    - 443  # okd apps
+    - 1936  # HAProxy status
+    - 6443  # okd api
+    - 8080  # ignition file hosting
+    - 8081  # network boot hosting
+    - 22623  # okd machine config
