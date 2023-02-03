@@ -3,4 +3,5 @@
 - ansible.builtin.include_tasks: "pull-secret.yml"
 - ansible.builtin.include_tasks: "get-oc-version.yml"
 - ansible.builtin.include_tasks: "create-openshift-config.yml"
+- ansible.builtin.include_tasks: "create-ignition-files.yml"
 - ansible.builtin.include_tasks: "validate-ignition-files.yml"

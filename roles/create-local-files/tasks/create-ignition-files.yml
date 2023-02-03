@@ -1,0 +1,44 @@
+---
+
+- name: Set restrictive permission on kubeconfig and kubeadmin-password files
+  ansible.builtin.file:
+    path: "{{ item }}"
+    mode: '0600'
+  with_items:
+    - "{{ openshift_files_kubeconfig }}"
+    - "{{ openshift_files_kubeadmin_password }}"
+
+- name: Fix ignition files
+  ansible.builtin.include_tasks: "fix-ignition-files.yml"
+  loop:
+    - "bootstrap"
+    - "master"
+    - "worker"
+
+- name: Fix ignition files v4.8
+  ansible.builtin.include_tasks: "fix-ignition-files-v4.8.yml"
+  vars:
+    ifname: "eno1"
+  loop:
+    - "bootstrap"
+    - "master"
+    - "worker"
+  when: oc_version_minor in ["4.8", "4.9"]
+
+- name: Masters - Create host specific ignition files
+  ansible.builtin.include_tasks: "create-host-specific-ignition-file.yml"
+  loop: "{{ groups['masters'] }}"
+  vars:
+    template: master.ign
+
+- name: Workers - Create host specific ignition files
+  ansible.builtin.include_tasks: "create-host-specific-ignition-file.yml"
+  loop: "{{ groups['workers'] }}"
+  vars:
+    template: worker.ign
+
+- name: Bootstrap - Create host specific ignition files
+  ansible.builtin.include_tasks: "create-host-specific-ignition-file.yml"
+  loop: "{{ groups['bootstrap'] }}"
+  vars:
+    template: bootstrap.ign
