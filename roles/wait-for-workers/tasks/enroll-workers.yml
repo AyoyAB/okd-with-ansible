@@ -9,9 +9,9 @@
       1. Boot CoreOS
       2. Run the following command to install CoreOS:
 
-      bash -c "$(curl -fsSL http://{{ groups['lbs'][0] }}:8080/install.sh)"
+      bash -c "$(curl -fsSL http://{{ groups.lbs[0] }}:8080/install.sh)"
       or
-      bash -c "$(curl -fsSL http://{{ groups['lbs'][0] }}:8080/install.sh)" -s worker[1-3]
+      bash -c "$(curl -fsSL http://{{ groups.lbs[0] }}:8080/install.sh)" -s worker[1-3]
 
       3. Reboot and verify they are trying to retrieve the second stage ignition file.
 
@@ -23,7 +23,7 @@
   ansible.builtin.command:
     cmd: |
       "{{ playbook_dir }}/issueCertificates.sh" "{{ inventory_hostname }}"
-  when: inventory_hostname in groups['workers']
+  when: inventory_hostname in groups.workers
   delegate_to: localhost
   register: result
   until: result.rc == 0

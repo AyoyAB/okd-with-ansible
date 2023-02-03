@@ -7,12 +7,12 @@ compute:
 {% if use_control_plane_nodes_for_compute %}
     replicas: 0
 {% else %}
-    replicas: {{ groups['workers'] | length }}
+    replicas: {{ groups.workers | length }}
 {% endif %}
 controlPlane:
   hyperthreading: Enabled
   name: master
-  replicas: {{ groups['masters'] | length }}
+  replicas: {{ groups.masters | length }}
 metadata:
   name: {{ cluster_name }}
 networking:

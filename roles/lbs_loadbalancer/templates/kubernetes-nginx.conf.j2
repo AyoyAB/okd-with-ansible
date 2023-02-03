@@ -2,9 +2,9 @@ stream {
   upstream kubernetes {
     zone   stream_backend 64k;
 {% if bootstrap_enabled %}
-    server {{ groups['bootstrap'][0] }}:6443;
+    server {{ groups.bootstrap[0] }}:6443;
 {% endif %}
-{% for host in groups['masters'] %}
+{% for host in groups.masters %}
     server {{ host }}:6443;
 {% endfor %}
   }
@@ -17,9 +17,9 @@ stream {
   upstream machineconfig {
     zone   stream_backend 64k;
 {% if bootstrap_enabled %}
-    server {{ groups['bootstrap'][0] }}:22623;
+    server {{ groups.bootstrap[0] }}:22623;
 {% endif %}
-{% for host in groups['masters'] %}
+{% for host in groups.masters %}
     server {{ host }}:22623;
 {% endfor %}
     }
@@ -33,12 +33,12 @@ stream {
     zone   stream_backend 64k;
 {% if use_control_plane_nodes_for_compute %}
 {# The Ingress Controller pods run on the control plane nodes when there are no compute nodes. #}
-{% for host in groups['masters'] %}
+{% for host in groups.masters %}
     server {{ host }}:443;
 {% endfor %}
 {% else %}
 {# The Ingress Controller pods run on the compute nodes by default. #}
-{% for host in groups['workers'] %}
+{% for host in groups.workers %}
     server {{ host }}:443;
 {% endfor %}
 {% endif %}
@@ -52,12 +52,12 @@ stream {
     zone   stream_backend 64k;
 {% if use_control_plane_nodes_for_compute %}
 {# The Ingress Controller pods run on the control plane nodes when there are no compute nodes. #}
-{% for host in groups['masters'] %}
+{% for host in groups.masters %}
     server {{ host }}:80;
 {% endfor %}
 {% else %}
 {# The Ingress Controller pods run on the compute nodes by default. #}
-{% for host in groups['workers'] %}
+{% for host in groups.workers %}
     server {{ host }}:80;
 {% endfor %}
 {% endif %}
