@@ -1,6 +1,5 @@
 ---
 galaxy_info:
-  role_name: wait-for-workers
   author: John Allberg
   description: Setup worker nodes.
   company: Ayoy AB

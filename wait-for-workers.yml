@@ -4,4 +4,4 @@
   any_errors_fatal: true
   gather_facts: false
   roles:
-    - role: wait-for-workers
+    - role: wait_for_workers
