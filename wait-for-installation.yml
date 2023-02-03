@@ -4,4 +4,4 @@
   any_errors_fatal: true
   gather_facts: false
   roles:
-    - role: wait-for-installation
+    - role: wait_for_installation
