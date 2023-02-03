@@ -24,5 +24,8 @@
   ansible.builtin.fail:
     msg: "Aborting. System or architecture is not supported at the moment."
 
-- ansible.builtin.include_tasks: "download-installer.yml"
-- ansible.builtin.include_tasks: "download-tools.yml"
+- name: Download openshift-installer
+  ansible.builtin.include_tasks: "download-installer.yml"
+
+- name: Download other tools
+  ansible.builtin.include_tasks: "download-tools.yml"

@@ -1,5 +1,6 @@
 ---
-- hosts: localhost
+- name: Install local tools
+  hosts: localhost
   any_errors_fatal: true
   roles:
     - role: local_install

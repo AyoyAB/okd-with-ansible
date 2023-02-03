@@ -1,5 +1,5 @@
 ---
-- name: "{{ item }} - Add custom container registry ca.crt"
+- name: "Add custom container registry ca.crt - {{ item }}"
   ansible.builtin.shell:
     cmd: >-
       set -o pipefail &&

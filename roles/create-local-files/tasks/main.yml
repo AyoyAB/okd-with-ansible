@@ -1,7 +1,18 @@
 ---
-- ansible.builtin.include_tasks: "config-dir.yml"
-- ansible.builtin.include_tasks: "pull-secret.yml"
-- ansible.builtin.include_tasks: "get-oc-version.yml"
-- ansible.builtin.include_tasks: "create-openshift-config.yml"
-- ansible.builtin.include_tasks: "create-ignition-files.yml"
-- ansible.builtin.include_tasks: "validate-ignition-files.yml"
+- name: Create configuration directory
+  ansible.builtin.include_tasks: "config-dir.yml"
+
+- name: Setup pull-secret
+  ansible.builtin.include_tasks: "pull-secret.yml"
+
+- name: Get okd version
+  ansible.builtin.include_tasks: "get-oc-version.yml"
+
+- name: Create okd config
+  ansible.builtin.include_tasks: "create-openshift-config.yml"
+
+- name: Create ignition files
+  ansible.builtin.include_tasks: "create-ignition-files.yml"
+
+- name: Validate ignition files
+  ansible.builtin.include_tasks: "validate-ignition-files.yml"

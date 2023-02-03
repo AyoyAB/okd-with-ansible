@@ -1,12 +1,14 @@
 ---
-- hosts: rpis
+- name: Create RPi
+  hosts: rpis
   any_errors_fatal: true
   gather_facts: false
   roles:
     - role: setup-rpi
       become: true
 
-- hosts: lbs
+- name: Create lbs
+  hosts: lbs
   any_errors_fatal: true
   gather_facts: false
   roles:

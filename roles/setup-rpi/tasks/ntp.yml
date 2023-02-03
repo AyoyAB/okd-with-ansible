@@ -1,6 +1,6 @@
 ---
 - name: Set timezone to Central Europe
-  timezone:
+  community.general.timezone:
     name: Europe/Stockholm
 
 - name: Install ntp

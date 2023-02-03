@@ -7,7 +7,7 @@
 
 - name: Calculate how much longer config directory is valid
   ansible.builtin.set_fact:
-    config_dir_validity_time: "{{ (config_dir_stat.stat.ctime|int + okd_configuration_validity_duration_s - ansible_date_time.epoch|int) }}"
+    config_dir_validity_time: "{{ (config_dir_stat.stat.ctime | int + okd_configuration_validity_duration_s - ansible_date_time.epoch | int) }}"
   when: config_dir_stat.stat.exists
 
 - name: Print if it is time to reset configuration directory

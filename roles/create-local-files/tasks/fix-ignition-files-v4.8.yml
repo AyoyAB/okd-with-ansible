@@ -1,5 +1,5 @@
 ---
-- name: "{{ item }} - Create the network delay configuration"
+- name: "Create the network delay configuration - {{ item }}"
   ansible.builtin.set_fact:
     rendered_template: "{{ lookup('template', 'carrier-wait-timeout.conf') }}"
   register: networkdelay
@@ -8,7 +8,7 @@
   ansible.builtin.debug:
     var: networkdelay
 
-- name: "{{ item }} - Add the network delay configuration"
+- name: "Add the network delay configuration - {{ item }}"
   ansible.builtin.shell:
     cmd: >-
       set -o pipefail &&
@@ -30,13 +30,13 @@
   changed_when: false
 
 ############ https://github.com/coreos/fedora-coreos-tracker/issues/746
-- name: "{{ item }} - Create content of boot fix (https://github.com/coreos/fedora-coreos-tracker/issues/746)"
+- name: "Create content of boot fix (https://github.com/coreos/fedora-coreos-tracker/issues/746) - {{ item }}"
   ansible.builtin.set_fact:
     before_rfkill: |
       [Unit]
       Before=systemd-rfkill.service systemd-rfkill.socket
 
-- name: "{{ item }} - Add the boot fix (https://github.com/coreos/fedora-coreos-tracker/issues/746)"
+- name: "Add the boot fix (https://github.com/coreos/fedora-coreos-tracker/issues/746) - {{ item }}"
   ansible.builtin.shell:
     cmd: >-
       set -o pipefail &&
@@ -58,13 +58,13 @@
   changed_when: false
 
 ############ https://github.com/coreos/fedora-coreos-tracker/issues/975
-- name: "{{ item }} - Create content of boot fix (https://github.com/coreos/fedora-coreos-tracker/issues/975)"
+- name: "Create content of boot fix (https://github.com/coreos/fedora-coreos-tracker/issues/975) - {{ item }}"
   ansible.builtin.set_fact:
     after_ostree: |
       [Unit]
       After=ostree-remount.service
 
-- name: "{{ item }} - Add the boot fix (https://github.com/coreos/fedora-coreos-tracker/issues/975)"
+- name: "Add the boot fix (https://github.com/coreos/fedora-coreos-tracker/issues/975) - {{ item }}"
   ansible.builtin.shell:
     cmd: >-
       set -o pipefail &&
