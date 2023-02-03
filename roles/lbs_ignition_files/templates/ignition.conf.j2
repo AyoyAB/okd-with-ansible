@@ -1,0 +1,16 @@
+server {
+    listen 8080;
+
+    root {{ nginx_static_hosting_root_dir }};
+
+    location / {
+        deny all;
+    }
+
+    location /install.sh {
+    }
+
+    location /ignition/ {
+        autoindex on;
+    }
+}
