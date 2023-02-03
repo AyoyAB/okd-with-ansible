@@ -4,7 +4,7 @@
   any_errors_fatal: true
   gather_facts: false
   roles:
-    - role: setup-rpi
+    - role: setup_rpi
       become: true
 
 - name: Create lbs
