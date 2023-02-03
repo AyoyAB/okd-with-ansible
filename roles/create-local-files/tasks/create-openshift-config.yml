@@ -6,9 +6,6 @@
     dest: "{{ openshift_files_directory }}/install-config.yaml"
     mode: '0644'
 
-- name: Fetch install version
-  ansible.builtin.include_tasks: "get-oc-version.yml"
-
 - name: Create cluster manifests files
   ansible.builtin.command:
     cmd: "{{ openshift_install_executable }} create manifests --dir={{ openshift_files_directory }}"
@@ -26,10 +23,6 @@
   with_items:
     - "{{ openshift_files_kubeconfig }}"
     - "{{ openshift_files_kubeadmin_password }}"
-
-- name: Log oc_version_minor
-  ansible.builtin.debug:
-    var: oc_version_minor
 
 - name: Fix ignition files
   ansible.builtin.include_tasks: "fix-ignition-files.yml"

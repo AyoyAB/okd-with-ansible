@@ -1,12 +1,21 @@
-- name: Fetch install version
+---
+
+- name: Get install version
   ansible.builtin.shell:
     cmd: "{{ openshift_install_executable }} version | head -1"
   delegate_to: localhost
-  register: install_version
+  register: install_version_cmd
   changed_when: false
 
 - name: Publish install version as fact
   ansible.builtin.set_fact:
-    oc_version_full: "{{ install_version | regex_search('[0-9]\\.[0-9]+\\.[0-9]+.*') }}"
-    oc_version: "{{ install_version | regex_search('[0-9]\\.[0-9]+\\.[0-9]+') }}"
-    oc_version_minor: "{{ install_version | regex_search('([0-9]+\\.[0-9]+)\\.', '\\1') | first }}"
+    oc_version_full: "{{ install_version_cmd.stdout | regex_search('[0-9]\\.[0-9]+\\.[0-9]+.*') }}"
+    oc_version: "{{ install_version_cmd.stdout | regex_search('[0-9]\\.[0-9]+\\.[0-9]+') }}"
+    oc_version_minor: "{{ install_version_cmd.stdout | regex_search('([0-9]+\\.[0-9]+)\\.', '\\1') | first }}"
+
+- name: Log oc version
+  ansible.builtin.debug:
+    msg:
+      - "oc_version_full: {{ oc_version_full }}"
+      - "oc_version: {{ oc_version }}"
+      - "oc_version_minor: {{ oc_version_minor }}"
