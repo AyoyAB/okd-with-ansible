@@ -1,16 +1,4 @@
-- name: Delete directory {{ openshift_files_directory }}
-  ansible.builtin.file:
-    state: absent
-    path: "{{ openshift_files_directory }}"
-
-- name: Create directory {{ openshift_files_directory }}
-  ansible.builtin.file:
-    state: directory
-    path: "{{ openshift_files_directory }}"
-    mode: '0755'
-
-- name: Create pull secret
-  ansible.builtin.include_tasks: "pull-secret.yml"
+---
 
 - name: Create installation config
   ansible.builtin.template:

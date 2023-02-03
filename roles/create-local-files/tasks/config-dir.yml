@@ -1,0 +1,32 @@
+---
+
+- name: Check status of config directory
+  ansible.builtin.stat:
+    path: "{{ openshift_files_directory }}"
+  register: config_dir_stat
+
+- name: Calculate how much longer config directory is valid
+  ansible.builtin.set_fact:
+    config_dir_validity_time: "{{ (config_dir_stat.stat.ctime|int + okd_configuration_validity_duration_s - ansible_date_time.epoch|int) }}"
+  when: config_dir_stat.stat.exists
+
+- name: Print if it is time to reset configuration directory
+  ansible.builtin.debug:
+    msg: "The configuration directory is no longer valid, it will be removed."
+  when:
+    - config_dir_stat.stat.exists
+    - (config_dir_validity_time|int <= 0)
+
+- name: Delete configuration directory if it is time
+  ansible.builtin.file:
+    state: absent
+    path: "{{ openshift_files_directory }}"
+  when:
+    - config_dir_stat.stat.exists
+    - (config_dir_validity_time|int <= 0)
+
+- name: Create configuration directory
+  ansible.builtin.file:
+    state: directory
+    path: "{{ openshift_files_directory }}"
+    mode: '0755'
