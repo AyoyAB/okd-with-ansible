@@ -5,7 +5,7 @@
     src: ignition.conf.j2
     dest: /etc/nginx/sites-enabled/ignition.conf
     mode: '0644'
-  notify: restart nginx
+  notify: Restart nginx
 
 - name: Create ignition file directory
   ansible.builtin.file:

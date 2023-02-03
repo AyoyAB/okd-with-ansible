@@ -87,7 +87,7 @@
     src: network-boot.conf.j2
     dest: /etc/nginx/sites-enabled/network-boot.conf
     mode: '0644'
-  notify: restart nginx
+  notify: Restart nginx
 
 - name: Create iPXE directory
   ansible.builtin.file:

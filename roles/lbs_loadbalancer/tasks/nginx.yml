@@ -5,4 +5,4 @@
     src: kubernetes-nginx.conf.j2
     dest: /etc/nginx/tcpconf.d/kubernetes.conf
     mode: '0644'
-  notify: restart nginx
+  notify: Restart nginx
