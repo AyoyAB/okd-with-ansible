@@ -58,10 +58,16 @@
     template: worker.ign.tmp
     workdir: "{{ openshift_files_directory }}/.ignition"
 
+- name: Create ignition file directory
+  ansible.builtin.file:
+    state: directory
+    path: "{{ openshift_files_ignition_directory }}"
+    mode: '0755'
+
 - name: Copy final group ignition files
   ansible.builtin.copy:
     src: "{{ openshift_files_directory }}/.ignition/{{ item }}.ign.tmp"
-    dest: "{{ openshift_files_directory }}/{{ item }}.ign"
+    dest: "{{ openshift_files_ignition_directory }}/{{ item }}.ign"
     mode: '0644'
   with_items:
     - bootstrap
@@ -71,6 +77,6 @@
 - name: Copy final node specific ignition files
   ansible.builtin.copy:
     src: "{{ openshift_files_directory }}/.ignition/{{ item }}.ign.tmp"
-    dest: "{{ openshift_files_directory }}/{{ item }}.ign"
+    dest: "{{ openshift_files_ignition_directory }}/{{ item }}.ign"
     mode: '0644'
   with_items: "{{ groups.nodes }}"
