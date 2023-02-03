@@ -1,3 +1,4 @@
+---
 - name: Find ignition files
   ansible.builtin.find:
     paths: "{{ openshift_files_directory }}"

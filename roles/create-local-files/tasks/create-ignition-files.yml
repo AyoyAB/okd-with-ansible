@@ -1,44 +1,76 @@
 ---
 
-- name: Set restrictive permission on kubeconfig and kubeadmin-password files
+- name: Create ignition file tmp directory
   ansible.builtin.file:
-    path: "{{ item }}"
-    mode: '0600'
+    state: directory
+    path: "{{ openshift_files_directory }}/.ignition"
+    mode: '0755'
+
+- name: Copy original ignition files
+  ansible.builtin.copy:
+    src: "{{ openshift_files_directory }}/.install-config/{{ item }}.ign"
+    dest: "{{ openshift_files_directory }}/.ignition/{{ item }}.ign.tmp"
+    mode: '0644'
   with_items:
-    - "{{ openshift_files_kubeconfig }}"
-    - "{{ openshift_files_kubeadmin_password }}"
+    - bootstrap
+    - master
+    - worker
+  changed_when: false
 
 - name: Fix ignition files
   ansible.builtin.include_tasks: "fix-ignition-files.yml"
+  vars:
+    workdir: "{{ openshift_files_directory }}/.ignition"
   loop:
-    - "bootstrap"
-    - "master"
-    - "worker"
+    - bootstrap.ign.tmp
+    - master.ign.tmp
+    - worker.ign.tmp
 
 - name: Fix ignition files v4.8
   ansible.builtin.include_tasks: "fix-ignition-files-v4.8.yml"
   vars:
+    workdir: "{{ openshift_files_directory }}/.ignition"
     ifname: "eno1"
   loop:
-    - "bootstrap"
-    - "master"
-    - "worker"
+    - bootstrap.ign.tmp
+    - master.ign.tmp
+    - worker.ign.tmp
   when: oc_version_minor in ["4.8", "4.9"]
 
-- name: Masters - Create host specific ignition files
-  ansible.builtin.include_tasks: "create-host-specific-ignition-file.yml"
-  loop: "{{ groups['masters'] }}"
+- name: Bootstrap - Create node specific ignition files
+  ansible.builtin.include_tasks: "create-node-specific-ignition-file.yml"
+  loop: "{{ groups.bootstrap }}"
   vars:
-    template: master.ign
+    template: bootstrap.ign.tmp
+    workdir: "{{ openshift_files_directory }}/.ignition"
 
-- name: Workers - Create host specific ignition files
-  ansible.builtin.include_tasks: "create-host-specific-ignition-file.yml"
-  loop: "{{ groups['workers'] }}"
+- name: Masters - Create node specific ignition files
+  ansible.builtin.include_tasks: "create-node-specific-ignition-file.yml"
+  loop: "{{ groups.masters }}"
   vars:
-    template: worker.ign
+    template: master.ign.tmp
+    workdir: "{{ openshift_files_directory }}/.ignition"
 
-- name: Bootstrap - Create host specific ignition files
-  ansible.builtin.include_tasks: "create-host-specific-ignition-file.yml"
-  loop: "{{ groups['bootstrap'] }}"
+- name: Workers - Create node specific ignition files
+  ansible.builtin.include_tasks: "create-node-specific-ignition-file.yml"
+  loop: "{{ groups.workers }}"
   vars:
-    template: bootstrap.ign
+    template: worker.ign.tmp
+    workdir: "{{ openshift_files_directory }}/.ignition"
+
+- name: Copy final group ignition files
+  ansible.builtin.copy:
+    src: "{{ openshift_files_directory }}/.ignition/{{ item }}.ign.tmp"
+    dest: "{{ openshift_files_directory }}/{{ item }}.ign"
+    mode: '0644'
+  with_items:
+    - bootstrap
+    - master
+    - worker
+
+- name: Copy final node specific ignition files
+  ansible.builtin.copy:
+    src: "{{ openshift_files_directory }}/.ignition/{{ item }}.ign.tmp"
+    dest: "{{ openshift_files_directory }}/{{ item }}.ign"
+    mode: '0644'
+  with_items: "{{ groups.nodes }}"

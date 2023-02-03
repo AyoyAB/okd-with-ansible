@@ -1,17 +1,56 @@
 ---
 
-- name: Create installation config
+- name: Create installation config file
   ansible.builtin.template:
-    src: templates/install-config.yaml
+    src: templates/install-config.yaml.j2
     dest: "{{ openshift_files_directory }}/install-config.yaml"
     mode: '0644'
+  register: install_config
 
-- name: Create cluster manifests files
-  ansible.builtin.command:
-    cmd: "{{ openshift_install_executable }} create manifests --dir={{ openshift_files_directory }}"
-  changed_when: false
+- name: Create new cluster files  # noqa: no-handler
+  when: install_config.changed
+  block:
+    - name: Delete installation config tmp directory
+      ansible.builtin.file:
+        state: absent
+        path: "{{ openshift_files_directory }}/.install-config"
 
-- name: Create cluster ignition files
-  ansible.builtin.command:
-    cmd: "{{ openshift_install_executable }} create ignition-configs --dir={{ openshift_files_directory }}"
-  changed_when: false
+    - name: Create installation config tmp directory
+      ansible.builtin.file:
+        state: directory
+        path: "{{ openshift_files_directory }}/.install-config"
+        mode: '0755'
+
+    - name: Copy dependencies
+      ansible.builtin.copy:
+        src: "{{ openshift_files_directory }}/{{ item }}"
+        dest: "{{ openshift_files_directory }}/.install-config/{{ item }}"
+        mode: '0644'
+      with_items:
+        - install-config.yaml
+        - pull-secret
+
+    - name: Create cluster manifests files
+      ansible.builtin.command:
+        cmd: "{{ openshift_install_executable }} create manifests --dir={{ openshift_files_directory }}/.install-config"
+      changed_when: true
+
+    - name: Create cluster ignition files
+      ansible.builtin.command:
+        cmd: "{{ openshift_install_executable }} create ignition-configs --dir={{ openshift_files_directory }}/.install-config"
+      changed_when: true
+
+    - name: Create auth directory
+      ansible.builtin.file:
+        state: directory
+        path: "{{ openshift_files_directory }}/auth"
+        mode: '0755'
+
+    - name: Copy new kubeconfig and kubeadmin-password files
+      ansible.builtin.copy:
+        src: "{{ openshift_files_directory }}/.install-config/auth/{{ item }}"
+        dest: "{{ openshift_files_directory }}/auth/{{ item }}"
+        mode: '0600'
+      with_items:
+        - kubeconfig
+        - kubeadmin-password

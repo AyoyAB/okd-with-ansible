@@ -1,12 +1,14 @@
+---
 - name: "{{ item }} - Create the ignition file name"
   ansible.builtin.set_fact:
-    ign_file: "{{ openshift_files_directory }}/{{ item }}.ign"
+    ign_file: "{{ workdir }}/{{ item }}.ign.tmp"
 
 - name: "Create ignition file"
   ansible.builtin.copy:
-    src: "{{ openshift_files_directory }}/{{ template }}"
+    src: "{{ workdir }}/{{ template }}"
     dest: "{{ ign_file }}"
     mode: '0644'
+  changed_when: false
 
 - name: "{{ item }} - Set /etc/hostname in ignition file"
   when: set_etc_hostname_in_ignition_file
@@ -26,3 +28,4 @@
     && mv {{ ign_file }}.tmp {{ ign_file }}
   register: host_result
   failed_when: host_result.stderr != ""
+  changed_when: false

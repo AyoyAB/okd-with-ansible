@@ -1,8 +1,9 @@
+---
 - name: "{{ item }} - Add custom container registry ca.crt"
   ansible.builtin.shell:
     cmd: >-
       set -o pipefail &&
-      cat "{{ openshift_files_directory }}/{{ item }}.ign"
+      cat "{{ workdir }}/{{ item }}"
       | jq '.storage.files += [{
         "overwrite": true,
         "path": "/etc/containers/certs.d/{{ custom_container_registry_hostname_port }}/ca.crt",
@@ -14,7 +15,8 @@
           "source": "data:text/plain;charset=utf-8;base64,{{ lookup('file', custom_container_registry_ca_file) | b64encode }}"
         }
       }]'
-      > "{{ openshift_files_directory }}/{{ item }}.json"
-      && mv "{{ openshift_files_directory }}/{{ item }}.json" "{{ openshift_files_directory }}/{{ item }}.ign"
+      > "{{ workdir }}/{{ item }}.tmp"
+      && mv "{{ workdir }}/{{ item }}.tmp" "{{ workdir }}/{{ item }}"
     executable: /bin/bash
   when: use_custom_container_registry
+  changed_when: false
