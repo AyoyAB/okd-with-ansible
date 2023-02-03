@@ -25,12 +25,8 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Retrieve pull-secret
-        env:
-          PULL_SECRET: ${{ secrets.PULL_SECRET }}
-          PULL_SECRET_HASH: ${{ secrets.PULL_SECRET_HASH }}
         run: |
-          echo "$PULL_SECRET" > pull-secret
-          echo "$PULL_SECRET_HASH  pull-secret" | shasum -a 256 -c
+          echo '{"auths":{"fake":{"auth": "Zm9vOmJhcgo="}}}' > pull-secret
 
       - name: Generate ansible SSH key
         run: |
