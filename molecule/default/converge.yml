@@ -1,4 +1,9 @@
 ---
+
+- ansible.builtin.import_playbook: ../../install-local-tools.yml
+
+- ansible.builtin.import_playbook: ../../create-local-files.yml
+
 - ansible.builtin.import_playbook: ../../create-lbs.yml
 
 - ansible.builtin.import_playbook: ../../configure-lbs-ignition-files.yml

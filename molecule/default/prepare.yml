@@ -8,7 +8,3 @@
       ansible.builtin.command:
         cmd: "make clean"
         chdir: ../../
-
-- ansible.builtin.import_playbook: ../../install-local-tools.yml
-
-- ansible.builtin.import_playbook: ../../create-local-files.yml
