@@ -16,3 +16,33 @@ jobs:
         uses: ansible-community/ansible-lint-action@v6.2.1
         with:
           path: "./roles"
+
+  molecule:
+    name: Molecule
+    runs-on: macOS-12
+    steps:
+      - name: Check out the codebase.
+        uses: actions/checkout@v3
+
+      - name: Retrieve pull-secret
+        run: |
+          echo '{"auths":{"fake":{"auth": "Zm9vOmJhcgo="}}}' > pull-secret
+
+      - name: Generate ansible SSH key
+        run: |
+          ssh-keygen -t ed25519 -C "ansible ssh key" -f ~/.ssh/id_ansible -q -N ''
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+          cache: 'pip' # caching pip dependencies
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Test with molecule
+        run: |
+          molecule test --all

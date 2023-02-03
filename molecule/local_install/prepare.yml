@@ -1,0 +1,9 @@
+---
+- hosts: localhost
+  any_errors_fatal: true
+  gather_facts: false
+  tasks:
+    - name: Cleanup local files before
+      ansible.builtin.command:
+        cmd: "make clean"
+        chdir: ../../

@@ -18,7 +18,7 @@ platforms:
     interfaces:
       # `network_name` is the required identifier, other keys map to arguments.
       - network_name: private_network
-        ip: 172.16.32.90
+        ip: 192.168.62.90 # GitHub action vagrant only allows 192.168.56.0/21 = 192.168.56.1 - 192.168.63.254
 #    # List of raw Vagrant `config` options.
 #    provider_raw_config_args:
 #      - "customize [ 'modifyvm', :id, '--natdnshostresolver1', 'on' ]"
