@@ -4,4 +4,4 @@
   any_errors_fatal: true
   gather_facts: false
   roles:
-    - role: validate-dns
+    - role: validate_dns
