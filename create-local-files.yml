@@ -3,4 +3,4 @@
   hosts: localhost
   any_errors_fatal: true
   roles:
-    - role: create-local-files
+    - role: create_local_files

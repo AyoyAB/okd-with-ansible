@@ -1,6 +1,5 @@
 ---
 galaxy_info:
-  role_name: create-local-files
   author: John Allberg
   description: Creates the local files to prepare for OKD installation.
   company: Ayoy AB
