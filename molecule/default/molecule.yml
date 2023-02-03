@@ -17,7 +17,7 @@ platforms:
     cpu: 2
     interfaces:
       - network_name: private_network
-        ip: 192.168.62.90 # GitHub action vagrant only allows 192.168.56.0/21 = 192.168.56.1 - 192.168.63.254
+        ip: 192.168.62.90  # GitHub action vagrant only allows 192.168.56.0/21 = 192.168.56.1 - 192.168.63.254
 provisioner:
   name: ansible
   options:
@@ -26,9 +26,9 @@ provisioner:
     links:
       hosts: ../../inventories/local/hosts.yml
       group_vars: ../../inventories/local/group_vars/
-#lint: |
-#  set -e
-#  yamllint .
-#  ansible-lint
+lint: |
+  set -e
+  yamllint .
+  ansible-lint
 verifier:
   name: ansible

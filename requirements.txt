@@ -1,5 +1,7 @@
 ansible-core==2.14.2
+ansible-lint==6.12.1
 kubernetes==25.3.0
 molecule==4.0.4
 molecule-plugins==23.0.0
 python-vagrant==1.0.0
+yamllint==1.29.0
