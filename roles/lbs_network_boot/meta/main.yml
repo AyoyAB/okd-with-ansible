@@ -47,4 +47,4 @@ galaxy_info:
 
 dependencies:
   - role: lbs_handlers
-  - role: local-path-definitions
+  - role: local_path_definitions

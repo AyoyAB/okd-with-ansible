@@ -48,4 +48,4 @@ galaxy_info:
 
 dependencies:
   - role: validate_inventory
-  - role: local-path-definitions
+  - role: local_path_definitions

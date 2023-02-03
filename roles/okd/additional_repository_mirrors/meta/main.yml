@@ -46,4 +46,4 @@ galaxy_info:
   #       Maximum 20 tags per role.
 
 dependencies:
-  - role: local-path-definitions
+  - role: local_path_definitions
