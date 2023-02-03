@@ -1,3 +1,3 @@
 ---
-- ansible.builtin.include_tasks: "3-create-openshift-config.yml"
-- ansible.builtin.include_tasks: "4-validate-ignition-files.yml"
+- ansible.builtin.include_tasks: "create-openshift-config.yml"
+- ansible.builtin.include_tasks: "validate-ignition-files.yml"
