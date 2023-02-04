@@ -3,9 +3,9 @@
 set IGNITION_URL http://{{ groups.lbs[0] }}:8080/ignition/{{ item }}.ign
 
 set BASEURL http://{{ groups.lbs[0] }}:{{ network_boot_nginx_ipxe_port }}/coreos
-set KERNEL_URL ${BASEURL}/{{ network_boot_coreos_kernel_path }}
-set ROOTFS_URL ${BASEURL}/{{ network_boot_coreos_rootfs_path }}
-set INITRAMFS_URL ${BASEURL}/{{ network_boot_coreos_initramfs_path }}
+set KERNEL_URL ${BASEURL}{{ network_boot_coreos_kernel_path }}
+set ROOTFS_URL ${BASEURL}{{ network_boot_coreos_rootfs_path }}
+set INITRAMFS_URL ${BASEURL}{{ network_boot_coreos_initramfs_path }}
 
 set INSTALLDEV /dev/sda
 
