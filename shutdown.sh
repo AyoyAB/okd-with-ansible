@@ -2,7 +2,7 @@
 # RedHat recommendation is 10 minuter for large clusters with 10 nodes or more.
 # Therefore, for production clusters, set SECONDS_AFTER_WORKERS to 600.
 # https://docs.openshift.com/container-platform/4.8/backup_and_restore/graceful-cluster-shutdown.html
-MINUTES_TO_SHUTDOWN=1
+MINUTES_TO_SHUTDOWN=0
 SECONDS_AFTER_WORKERS=90
 
 certExpire=$(oc -n openshift-kube-apiserver-operator get secret kube-apiserver-to-kubelet-signer -o jsonpath='{.metadata.annotations.auth\.openshift\.io/certificate-not-after}')
