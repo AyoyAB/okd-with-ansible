@@ -295,8 +295,17 @@ iPXE can be booted from an iso, USB drive, etc.
 More information: https://ipxe.org/
 
 1. iPXE will start and get a DHCP assignment.
-2. iPXE will first load `http://lbs.okd4.example.com:8081/ipxe/autoexec.ipxe`
-3. Which will load `http://lbs.okd4.example.com:8081/ipxe/$hostname.$domain.ipxe`
+   If your DHCP provider does not set the hostname and domain, you can manually set them with
+   ```
+   $ set hostname master1
+   $ set domain okd4.example.com
+   ``` 
+2. iPXE will first load `http://infra1.okd4.example.com:8081/ipxe/autoexec.ipxe`
+   This can be done manually with
+   ```
+   $ chain http://infra1.okd4.example.com:8081/ipxe/autoexec.ipxe
+   ```
+3. Which will load `http://infra1.okd4.example.com:8081/ipxe/$hostname.$domain.ipxe`
    - Hostname and domain values are taken from DHCP.
 4. Which will load CoreOS with the nodes ignition file. e.g. `http://lbs.okd4.example.com:8080/ignition/bootstrap.okd4.example.com.ign`
 
