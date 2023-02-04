@@ -13,6 +13,8 @@
 
 - ansible.builtin.import_playbook: configure-lbs-ignition-files.yml
 
+- ansible.builtin.import_playbook: configure-lbs-network-boot.yml
+
 - ansible.builtin.import_playbook: configure-lbs-bootstrap-enabled.yml
 
 - ansible.builtin.import_playbook: wait-for-installation.yml

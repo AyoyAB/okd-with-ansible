@@ -1,14 +1,15 @@
 ---
 
-- name: Configure UFW to allow access access to tcp ports 80,443,1936,6443,8080,22623
+- name: Configure UFW to allow access access to local services
   community.general.ufw:
     rule: allow
     port: "'{{ item }}'"
     proto: tcp
   loop:
-    - 80
-    - 443
-    - 1936
-    - 6443
-    - 8080
-    - 22623
+    - 80 # okd apps
+    - 443 # okd apps
+    - 1936 # HAProxy status
+    - 6443 # okd api
+    - 8080 # ignition file hosting
+    - 8081 # network boot hosting
+    - 22623 # okd machine config

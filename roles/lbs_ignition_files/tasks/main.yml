@@ -2,7 +2,7 @@
 
 - name: Copy over nginx ignition configuration
   ansible.builtin.template:
-    src: ignition.conf
+    src: ignition.conf.j2
     dest: /etc/nginx/sites-enabled/ignition.conf
     mode: '0644'
   notify: restart nginx
@@ -22,35 +22,16 @@
     - "bootstrap"
     - "master"
     - "worker"
-  notify: restart nginx
 
-- name: Copy over bootstrap ignition files
+- name: Copy over all nodes ignition files
   ansible.builtin.copy:
     src: "{{ openshift_files_directory }}/{{ item }}.ign"
     dest: "{{ nginx_ignition_files_dir }}/{{ item }}.ign"
     mode: '0644'
-  loop: "{{ groups['bootstrap'] }}"
-  notify: restart nginx
-
-- name: Copy over master ignition files
-  ansible.builtin.copy:
-    src: "{{ openshift_files_directory }}/{{ item }}.ign"
-    dest: "{{ nginx_ignition_files_dir }}/{{ item }}.ign"
-    mode: '0644'
-  loop: "{{ groups['masters'] }}"
-  notify: restart nginx
-
-- name: Copy over worker ignition files
-  ansible.builtin.copy:
-    src: "{{ openshift_files_directory }}/{{ item }}.ign"
-    dest: "{{ nginx_ignition_files_dir }}/{{ item }}.ign"
-    mode: '0644'
-  loop: "{{ groups['workers'] }}"
-  notify: restart nginx
+  loop: "{{ groups.nodes }}"
 
 - name: Copy install.sh
   ansible.builtin.template:
     src: install.sh.j2
     dest: "{{ nginx_static_hosting_root_dir }}/install.sh"
     mode: '0644'
-  notify: restart nginx

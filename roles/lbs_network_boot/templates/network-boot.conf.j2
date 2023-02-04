@@ -1,0 +1,23 @@
+resolver 127.0.0.1 ipv6=off valid=10s;
+
+server {
+    listen {{ network_boot_nginx_ipxe_port }};
+
+    root {{ network_boot_nginx_root_dir }};
+
+    location / {
+        deny all;
+    }
+
+    location /ipxe/ {
+        autoindex on;
+    }
+
+    location /coreos/ {
+        rewrite ^/coreos/(.*) /$1 break;
+        proxy_pass {{ network_boot_coreos_proxy_scheme }}://{{ network_boot_coreos_proxy_hostname }}{% if network_boot_coreos_proxy_port != '' %}:{{ network_boot_coreos_proxy_port }}{% endif %};
+{% if network_boot_coreos_proxy_scheme == 'https' %}
+        proxy_ssl_server_name on;
+{% endif %}
+    }
+}
