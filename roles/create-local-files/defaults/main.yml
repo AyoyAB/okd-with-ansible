@@ -1,4 +1,6 @@
 ---
+okd_configuration_validity_duration_s: 21600 # 6 hours
+
 opt_out_of_remote_health_reporting: false
 
 set_etc_hostname_in_ignition_file: false

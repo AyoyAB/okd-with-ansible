@@ -1,4 +1,5 @@
-- name: "3.1 {{ item }} - Create the network delay configuration"
+---
+- name: "{{ item }} - Create the network delay configuration"
   ansible.builtin.set_fact:
     rendered_template: "{{ lookup('template', 'carrier-wait-timeout.conf') }}"
   register: networkdelay
@@ -7,11 +8,11 @@
   ansible.builtin.debug:
     var: networkdelay
 
-- name: "3.1 {{ item }} - Add the network delay configuration"
+- name: "{{ item }} - Add the network delay configuration"
   ansible.builtin.shell:
     cmd: >-
       set -o pipefail &&
-      cat "{{ openshift_files_directory }}/{{ item }}.ign"
+      cat "{{ workdir }}/{{ item }}"
       | jq '.storage.files += [{
         "overwrite": true,
         "path": "/run/NetworkManager/conf.d/delay-{{ ifname }}.conf",
@@ -23,23 +24,23 @@
           "source": "data:text/plain;charset=utf-8;base64,{{ networkdelay | b64encode }}"
         }
       }]'
-      > "{{ openshift_files_directory }}/{{ item }}.json"
-      && mv "{{ openshift_files_directory }}/{{ item }}.json" "{{ openshift_files_directory }}/{{ item }}.ign"
+      > "{{ workdir }}/{{ item }}.tmp"
+      && mv "{{ workdir }}/{{ item }}.tmp" "{{ workdir }}/{{ item }}"
     executable: /bin/bash
-  changed_when: true
+  changed_when: false
 
 ############ https://github.com/coreos/fedora-coreos-tracker/issues/746
-- name: "3.1 {{ item }} - Create content of boot fix (https://github.com/coreos/fedora-coreos-tracker/issues/746)"
+- name: "{{ item }} - Create content of boot fix (https://github.com/coreos/fedora-coreos-tracker/issues/746)"
   ansible.builtin.set_fact:
     before_rfkill: |
       [Unit]
       Before=systemd-rfkill.service systemd-rfkill.socket
 
-- name: "3.1 {{ item }} - Add the boot fix (https://github.com/coreos/fedora-coreos-tracker/issues/746)"
+- name: "{{ item }} - Add the boot fix (https://github.com/coreos/fedora-coreos-tracker/issues/746)"
   ansible.builtin.shell:
     cmd: >-
       set -o pipefail &&
-      cat "{{ openshift_files_directory }}/{{ item }}.ign"
+      cat "{{ workdir }}/{{ item }}"
       | jq '.storage.files += [{
         "overwrite": true,
         "path": "/etc/systemd/system/ostree-remount.service.d/before-rfkill.conf",
@@ -51,23 +52,23 @@
           "source": "data:text/plain;charset=utf-8;base64,{{ before_rfkill | b64encode }}"
         }
       }]'
-      > "{{ openshift_files_directory }}/{{ item }}.json"
-      && mv "{{ openshift_files_directory }}/{{ item }}.json" "{{ openshift_files_directory }}/{{ item }}.ign"
+      > "{{ workdir }}/{{ item }}.tmp"
+      && mv "{{ workdir }}/{{ item }}.tmp" "{{ workdir }}/{{ item }}"
     executable: /bin/bash
-  changed_when: true
+  changed_when: false
 
 ############ https://github.com/coreos/fedora-coreos-tracker/issues/975
-- name: "3.1 {{ item }} - Create content of boot fix (https://github.com/coreos/fedora-coreos-tracker/issues/975)"
+- name: "{{ item }} - Create content of boot fix (https://github.com/coreos/fedora-coreos-tracker/issues/975)"
   ansible.builtin.set_fact:
     after_ostree: |
       [Unit]
       After=ostree-remount.service
 
-- name: "3.1 {{ item }} - Add the boot fix (https://github.com/coreos/fedora-coreos-tracker/issues/975)"
+- name: "{{ item }} - Add the boot fix (https://github.com/coreos/fedora-coreos-tracker/issues/975)"
   ansible.builtin.shell:
     cmd: >-
       set -o pipefail &&
-      cat "{{ openshift_files_directory }}/{{ item }}.ign"
+      cat "{{ workdir }}/{{ item }}"
       | jq '.storage.files += [{
         "overwrite": true,
         "path": "/etc/systemd/system/systemd-backlight@.service.d/45-after-ostree-remount.conf",
@@ -79,7 +80,7 @@
           "source": "data:text/plain;charset=utf-8;base64,{{ after_ostree | b64encode }}"
         }
       }]'
-      > "{{ openshift_files_directory }}/{{ item }}.json"
-      && mv "{{ openshift_files_directory }}/{{ item }}.json" "{{ openshift_files_directory }}/{{ item }}.ign"
+      > "{{ workdir }}/{{ item }}.tmp"
+      && mv "{{ workdir }}/{{ item }}.tmp" "{{ workdir }}/{{ item }}"
     executable: /bin/bash
-  changed_when: true
+  changed_when: false

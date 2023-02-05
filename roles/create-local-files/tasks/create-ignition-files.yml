@@ -1,0 +1,82 @@
+---
+
+- name: Create ignition file tmp directory
+  ansible.builtin.file:
+    state: directory
+    path: "{{ openshift_files_directory }}/.ignition"
+    mode: '0755'
+
+- name: Copy original ignition files
+  ansible.builtin.copy:
+    src: "{{ openshift_files_directory }}/.install-config/{{ item }}.ign"
+    dest: "{{ openshift_files_directory }}/.ignition/{{ item }}.ign.tmp"
+    mode: '0644'
+  with_items:
+    - bootstrap
+    - master
+    - worker
+  changed_when: false
+
+- name: Fix ignition files
+  ansible.builtin.include_tasks: "fix-ignition-files.yml"
+  vars:
+    workdir: "{{ openshift_files_directory }}/.ignition"
+  loop:
+    - bootstrap.ign.tmp
+    - master.ign.tmp
+    - worker.ign.tmp
+
+- name: Fix ignition files v4.8
+  ansible.builtin.include_tasks: "fix-ignition-files-v4.8.yml"
+  vars:
+    workdir: "{{ openshift_files_directory }}/.ignition"
+    ifname: "eno1"
+  loop:
+    - bootstrap.ign.tmp
+    - master.ign.tmp
+    - worker.ign.tmp
+  when: oc_version_minor in ["4.8", "4.9"]
+
+- name: Bootstrap - Create node specific ignition files
+  ansible.builtin.include_tasks: "create-node-specific-ignition-file.yml"
+  loop: "{{ groups.bootstrap }}"
+  vars:
+    template: bootstrap.ign.tmp
+    workdir: "{{ openshift_files_directory }}/.ignition"
+
+- name: Masters - Create node specific ignition files
+  ansible.builtin.include_tasks: "create-node-specific-ignition-file.yml"
+  loop: "{{ groups.masters }}"
+  vars:
+    template: master.ign.tmp
+    workdir: "{{ openshift_files_directory }}/.ignition"
+
+- name: Workers - Create node specific ignition files
+  ansible.builtin.include_tasks: "create-node-specific-ignition-file.yml"
+  loop: "{{ groups.workers }}"
+  vars:
+    template: worker.ign.tmp
+    workdir: "{{ openshift_files_directory }}/.ignition"
+
+- name: Create ignition file directory
+  ansible.builtin.file:
+    state: directory
+    path: "{{ openshift_files_ignition_directory }}"
+    mode: '0755'
+
+- name: Copy final group ignition files
+  ansible.builtin.copy:
+    src: "{{ openshift_files_directory }}/.ignition/{{ item }}.ign.tmp"
+    dest: "{{ openshift_files_ignition_directory }}/{{ item }}.ign"
+    mode: '0644'
+  with_items:
+    - bootstrap
+    - master
+    - worker
+
+- name: Copy final node specific ignition files
+  ansible.builtin.copy:
+    src: "{{ openshift_files_directory }}/.ignition/{{ item }}.ign.tmp"
+    dest: "{{ openshift_files_ignition_directory }}/{{ item }}.ign"
+    mode: '0644'
+  with_items: "{{ groups.nodes }}"

@@ -1,61 +1,64 @@
+---
 - name: Create directory openshift-client
   ansible.builtin.file:
     state: directory
     path: "{{ openshift_client_directory }}"
     mode: '0755'
 
-- name: Get stats of a file
-  ansible.builtin.stat:
-    path: "{{ openshift_client_executable }}"
-  register: st
-
 - name: Define openshift client download url
   ansible.builtin.set_fact:
-    openshift_client_download_url: "https://github.com/openshift/okd/releases/download/{{ okd_version }}/openshift-client-{{ okd_tools_arch }}-{{ okd_version }}.tar.gz" # noqa yaml[line-length]
-  when: not st.stat.exists
+    openshift_client_download_url: "https://github.com/openshift/okd/releases/download/{{ okd_version }}/openshift-client-{{ okd_tools_arch }}-{{ okd_version }}.tar.gz"  # noqa yaml[line-length]
 
-- name: Inform user about download location
+- name: Write download url to file
+  ansible.builtin.copy:
+    content: "{{ openshift_client_download_url }}"
+    dest: "{{ openshift_install_directory }}/.openshift-client.url"
+    mode: '0644'
+  register: download_url
+
+- name: Inform user about download location  # noqa: no-handler
   ansible.builtin.debug:
     msg: "Fetching openshift client from {{ openshift_client_download_url }}"
-  when: not st.stat.exists
+  when: download_url.changed
 
 # https://github.com/openshift/okd/releases
-- name: Download openshift-client
-  when: not st.stat.exists
+- name: Download openshift-client  # noqa: no-handler
+  when: download_url.changed
   ansible.builtin.get_url:
     url: "{{ openshift_client_download_url }}"
     dest: "{{ openshift_client_archive }}"
     mode: '0440'
 
-- name: Unpack openshift-client
-  when: not st.stat.exists
+- name: Unpack openshift-client  # noqa: no-handler
+  when: download_url.changed
   ansible.builtin.command:
     # As we're running on mac, we can't use the module as it requires GNU tar.
-    cmd: tar -xvf "{{ openshift_client_archive }}" -C "{{ openshift_client_directory }}" # noqa command-instead-of-module yaml[line-length]
+    cmd: tar -xvf "{{ openshift_client_archive }}" -C "{{ openshift_client_directory }}"  # noqa command-instead-of-module yaml[line-length]
 
 - name: Delete packed openshift-client
   ansible.builtin.file:
     state: absent
     path: "{{ openshift_client_archive }}"
 
-- name: Get stats of a validator file
-  ansible.builtin.stat:
-    path: "{{ openshift_ignition_validate_executable }}"
-  register: st
-
 - name: Define ignition validate download url
   ansible.builtin.set_fact:
-    ignition_validate_download_url: "https://github.com/coreos/ignition/releases/download/{{ ignition_version }}/ignition-validate-{{ ignition_tool_arch }}" # noqa yaml[line-length]
-  when: not st.stat.exists
+    ignition_validate_download_url: "https://github.com/coreos/ignition/releases/download/{{ ignition_version }}/ignition-validate-{{ ignition_tool_arch }}"  # noqa yaml[line-length]
 
-- name: Inform user about download location
+- name: Write download url to file
+  ansible.builtin.copy:
+    content: "{{ ignition_validate_download_url }}"
+    dest: "{{ openshift_install_directory }}/.ignition-validate.url"
+    mode: '0644'
+  register: download_url
+
+- name: Inform user about download location  # noqa: no-handler
   ansible.builtin.debug:
     msg: "Fetching ignition validator from {{ ignition_validate_download_url }}"
-  when: not st.stat.exists
+  when: download_url.changed
 
 # https://github.com/coreos/ignition/releases
-- name: Download ignition validator
-  when: not st.stat.exists
+- name: Download ignition validator  # noqa: no-handler
+  when: download_url.changed
   ansible.builtin.get_url:
     url: "{{ ignition_validate_download_url }}"
     dest: "{{ openshift_ignition_validate_executable }}"

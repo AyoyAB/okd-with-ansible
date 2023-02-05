@@ -1,7 +1,8 @@
+---
 - name: Find ignition files
   ansible.builtin.find:
-    paths: "{{ openshift_files_directory }}"
-    patterns: '*.ign'
+    paths: "{{ openshift_files_ignition_directory }}"
+    patterns: '*'
   register: files
 
 - name: Validate ignition files

@@ -6,7 +6,7 @@ dependency:
 driver:
   name: delegated
   options:
-    managed: False
+    managed: false
     ansible_connection_options:
       ansible_connection: local
 platforms:
@@ -14,7 +14,7 @@ platforms:
 provisioner:
   name: ansible
   options:
-    v: True
+    v: true
   inventory:
     links:
       hosts: ../../inventories/local/hosts.yml
