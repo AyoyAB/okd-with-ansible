@@ -9,13 +9,13 @@
 
 - name: Publish install version as fact
   ansible.builtin.set_fact:
-    oc_version_full: "{{ install_version_cmd.stdout | regex_search('[0-9]\\.[0-9]+\\.[0-9]+.*') }}"
-    oc_version: "{{ install_version_cmd.stdout | regex_search('[0-9]\\.[0-9]+\\.[0-9]+') }}"
-    oc_version_minor: "{{ install_version_cmd.stdout | regex_search('([0-9]+\\.[0-9]+)\\.', '\\1') | first }}"
+    okd_version_full: "{{ install_version_cmd.stdout | regex_search('[0-9]\\.[0-9]+\\.[0-9]+.*') }}"
+    okd_version: "{{ install_version_cmd.stdout | regex_search('[0-9]\\.[0-9]+\\.[0-9]+') }}"
+    okd_version_minor: "{{ install_version_cmd.stdout | regex_search('([0-9]+\\.[0-9]+)\\.', '\\1') | first }}"
 
 - name: Log oc version
   ansible.builtin.debug:
     msg:
-      - "oc_version_full: {{ oc_version_full }}"
-      - "oc_version: {{ oc_version }}"
-      - "oc_version_minor: {{ oc_version_minor }}"
+      - "okd_version_full: {{ okd_version_full }}"
+      - "okd_version: {{ okd_version }}"
+      - "okd_version_minor: {{ okd_version_minor }}"
