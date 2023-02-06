@@ -7,8 +7,15 @@
     mode: '0644'
   register: install_config
 
-- name: Create new cluster files  # noqa: no-handler
-  when: install_config.changed
+- name: Write OKD version to file
+  ansible.builtin.copy:
+    content: "{{ okd_version_full }}"
+    dest: "{{ openshift_files_directory }}/.okd-version"
+    mode: '0644'
+  register: okd_version_file
+
+- name: Create new cluster files if config file or okd version changed  # noqa: no-handler
+  when: install_config.changed or okd_version_file.changed
   block:
     - name: Delete installation config tmp directory
       ansible.builtin.file:
