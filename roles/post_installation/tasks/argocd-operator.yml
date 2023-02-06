@@ -1,0 +1,120 @@
+---
+- name: Create or update Argo CD Operator subscription
+  kubernetes.core.k8s:
+    kubeconfig: "{{ openshift_files_kubeconfig }}"
+    resource_definition:
+      apiVersion: operators.coreos.com/v1alpha1
+      kind: Subscription
+      metadata:
+        labels:
+          operators.coreos.com/argocd-operator.openshift-operators: ""
+        name: argocd-operator
+        namespace: openshift-operators
+      spec:
+        channel: alpha
+        installPlanApproval: Automatic
+        name: argocd-operator
+        source: community-operators
+        sourceNamespace: openshift-marketplace
+        startingCSV: argocd-operator.{{ argocd_operator_starting_cluster_service_version }}
+        config:
+          env:
+            - name: ARGOCD_CLUSTER_CONFIG_NAMESPACES
+              value: "{{ argocd_namespace }}"
+
+- name: Wait for Argo CD Operator to start
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail && \
+      KUBECONFIG="{{ openshift_files_kubeconfig }}" \
+      "{{ openshift_client_executable }}" \
+      -n openshift-operators \
+      get deploy argocd-operator-controller-manager -o json \
+      | jq '.status.readyReplicas'
+    executable: /bin/bash
+  register: ready_replicas
+  retries: 60
+  delay: 5
+  until: ready_replicas.stdout == "1"
+  changed_when: false
+
+- name: Create or update namespace {{ argocd_namespace }}
+  kubernetes.core.k8s:
+    kubeconfig: "{{ openshift_files_kubeconfig }}"
+    resource_definition:
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: "{{ argocd_namespace }}"
+        annotations:
+          openshift.io/node-selector: ""
+
+- name: Setup a basic Argo CD cluster
+  kubernetes.core.k8s:
+    kubeconfig: "{{ openshift_files_kubeconfig }}"
+    resource_definition:
+      apiVersion: argoproj.io/v1alpha1
+      kind: ArgoCD
+      metadata:
+        name: argocd
+        namespace: "{{ argocd_namespace }}"
+      spec:
+        sso:
+          provider: dex
+          dex:
+            openShiftOAuth: true
+            groups:
+              - "system:authenticated"
+            resources:
+              limits:
+                memory: 256Mi
+              requests:
+                cpu: 250m
+                memory: 128Mi
+        server:
+          route:
+            enabled: true
+          env:
+            - name: ARGOCD_SYNC_WAVE_DELAY
+              value: "{{ argocd_sync_wave_delay | default('2') }}"
+          resources:
+            limits:
+              memory: 256Mi
+            requests:
+              cpu: 125m
+              memory: 128Mi
+        rbac:
+          defaultPolicy: 'role:readonly'
+          policy: |
+            g, cluster-admins, role:admin
+            g, system:authenticated, role:admin
+          scopes: '[groups]'
+        redis:
+          image: registry.okd4.example.com:5010/library/redis
+          resources:
+            limits:
+              memory: 256Mi
+            requests:
+              cpu: 250m
+              memory: 128Mi
+        applicationSet:
+          resources:
+            limits:
+              memory: 1Gi
+            requests:
+              cpu: 250m
+              memory: 512Mi
+        repo:
+          resources:
+            limits:
+              memory: 512Mi
+            requests:
+              cpu: 250m
+              memory: 256Mi
+        controller:
+          resources:
+            limits:
+              memory: 2Gi
+            requests:
+              cpu: 250m
+              memory: 1Gi

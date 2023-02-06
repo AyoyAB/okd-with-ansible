@@ -21,7 +21,7 @@
     src: okd.conf.j2
     dest: /etc/dnsmasq.d/okd.conf
     mode: '0644'
-  notify: dnsmasq restart
+  notify: Restart dnsmasq
 
 - name: Use dnsmasq
   ansible.builtin.lineinfile:

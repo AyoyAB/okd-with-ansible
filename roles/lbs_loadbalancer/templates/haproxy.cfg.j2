@@ -33,7 +33,7 @@ frontend stats
   stats   hide-version
   stats   refresh 30s
   stats   show-node
-  stats   show-desc Stats for {{ groups['lbs'][0] }}
+  stats   show-desc Stats for {{ groups.lbs[0] }}
   stats   auth {{ haproxy_stats_username }}:{{ haproxy_stats_password }}
   stats   uri /stats
 
@@ -41,9 +41,9 @@ listen api-server-6443
   bind *:6443
   mode tcp
 {% if bootstrap_enabled %}
-  server {{ groups['bootstrap'][0].split(".")[0] }} {{ groups['bootstrap'][0] }}:6443 check inter 1s backup
+  server {{ groups.bootstrap[0].split(".")[0] }} {{ groups.bootstrap[0] }}:6443 check inter 1s backup
 {% endif %}
-{% for host in groups['masters'] %}
+{% for host in groups.masters %}
   server {{ host.split(".")[0] }} {{ host }}:6443 check inter 1s
 {% endfor %}
 
@@ -51,9 +51,9 @@ listen machine-config-server-22623
   bind *:22623
   mode tcp
 {% if bootstrap_enabled %}
-  server {{ groups['bootstrap'][0].split(".")[0] }} {{ groups['bootstrap'][0] }}:22623 check inter 1s backup
+  server {{ groups.bootstrap[0].split(".")[0] }} {{ groups.bootstrap[0] }}:22623 check inter 1s backup
 {% endif %}
-{% for host in groups['masters'] %}
+{% for host in groups.masters %}
   server {{ host.split(".")[0] }} {{ host }}:22623 check inter 1s
 {% endfor %}
 
@@ -63,12 +63,12 @@ listen ingress-router-443
   balance source
 {% if use_control_plane_nodes_for_compute %}
 {# The Ingress Controller pods run on the control plane nodes when there are no compute nodes. #}
-{% for host in groups['masters'] %}
+{% for host in groups.masters %}
   server {{ host.split(".")[0] }} {{ host }}:443 check inter 1s
 {% endfor %}
 {% else %}
 {# The Ingress Controller pods run on the compute nodes by default. #}
-{% for host in groups['workers'] %}
+{% for host in groups.workers %}
   server {{ host.split(".")[0] }} {{ host }}:443 check inter 1s
 {% endfor %}
 {% endif %}
@@ -79,12 +79,12 @@ listen ingress-router-80
   balance source
 {% if use_control_plane_nodes_for_compute %}
 {# The Ingress Controller pods run on the control plane nodes when there are no compute nodes. #}
-{% for host in groups['masters'] %}
+{% for host in groups.masters %}
   server {{ host.split(".")[0] }} {{ host }}:80 check inter 1s
 {% endfor %}
 {% else %}
 {# The Ingress Controller pods run on the compute nodes by default. #}
-{% for host in groups['workers'] %}
+{% for host in groups.workers %}
   server {{ host.split(".")[0] }} {{ host }}:80 check inter 1s
 {% endfor %}
 {% endif %}

@@ -1,0 +1,48 @@
+---
+# Docs: https://docs.openshift.com/container-platform/4.10/installing/installing_bare_metal_ipi/ipi-install-installation-workflow.html#ipi-install-configuration-files
+apiVersion: v1
+baseDomain: {{ base_domain }}
+compute:
+  - hyperthreading: Enabled
+    name: worker
+{% if use_control_plane_nodes_for_compute %}
+    replicas: 0
+{% else %}
+    replicas: {{ groups.workers | length }}
+{% endif %}
+controlPlane:
+  hyperthreading: Enabled
+  name: master
+  replicas: {{ groups.masters | length }}
+metadata:
+  name: {{ cluster_name }}
+networking:
+  clusterNetwork:
+    - cidr: 10.128.0.0/14
+      hostPrefix: 23
+  networkType: OpenShiftSDN
+  serviceNetwork:
+    - 172.30.0.0/16
+platform:
+  none: {}
+pullSecret: "{{ lookup('file', '{{ openshift_files_directory }}/pull-secret') | regex_replace('\"', '\\\"') }}"
+sshKey: "{{ lookup('file', ssh_public_key_file) }}"
+{% if use_cluster_proxy == true %}
+proxy:
+  httpProxy: "{{ cluster_proxy_http_proxy }}"
+  httpsProxy: "{{ cluster_proxy_https_proxy }}"
+  noProxy: "{{ cluster_proxy_no_proxy }}"
+{% endif %}
+{% if use_disconnected_registry == true %}
+{% if disconnected_registry_trust_bundle_file is defined %}
+additionalTrustBundle: |
+  {{ lookup('file', disconnected_registry_trust_bundle_file) | indent(2) }}
+{% endif %}
+imageContentSources:
+  - source: quay.io/openshift/okd
+    mirrors:
+      - {{ disconnected_registry_quay_io_openshift_okd }}
+  - source: quay.io/openshift/okd-content
+    mirrors:
+      - {{ disconnected_registry_quay_io_openshift_okd_content }}
+{% endif %}

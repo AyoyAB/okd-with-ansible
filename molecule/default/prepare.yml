@@ -1,6 +1,7 @@
 ---
 
-- hosts: localhost
+- name: Prepare
+  hosts: localhost
   any_errors_fatal: true
   gather_facts: false
   tasks:
@@ -8,3 +9,4 @@
       ansible.builtin.command:
         cmd: "make clean"
         chdir: ../../
+      changed_when: true

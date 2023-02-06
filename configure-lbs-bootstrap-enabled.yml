@@ -1,5 +1,6 @@
 ---
-- hosts: lbs
+- name: Configure lbs bootstrap enabled
+  hosts: lbs
   any_errors_fatal: true
   gather_facts: false
   roles:

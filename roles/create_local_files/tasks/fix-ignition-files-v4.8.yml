@@ -1,0 +1,86 @@
+---
+- name: "Create the network delay configuration - {{ item }}"
+  ansible.builtin.set_fact:
+    rendered_template: "{{ lookup('template', 'carrier-wait-timeout.conf') }}"
+  register: networkdelay
+
+- name: Log networkdelay
+  ansible.builtin.debug:
+    var: networkdelay
+
+- name: "Add the network delay configuration - {{ item }}"
+  ansible.builtin.shell:
+    cmd: >-
+      set -o pipefail &&
+      cat "{{ workdir }}/{{ item }}"
+      | jq '.storage.files += [{
+        "overwrite": true,
+        "path": "/run/NetworkManager/conf.d/delay-{{ ifname }}.conf",
+        "mode": 420,
+        "user": {
+          "name": "root"
+        },
+        "contents": {
+          "source": "data:text/plain;charset=utf-8;base64,{{ networkdelay | b64encode }}"
+        }
+      }]'
+      > "{{ workdir }}/{{ item }}.tmp"
+      && mv "{{ workdir }}/{{ item }}.tmp" "{{ workdir }}/{{ item }}"
+    executable: /bin/bash
+  changed_when: false
+
+############ https://github.com/coreos/fedora-coreos-tracker/issues/746
+- name: "Create content of boot fix (https://github.com/coreos/fedora-coreos-tracker/issues/746) - {{ item }}"
+  ansible.builtin.set_fact:
+    before_rfkill: |
+      [Unit]
+      Before=systemd-rfkill.service systemd-rfkill.socket
+
+- name: "Add the boot fix (https://github.com/coreos/fedora-coreos-tracker/issues/746) - {{ item }}"
+  ansible.builtin.shell:
+    cmd: >-
+      set -o pipefail &&
+      cat "{{ workdir }}/{{ item }}"
+      | jq '.storage.files += [{
+        "overwrite": true,
+        "path": "/etc/systemd/system/ostree-remount.service.d/before-rfkill.conf",
+        "mode": 420,
+        "user": {
+          "name": "root"
+        },
+        "contents": {
+          "source": "data:text/plain;charset=utf-8;base64,{{ before_rfkill | b64encode }}"
+        }
+      }]'
+      > "{{ workdir }}/{{ item }}.tmp"
+      && mv "{{ workdir }}/{{ item }}.tmp" "{{ workdir }}/{{ item }}"
+    executable: /bin/bash
+  changed_when: false
+
+############ https://github.com/coreos/fedora-coreos-tracker/issues/975
+- name: "Create content of boot fix (https://github.com/coreos/fedora-coreos-tracker/issues/975) - {{ item }}"
+  ansible.builtin.set_fact:
+    after_ostree: |
+      [Unit]
+      After=ostree-remount.service
+
+- name: "Add the boot fix (https://github.com/coreos/fedora-coreos-tracker/issues/975) - {{ item }}"
+  ansible.builtin.shell:
+    cmd: >-
+      set -o pipefail &&
+      cat "{{ workdir }}/{{ item }}"
+      | jq '.storage.files += [{
+        "overwrite": true,
+        "path": "/etc/systemd/system/systemd-backlight@.service.d/45-after-ostree-remount.conf",
+        "mode": 420,
+        "user": {
+          "name": "root"
+        },
+        "contents": {
+          "source": "data:text/plain;charset=utf-8;base64,{{ after_ostree | b64encode }}"
+        }
+      }]'
+      > "{{ workdir }}/{{ item }}.tmp"
+      && mv "{{ workdir }}/{{ item }}.tmp" "{{ workdir }}/{{ item }}"
+    executable: /bin/bash
+  changed_when: false

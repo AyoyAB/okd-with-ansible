@@ -1,0 +1,29 @@
+---
+- name: 4.1 Create or update the namespace
+  kubernetes.core.k8s:
+    kubeconfig: "{{ openshift_files_kubeconfig }}"
+    resource_definition:
+      kind: Namespace
+      apiVersion: v1
+      metadata:
+        name: addon-nfs-provisioner
+
+- name: 4.2 Create or update the service account
+  kubernetes.core.k8s:
+    kubeconfig: "{{ openshift_files_kubeconfig }}"
+    resource_definition:
+      kind: ServiceAccount
+      apiVersion: v1
+      metadata:
+        name: nfs-pod-provisioner-sa
+        namespace: addon-nfs-provisioner
+
+- name: 4.3 Fix rights to use NFS
+  ansible.builtin.shell: |
+    KUBECONFIG="{{ openshift_files_kubeconfig }}" \
+    "{{ openshift_client_executable }}" \
+    -n addon-nfs-provisioner \
+    adm policy add-scc-to-user hostmount-anyuid -z nfs-pod-provisioner-sa
+  changed_when: true
+
+# NFS subdir provider will be later installed via ArgoCD

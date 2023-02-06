@@ -1,28 +1,37 @@
 ---
-- hosts: all
-  any_errors_fatal: true
-  gather_facts: false
 
-- ansible.builtin.import_playbook: install-local-tools.yml
+- name: Install local tools
+  ansible.builtin.import_playbook: install-local-tools.yml
 
-- ansible.builtin.import_playbook: create-local-files.yml
+- name: Create local files
+  ansible.builtin.import_playbook: create-local-files.yml
 
-- ansible.builtin.import_playbook: validate-dns.yml
+- name: Validate DNS
+  ansible.builtin.import_playbook: validate-dns.yml
 
-- ansible.builtin.import_playbook: create-lbs.yml
+- name: Create lbs
+  ansible.builtin.import_playbook: create-lbs.yml
 
-- ansible.builtin.import_playbook: configure-lbs-ignition-files.yml
+- name: Configure lbs ignition files
+  ansible.builtin.import_playbook: configure-lbs-ignition-files.yml
 
-- ansible.builtin.import_playbook: configure-lbs-network-boot.yml
+- name: Configure lbs network boot
+  ansible.builtin.import_playbook: configure-lbs-network-boot.yml
 
-- ansible.builtin.import_playbook: configure-lbs-bootstrap-enabled.yml
+- name: Configure lbs bootstrap enabled
+  ansible.builtin.import_playbook: configure-lbs-bootstrap-enabled.yml
 
-- ansible.builtin.import_playbook: wait-for-installation.yml
+- name: Wait for installation
+  ansible.builtin.import_playbook: wait-for-installation.yml
 
-- ansible.builtin.import_playbook: configure-lbs-bootstrap-disabled.yml
+- name: Configure lbs bootstrap disabled
+  ansible.builtin.import_playbook: configure-lbs-bootstrap-disabled.yml
 
-- ansible.builtin.import_playbook: wait-for-workers.yml
+- name: Wait for workers
+  ansible.builtin.import_playbook: wait-for-workers.yml
 
-- ansible.builtin.import_playbook: configure-cluster.yml
+- name: Configure cluster
+  ansible.builtin.import_playbook: configure-cluster.yml
 
-- ansible.builtin.import_playbook: post-installation.yml
+- name: Post-installation steps
+  ansible.builtin.import_playbook: post-installation.yml

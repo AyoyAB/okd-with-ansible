@@ -1,0 +1,19 @@
+---
+- name: Configure nfs storage
+  ansible.builtin.include_tasks: "nfs-storage.yml"
+  when: nfs_server is defined
+
+- name: Configure sealed secrets
+  ansible.builtin.include_tasks: "sealed_secrets.yml"
+  when:
+    - sealed_secrets is defined
+
+- name: Configure argocd operator
+  ansible.builtin.include_tasks: "argocd-operator.yml"
+  when:
+    - argocd is defined
+
+- name: Configure argocd applications
+  ansible.builtin.include_tasks: "argocd-applications.yml"
+  when:
+    - argocd is defined

@@ -1,0 +1,54 @@
+---
+- name: Set timezone to Central Europe
+  community.general.timezone:
+    name: Europe/Stockholm
+
+- name: Install ntp
+  ansible.builtin.apt:
+    name: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+      - ntp
+      - ntpdate
+
+- name: Copy over the NTP configuration
+  ansible.builtin.template:
+    src: ./templates/ntp.conf
+    dest: /etc/ntp.conf
+    mode: '0644'
+
+- name: Make ntp /etc/ntp/crypto/pw directory
+  ansible.builtin.file:
+    path: /etc/ntp/crypto/pw
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+
+- name: Make ntp /etc/ntp/keys directory
+  ansible.builtin.file:
+    path: /etc/ntp/keys
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+
+- name: Make sure NTP is stopped
+  ansible.builtin.service:
+    name: ntp
+    state: stopped
+    enabled: true
+
+- name: Sync time initialy
+  ansible.builtin.command:
+    cmd: ntpdate -t 10 se.pool.ntp.org
+  changed_when: false
+
+- name: Make sure NTP is started up
+  ansible.builtin.service:
+    name: ntp
+    state: started
+    enabled: true

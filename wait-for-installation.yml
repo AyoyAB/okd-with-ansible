@@ -1,6 +1,7 @@
 ---
-- hosts: all
+- name: Wait for installation
+  hosts: all
   any_errors_fatal: true
   gather_facts: false
   roles:
-    - role: wait-for-installation
+    - role: wait_for_installation
