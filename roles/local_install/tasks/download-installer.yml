@@ -5,38 +5,13 @@
     path: "{{ openshift_install_directory }}"
     mode: '0755'
 
-- name: Define openshift install download url
-  ansible.builtin.set_fact:
-    openshift_install_download_url: "https://github.com/openshift/okd/releases/download/{{ okd_version }}/openshift-install-{{ okd_tools_arch }}-{{ okd_version }}.tar.gz"  # noqa yaml[line-length]
-
-- name: Write download url to file
-  ansible.builtin.copy:
-    content: "{{ openshift_install_download_url }}"
-    dest: "{{ openshift_install_directory }}/.openshift-install.url"
-    mode: '0644'
-  register: download_url
-
-- name: Inform user about download location  # noqa: no-handler
-  ansible.builtin.debug:
-    msg: "Fetching okd installer from {{ openshift_install_download_url }}"
-  when: download_url.changed
-
-# https://github.com/openshift/okd/releases
-# https://amd64.origin.releases.ci.openshift.org/
-- name: Download openshift-install  # noqa: no-handler
-  when: download_url.changed
-  ansible.builtin.get_url:
-    url: "{{ openshift_install_download_url }}"
-    dest: "{{ openshift_install_archive }}"
-    mode: '0440'
-
-- name: Unpack openshift-install  # noqa: no-handler
-  when: download_url.changed
-  ansible.builtin.command:
-    # As we're running on mac, we can't use the module as it requires GNU tar.
-    cmd: tar -xvf "{{ openshift_install_archive }}" -C "{{ openshift_install_directory }}"  # noqa command-instead-of-module
-
-- name: Delete openshift-install
-  ansible.builtin.file:
-    state: absent
-    path: "{{ openshift_install_archive }}"
+- name: Download openshift installer if needed
+  ansible.builtin.include_tasks: "download-if-url-changed.yml"
+  vars:
+    name: Openshift installer
+    url: "https://github.com/openshift/okd/releases/download/{{ okd_version }}/openshift-install-{{ okd_tools_arch }}-{{ okd_version }}.tar.gz"  # noqa yaml[line-length]
+    download_url_file: "{{ openshift_install_directory }}/.openshift-installer.url"
+    download_target: "{{ openshift_install_archive }}"
+    untar_downloaded: true
+    untar_directory: "{{ openshift_install_directory }}"
+    delete_download_target: true
