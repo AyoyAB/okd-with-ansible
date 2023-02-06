@@ -29,7 +29,7 @@ local-tools: env-check
 
 .PHONY: local-files
 local-files: env-check
-	ansible-playbook -i inventories/${CLUSTER_NAME} -v create_local_files.yml
+	ansible-playbook -i inventories/${CLUSTER_NAME} -v create-local-files.yml
 
 #
 # Cluster
