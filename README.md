@@ -263,6 +263,7 @@ The OKD nodes can be booted over the network with iPXE.
 | network_boot_coreos_proxy_scheme   | Override coreos proxy scheme (http/https). |         |
 | network_boot_coreos_proxy_hostname | Override coreos proxy hostname.            |         |
 | network_boot_coreos_proxy_port     | Override coreos proxy port.                |         |
+| network_boot_coreos_proxy_path     | Override coreos proxy path.                |         |
 
 ### Boot order
 
