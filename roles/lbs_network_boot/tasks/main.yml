@@ -53,6 +53,7 @@
     network_boot_coreos_proxy_scheme: "{{ coreos_pxe_kernel_location_cmd.stdout | ansible.builtin.urlsplit('scheme') }}"
     network_boot_coreos_proxy_hostname: "{{ coreos_pxe_kernel_location_cmd.stdout | ansible.builtin.urlsplit('hostname') }}"
     network_boot_coreos_proxy_port: "{{ coreos_pxe_kernel_location_cmd.stdout | ansible.builtin.urlsplit('port') }}"
+    network_boot_coreos_proxy_path: ""
   delegate_to: localhost
   run_once: true
   become: false
@@ -60,6 +61,7 @@
     - network_boot_coreos_proxy_scheme is not defined
     - network_boot_coreos_proxy_hostname is not defined
     - network_boot_coreos_proxy_port is not defined
+    - network_boot_coreos_proxy_path is not defined
 
 - name: Log CoreOS variables
   ansible.builtin.debug:
@@ -77,6 +79,7 @@
       - "scheme: {{ network_boot_coreos_proxy_scheme }}"
       - "hostname: {{ network_boot_coreos_proxy_hostname }}"
       - "port: {{ network_boot_coreos_proxy_port }}"
+      - "path: {{ network_boot_coreos_proxy_path }}"
 
 #
 # iPXE (nginx)
