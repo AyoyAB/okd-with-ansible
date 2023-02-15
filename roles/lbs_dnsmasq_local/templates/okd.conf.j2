@@ -6,25 +6,25 @@ no-hosts
 
 # DNS LBS
 {% for machine in groups.lbs %}
-address=/{{ machine }}/{{ hostvars[machine].vagrant_ip }}
+address=/{{ machine }}/{{ hostvars[machine].ipv4 }}
 {% endfor %}
 
 # DNS OKD api
-address=/api.{{ cluster_name }}.{{ base_domain }}/{{ hostvars[groups.lbs[0]].vagrant_ip }}
-address=/api-int.{{ cluster_name }}.{{ base_domain }}/{{ hostvars[groups.lbs[0]].vagrant_ip }}
+address=/api.{{ cluster_name }}.{{ base_domain }}/{{ hostvars[groups.lbs[0]].ipv4 }}
+address=/api-int.{{ cluster_name }}.{{ base_domain }}/{{ hostvars[groups.lbs[0]].ipv4 }}
 
 # DNS OKD apps
-address=/apps.{{ cluster_name }}.{{ base_domain }}/{{ hostvars[groups.lbs[0]].vagrant_ip }}
+address=/apps.{{ cluster_name }}.{{ base_domain }}/{{ hostvars[groups.lbs[0]].ipv4 }}
 
 # DNS Nodes
 # "Fake" that the hostnames exists by pointing to lbs
 {% for node in groups.nodes %}
-address=/{{ node }}/{{ hostvars[groups.lbs[0]].vagrant_ip }}
+address=/{{ node }}/{{ hostvars[groups.lbs[0]].ipv4 }}
 {% endfor %}
 
 # DHCP Nodes - Static IP
 {% for node in groups.nodes %}
-dhcp-host={{ hostvars[node].vagrant_mac }},{{ node }},{{ hostvars[node].vagrant_ip }},12h
+dhcp-host={{ hostvars[node].mac }},{{ node }},{{ hostvars[node].ipv4 }},12h
 {% endfor %}
 
 # iPXE Boot
