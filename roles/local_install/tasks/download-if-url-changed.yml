@@ -24,6 +24,7 @@
         # As we're running on mac, we can't use the module as it requires GNU tar.
         cmd: tar -xvf "{{ download_target }}" -C "{{ untar_directory }}"  # noqa yaml[line-length] command-instead-of-module
       when: untar_downloaded
+      changed_when: untar_downloaded
 
     - name: Delete download - {{ name }}
       ansible.builtin.file:

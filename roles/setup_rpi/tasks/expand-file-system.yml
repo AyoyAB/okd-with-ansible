@@ -12,7 +12,9 @@
 - name: Expand filesystem to fill disk
   ansible.builtin.command: raspi-config --expand-rootfs
   when: unpartitioned.stdout != "0.00GB"
+  changed_when: unpartitioned.stdout != "0.00GB"
 
 - name: Reboot after file system change
   ansible.builtin.reboot:
   when: unpartitioned.stdout != "0.00GB"
+  changed_when: unpartitioned.stdout != "0.00GB"
