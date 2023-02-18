@@ -1,7 +1,15 @@
 ---
 
-- name: Copy ipxe config for {{ item }}
+- name: Copy domain-specific ipxe config for {{ item }}
   ansible.builtin.template:
     src: boot.ipxe.j2
     dest: "{{ network_boot_nginx_ipxe_files_dir }}/{{ item }}.ipxe"
     mode: '0644'
+
+- name: Copy IPv4-specific ipxe config for {{ item }}
+  ansible.builtin.template:
+    src: boot.ipxe.j2
+    dest: "{{ network_boot_nginx_ipxe_files_dir }}/{{ hostvars[item].ipv4 }}.ipxe"
+    mode: '0644'
+  when:
+    - hostvars[item].ipv4 is defined

@@ -1,7 +1,15 @@
 #!ipxe
 
-set domain okd4.example.com
+set domain {{ cluster_name }}.{{ base_domain }}
+set BASEURL http://{{ groups.lbs[0] }}:{{ network_boot_nginx_ipxe_port }}
 
+# Retry dhcp until successful
+:retry_dhcp
+echo ========================================================
+echo Obtaining DHCP
+dhcp || goto retry_dhcp
+
+# Print useful information
 echo ========================================================
 echo UUID: ${uuid}
 echo Manufacturer: ${manufacturer}
@@ -19,9 +27,17 @@ echo IPv6 DNS: ${dns6}
 echo Domain: ${domain}
 echo ========================================================
 
-set BASEURL http://{{ groups.lbs[0] }}:{{ network_boot_nginx_ipxe_port }}
+sleep 2
 
-dhcp
+# Load hostname- and domain-specific iPXE config if available
+echo Attempting to boot from domain- and hostname- specific ipxe script
+chain ${BASEURL}/ipxe/${hostname}.${domain}.ipxe ||
 
-# Load IP-specific iPXE config
-chain ${BASEURL}/ipxe/${hostname}.${domain}.ipxe
+# Load IP-specific iPXE config if available
+echo Attempting to boot from IP-specific ipxe script
+chain ${BASEURL}/ipxe/${net0/ip}.ipxe ||
+
+sleep 2
+
+# Try boot loop again
+goto retry_dhcp
