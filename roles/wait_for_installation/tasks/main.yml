@@ -91,9 +91,11 @@
   retries: 1000
   delay: 30
   until: journalctl.stdout == "1\r\n"
+  changed_when: false
 
 - name: Shutdown the bootstrap machine
   ansible.builtin.raw: |
     sudo shutdown 1
   when:
     - inventory_hostname == groups.bootstrap[0]
+  changed_when: true
