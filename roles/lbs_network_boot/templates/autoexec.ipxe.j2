@@ -1,5 +1,6 @@
 #!ipxe
 
+set domain {{ cluster_name }}.{{ base_domain }}
 set BASEURL http://{{ groups.lbs[0] }}:{{ network_boot_nginx_ipxe_port }}
 
 # Retry dhcp until successful
