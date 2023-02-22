@@ -1,0 +1,33 @@
+---
+
+#  https://docs.okd.io/4.11/operators/admin/olm-restricted-networks.html#olm-restricted-networks-operatorhub_olm-restricted-networks
+- name: Disable default OperatorHub sources
+  kubernetes.core.k8s:
+    kubeconfig: "{{ openshift_files_kubeconfig }}"
+    state: present
+    definition:
+      apiVersion: config.openshift.io/v1
+      kind: OperatorHub
+      metadata:
+        name: cluster
+      spec:
+        disableAllDefaultSources: true
+        sources:
+          - disabled: true
+            name: certified-operators
+          - disabled: true
+            name: community-operators
+          - disabled: true
+            name: redhat-marketplace
+          - disabled: true
+            name: redhat-operators
+  register: status
+  until: "'result' in status"
+  when: okd_disable_default_operator_catalog_sources
+
+- name: Configure additional operator catalog sources
+  kubernetes.core.k8s:
+    kubeconfig: "{{ openshift_files_kubeconfig }}"
+    template: templates/catalog-source.yaml.j2
+  when: okd_additional_operator_catalog_sources | length > 0
+  with_items: "{{ okd_additional_operator_catalog_sources }}"

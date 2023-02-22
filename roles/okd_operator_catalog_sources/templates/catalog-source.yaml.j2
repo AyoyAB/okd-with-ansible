@@ -1,0 +1,11 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: CatalogSource
+metadata:
+  name: {{ item.name }}
+  namespace: openshift-marketplace
+spec:
+  image: {{ item.image }}
+  sourceType: grpc
+  updateStrategy:
+    registryPoll:
+      interval: 10m

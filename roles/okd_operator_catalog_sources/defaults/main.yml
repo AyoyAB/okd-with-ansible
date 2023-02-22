@@ -1,0 +1,5 @@
+---
+
+okd_disable_default_operator_catalog_sources: false
+
+okd_additional_operator_catalog_sources: []

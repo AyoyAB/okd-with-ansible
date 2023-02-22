@@ -49,7 +49,10 @@ loadbalancer_use_haproxy: true
 # Cluster Configuration
 #
 
-# disable_default_operator_hub: true
+# okd_disable_default_operator_catalog_sources: true
+# okd_additional_operator_catalog_sources:
+#   - name: community-operators-mirror
+#     image: registry.access.redhat.com/redhat/community-operator-index:v4.12
 
 # additional_repository_mirrors:
 #   - source: docker.io
