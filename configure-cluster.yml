@@ -12,5 +12,5 @@
     # First wait for cluster to be ready
     - role: okd/wait-for-cluster-ready
     # Then perform any additional configurations
-    - role: okd/operator_lifecycle_manager
+    - role: okd_operator_catalog_sources
     - role: okd/additional_repository_mirrors
