@@ -47,9 +47,9 @@
             valueFiles:
               - values-okd.yaml
             parameters:
-              - name: argo.target_revision
+              - name: argo.common.target_revision
                 value: "{{ argocd_repository_revision }}"
-              - name: argo.apps_namespace
+              - name: argo.common.apps_namespace
                 value: "{{ argocd_namespace }}"
           path: _start/
           repoURL: "{{ argocd_repository }}"
