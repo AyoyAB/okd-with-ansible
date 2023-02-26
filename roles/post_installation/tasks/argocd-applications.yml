@@ -51,6 +51,8 @@
                 value: "{{ argocd_repository_revision }}"
               - name: argo.common.apps_namespace
                 value: "{{ argocd_namespace }}"
+              - name: argo.common.enableLabelManagement
+                value: "{{ argocd_enable_label_management }}"
           path: _start/
           repoURL: "{{ argocd_repository }}"
           targetRevision: "{{ argocd_repository_revision }}"
