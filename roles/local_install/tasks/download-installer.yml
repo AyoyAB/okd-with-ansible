@@ -9,7 +9,7 @@
   ansible.builtin.include_tasks: "download-if-url-changed.yml"
   vars:
     name: Openshift installer
-    url: "https://github.com/openshift/okd/releases/download/{{ okd_version }}/openshift-install-{{ okd_tools_arch }}-{{ okd_version }}.tar.gz"  # noqa yaml[line-length]
+    url: "{{ openshift_installer_base_url }}/openshift-install-{{ okd_tools_arch }}-{{ okd_version }}.tar.gz"  # noqa yaml[line-length]
     download_url_file: "{{ openshift_install_directory }}/.openshift-installer.url"
     download_target: "{{ openshift_install_archive }}"
     untar_downloaded: true
