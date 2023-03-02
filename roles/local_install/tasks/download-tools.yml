@@ -20,7 +20,7 @@
   ansible.builtin.include_tasks: "download-if-url-changed.yml"
   vars:
     name: Openshift client
-    url: "https://github.com/coreos/ignition/releases/download/{{ ignition_version }}/ignition-validate-{{ ignition_tool_arch }}"  # noqa yaml[line-length]
+    url: "https://github.com/coreos/ignition/releases/download/{{ ignition_validate_version }}/ignition-validate-{{ ignition_tool_arch }}"  # noqa yaml[line-length]
     download_url_file: "{{ openshift_client_directory }}/.ignition-validate.url"
     download_target: "{{ openshift_ignition_validate_executable }}"
     untar_downloaded: false
