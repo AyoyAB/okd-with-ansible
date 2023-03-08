@@ -50,12 +50,13 @@ In disconnected environments you normally have a docker registry which will supp
 
 To use a disconnected registry, set the following parameters:
 
-| variable                                            | description                                                                                                          |
-|-----------------------------------------------------|----------------------------------------------------------------------------------------------------------------------|
-| use_disconnected_registry                           | Indicating a registry should be used. Example: true                                                                  |
-| disconnected_registry_trust_bundle_file             | Filename of the root CA for the registry. Example: ./openshift-ca/example.crt                                        |
-| disconnected_registry_quay_io_openshift_okd         | URL to the registry for quay.io/openshift/okd. Example: registry.okd4.example.com:5011/openshift/okd                 |
-| disconnected_registry_quay_io_openshift_okd_content | URL to the registry for quay.io/openshift/okd-content. Example: registry.okd4.example.com:5011/openshift/okd-content |                                           
+| variable                                | description                                                                                     |
+|-----------------------------------------|-------------------------------------------------------------------------------------------------|
+| use_disconnected_registry               | Boolean. Indicating a registry should be used. Example: true                                    |
+| disconnected_registry_trust_bundle_file | String. Filename of the root CA for the registry. Example: ./openshift-ca/example.crt           |
+| disconnected_registries                 | Array of objects. Mirror registries.                                                            |
+| disconnected_registries.source          | String. URL that will be replaced with mirror. Example: quay.io/openshift/okd                   |
+| disconnected_registries.mirrors         | Array of strings. URL to mirror registry. Example: registry.okd4.example.com:5011/openshift/okd |
 
 # Pull-through-cache
 
