@@ -2,8 +2,10 @@
 - name: Get CoreOS ISO download url
   ansible.builtin.shell:
     cmd: >-
+      set -o pipefail &&
       "{{ openshift_install_executable }}" coreos print-stream-json
       | jq -r '.architectures.x86_64.artifacts.metal.formats.iso.disk.location'
+    executable: /bin/bash
   delegate_to: localhost
   run_once: true
   register: coreos_iso_url_cmd

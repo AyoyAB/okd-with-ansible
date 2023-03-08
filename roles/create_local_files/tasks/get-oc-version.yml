@@ -2,7 +2,10 @@
 
 - name: Get install version
   ansible.builtin.shell:
-    cmd: "{{ openshift_install_executable }} version | head -1"
+    cmd: >-
+      set -o pipefail &&
+      "{{ openshift_install_executable }}" version | head -1
+    executable: /bin/bash
   delegate_to: localhost
   register: install_version_cmd
   changed_when: false
