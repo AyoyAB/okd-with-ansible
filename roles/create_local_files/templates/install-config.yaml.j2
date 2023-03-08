@@ -39,10 +39,11 @@ additionalTrustBundle: |
   {{ lookup('file', disconnected_registry_trust_bundle_file) | indent(2) }}
 {% endif %}
 imageContentSources:
-  - source: quay.io/openshift/okd
+{% for repo_mirror in disconnected_registries %}
+  - source: {{ repo_mirror.source }}
     mirrors:
-      - {{ disconnected_registry_quay_io_openshift_okd }}
-  - source: quay.io/openshift/okd-content
-    mirrors:
-      - {{ disconnected_registry_quay_io_openshift_okd_content }}
+{% for mirror in repo_mirror.mirrors %}
+      - {{ mirror }}
+{% endfor %}
+{% endfor %}
 {% endif %}
