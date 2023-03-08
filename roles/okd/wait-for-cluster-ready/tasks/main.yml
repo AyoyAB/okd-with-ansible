@@ -1,35 +1,13 @@
 ---
 
-- name: Wait for Cluster to report "available"
+- name: Wait for cluster installation to finish
   ansible.builtin.shell:
-    cmd: |
-      set -o pipefail && \
-      KUBECONFIG="{{ openshift_files_kubeconfig }}" \
-      "{{ openshift_client_executable }}" \
-      -n openshift-operators \
-      get clusterversion version -o json \
-      | jq '.status.conditions[] | select(.type=="Available")' \
-      | jq -r '.status'
+    cmd: >-
+      set -o pipefail &&
+      "{{ openshift_install_executable }}" wait-for install-complete --dir={{ openshift_files_directory }}/
     executable: /bin/bash
-  register: available_status
-  retries: 60
-  delay: 30
-  until: available_status.stdout == "True"
+  delegate_to: localhost
+  register: install_complete
+  become: false
   changed_when: false
-
-- name: Wait for Cluster to not report "Progressing"
-  ansible.builtin.shell:
-    cmd: |
-      set -o pipefail && \
-      KUBECONFIG="{{ openshift_files_kubeconfig }}" \
-      "{{ openshift_client_executable }}" \
-      -n openshift-operators \
-      get clusterversion version -o json \
-      | jq '.status.conditions[] | select(.type=="Progressing")' \
-      | jq -r '.status'
-    executable: /bin/bash
-  register: progressing_status
-  retries: 60
-  delay: 30
-  until: progressing_status.stdout == "False"
-  changed_when: false
+  until: install_complete.rc == 0
