@@ -63,7 +63,7 @@
       or
       bash -c "$(curl -fsSL http://{{ groups.lbs[0] }}:8080/install.sh)" -s bootstrap
 
-      3. Reboot and verify they are trying to retrieve the second stage ignition file.
+      3. Reboot and verify it's trying to retrieve the second stage ignition file.
 
       ----------------------------
       - Press return to continue -
