@@ -1,5 +1,9 @@
 ---
 okd_version: 4.12.0-0.okd-2023-02-18-033438
+
+# Retrieve the beta image from https://origin-release.apps.ci.l2s4.p1.openshiftapps.com/#4.13.0-0.okd
+# okd_tools_image_override: quay.io/okd/scos-release:4.12.0-0.okd-scos-2023-02-14-060109
+
 ignition_validate_version: v2.15.0
 
 # The full domain is <cluster_name>.<base_domain> (e.g. okd4.example.com)
