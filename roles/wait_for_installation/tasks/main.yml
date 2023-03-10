@@ -69,31 +69,19 @@
       - Press return to continue -
       ----------------------------
 
-- name: Wait for API server to start on all masters
-  ansible.builtin.uri:
-    url: "https://{{ inventory_hostname }}:6443/readyz"
-    method: GET
-    status_code: 200
-    validate_certs: false
+- name: Wait for bootstrap to finish
+  ansible.builtin.shell:
+    cmd: >-
+      set -o pipefail &&
+      "{{ openshift_install_executable }}" wait-for bootstrap-complete --dir={{ openshift_files_directory }}/
+    executable: /bin/bash
   delegate_to: localhost
-  register: result
-  when: inventory_hostname in groups.masters
-  until: result.status == 200
-  retries: 1000  # retry X times
-  delay: 5  # pause for X sec b/w each call
-
-- name: Check bootstrap status
-  ansible.builtin.raw: |
-    journalctl -b -u release-image.service -u bootkube.service \
-    | grep "bootkube.service: Deactivated successfully." \
-    | wc -l
+  register: bootstrap_complete
+  become: false
+  changed_when: false
+  until: bootstrap_complete.rc == 0
   when:
     - inventory_hostname == groups.bootstrap[0]
-  register: journalctl
-  retries: 1000
-  delay: 30
-  until: journalctl.stdout == "1\r\n"
-  changed_when: false
 
 - name: Shutdown the bootstrap machine
   ansible.builtin.raw: |
