@@ -12,7 +12,7 @@
     mode: '0644'
   register: download_url
 
-- name: Download if url has changed - {{ name }} # noqa: no-handler
+- name: Download if url has changed - {{ name }}  # noqa: no-handler
   when: download_url.changed
   block:
     - name: Extract openshift installer from image
