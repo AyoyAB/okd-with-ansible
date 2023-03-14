@@ -117,3 +117,8 @@
 - name: Copy IPv4-specific ipxe config files for nodes
   ansible.builtin.include_tasks: "ipxe-config-ipv4.yml"
   loop: "{{ groups.nodes }}"
+
+- name: Copy generic ipxe config files for worker nodes
+  ansible.builtin.include_tasks: "ipxe-config-domain.yml"
+  loop:
+    - worker
