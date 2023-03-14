@@ -1,0 +1,59 @@
+---
+- name: Create directory openshift-client
+  ansible.builtin.file:
+    state: directory
+    path: "{{ openshift_install_directory }}"
+    mode: '0755'
+
+- name: Write image url to file - {{ name }}
+  ansible.builtin.copy:
+    content: "{{ okd_tools_image_override }}"
+    dest: "{{ openshift_install_directory }}/.openshift-installer.url"
+    mode: '0644'
+  register: download_url
+
+- name: Download if url has changed - {{ name }}  # noqa: no-handler
+  when: download_url.changed
+  block:
+    - name: Extract openshift installer from image
+      ansible.builtin.shell:
+        cmd: |
+          "${OC_CLIENT}" adm release extract \
+            --tools \
+            --to="{{ openshift_install_directory }}" \
+            {{ okd_tools_image_override }}
+      changed_when: true
+
+    - name: Find extracted tar.gz files for installer
+      ansible.builtin.find:
+        paths: "{{ openshift_install_directory }}"
+        patterns: "openshift-install-*.tar.gz"
+      register: filenames
+
+    - name: Unpack download - {{ filenames.files[0].path }}
+      ansible.builtin.command:
+        # As we're running on mac, we can't use the module as it requires GNU tar.
+        cmd: tar -xvf "{{ filenames.files[0].path }}" -C "{{ openshift_install_directory }}"  # noqa yaml[line-length] command-instead-of-module
+      changed_when: true
+
+    - name: Delete download - {{ name }}
+      ansible.builtin.file:
+        state: absent
+        path: "{{ filenames.files[0].path }}"
+
+    - name: Find extracted tar.gz files for client
+      ansible.builtin.find:
+        paths: "{{ openshift_install_directory }}"
+        patterns: "openshift-client-*.tar.gz"
+      register: filenames
+
+    - name: Unpack download - {{ filenames.files[0].path }}
+      ansible.builtin.command:
+        # As we're running on mac, we can't use the module as it requires GNU tar.
+        cmd: tar -xvf "{{ filenames.files[0].path }}" -C "{{ openshift_client_directory }}"  # noqa yaml[line-length] command-instead-of-module
+      changed_when: true
+
+    - name: Delete download - {{ name }}
+      ansible.builtin.file:
+        state: absent
+        path: "{{ filenames.files[0].path }}"
