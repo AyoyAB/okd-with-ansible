@@ -1,9 +1,10 @@
 ---
-- name: Write download url to file - {{ name }}
+- name: Compare download url with file - {{ name }}
   ansible.builtin.copy:
     content: "{{ url }}"
     dest: "{{ download_url_file }}"
     mode: '0644'
+  check_mode: true
   register: download_url
 
 - name: Download if url has changed - {{ name }}  # noqa: no-handler
@@ -31,3 +32,9 @@
         state: absent
         path: "{{ download_target }}"
       when: delete_download_target
+
+    - name: Write download url with file - {{ name }}
+      ansible.builtin.copy:
+        content: "{{ url }}"
+        dest: "{{ download_url_file }}"
+        mode: '0644'
