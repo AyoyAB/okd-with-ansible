@@ -1,0 +1,11 @@
+---
+# Configure Cluster Samples Operator to bootstrap as Removed
+# https://docs.openshift.com/container-platform/4.12/openshift_images/configuring-samples-operator.html#samples-operator-restricted-network-install-with-access
+apiVersion: samples.operator.openshift.io/v1
+kind: Config
+metadata:
+  name: cluster
+spec:
+  architectures:
+    - x86_64
+  managementState: Removed

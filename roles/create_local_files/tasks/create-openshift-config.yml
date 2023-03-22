@@ -42,6 +42,13 @@
         cmd: "{{ openshift_install_executable }} create manifests --dir={{ openshift_files_directory }}/.install-config"
       changed_when: true
 
+    - name: Copy additional samples-operator configuration
+      ansible.builtin.copy:
+        src: "files/samples-operator-removed.yaml"
+        dest: "{{ openshift_files_directory }}/.install-config/openshift/samples-operator-removed.yaml"
+        mode: '0644'
+      when: okd_samples_operator_removed
+
     - name: Create cluster ignition files
       ansible.builtin.command:
         cmd: "{{ openshift_install_executable }} create ignition-configs --dir={{ openshift_files_directory }}/.install-config"

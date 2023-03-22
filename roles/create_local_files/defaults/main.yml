@@ -1,5 +1,6 @@
 ---
 okd_configuration_validity_duration_s: 21600  # 6 hours
+okd_samples_operator_removed: false
 
 opt_out_of_remote_health_reporting: false
 
