@@ -32,6 +32,3 @@
 
 - name: Configure cluster
   ansible.builtin.import_playbook: configure-cluster.yml
-
-- name: Post-installation steps
-  ansible.builtin.import_playbook: post-installation.yml

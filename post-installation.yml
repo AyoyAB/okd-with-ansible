@@ -1,7 +1,0 @@
----
-- name: Post installation
-  hosts: localhost
-  any_errors_fatal: true
-  gather_facts: false
-  roles:
-    - role: post_installation

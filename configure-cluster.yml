@@ -14,3 +14,5 @@
     # Then perform any additional configurations
     - role: okd_operator_catalog_sources
     - role: okd/additional_repository_mirrors
+    # Install Argo CD
+    - role: argocd
