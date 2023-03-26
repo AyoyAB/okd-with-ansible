@@ -1,7 +1,7 @@
 ---
 galaxy_info:
   author: John Allberg
-  description: Do the twist again, like we normally do after the cluster is up and running.
+  description: Configure Argo CD
   company: Ayoy AB
 
   # If the issue tracker for your role is not on github, uncomment the
