@@ -18,7 +18,7 @@
     - name: Extract openshift installer from image
       ansible.builtin.shell:
         cmd: |
-          "${OC_CLIENT}" adm release extract \
+          "{{ openshift_client_executable }}" adm release extract \
             --tools \
             --to="{{ openshift_install_directory }}" \
             {{ okd_tools_image_override }}
