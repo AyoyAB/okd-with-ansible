@@ -39,6 +39,15 @@ ssh_public_key_file: ~/.ssh/id_ansible.pub
 # custom_container_registry_hostname_port: registry.example.com:5000
 
 #
+# Local Configuration
+#
+
+# local_install_tools_download_validate_certs: true
+# openshift_client_base_url: "https://github.com/okd-project/okd/releases/download/{{ okd_version }}"
+# openshift_installer_base_url: "https://github.com/okd-project/okd/releases/download/{{ okd_version }}"
+# ignition_validate_base_url: "https://github.com/coreos/ignition/releases/download/{{ ignition_validate_version }}"
+
+#
 # Infra Configuration
 #
 
