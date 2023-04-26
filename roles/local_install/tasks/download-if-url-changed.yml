@@ -19,7 +19,6 @@
         url: "{{ url }}"
         dest: "{{ download_target }}"
         mode: '0440'
-        validate_certs: "{{ local_install_tools_download_validate_certs }}"
 
     - name: Unpack download - {{ name }}
       ansible.builtin.command:
