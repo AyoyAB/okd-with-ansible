@@ -42,7 +42,7 @@ disconnected_registries:
 # Local Configuration
 #
 
-# local_install_tools_download_validate_certs: true
+# Override tool download urls if using a local proxy
 # openshift_client_base_url: "https://github.com/okd-project/okd/releases/download/{{ okd_version }}"
 # openshift_installer_base_url: "https://github.com/okd-project/okd/releases/download/{{ okd_version }}"
 # ignition_validate_base_url: "https://github.com/coreos/ignition/releases/download/{{ ignition_validate_version }}"

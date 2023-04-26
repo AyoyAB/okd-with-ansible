@@ -130,6 +130,16 @@ the hostname `registry.okd4.example.com` needs to be setup in DNS.
    ```
 6. Set up static DHCP entries for the machines, matching IP addresses above.
 
+### Ansible CA-Trust
+
+If you are downloading tools from a self-hosted proxy that is using a custom CA, you need to configure Ansible to use this CA.
+
+You can do this by defining the `SSL_CERT_FILE` environment variable:
+
+```shell
+export SSL_CERT_FILE=./path/to/my/CA.pem
+```
+
 # Run playbook
 
 It's time to run the playbook. There are a number of steps
