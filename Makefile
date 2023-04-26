@@ -1,3 +1,17 @@
+#!make
+
+# Include default .env if file exists
+ifneq (,$(wildcard .env))
+	include .env
+endif
+
+# Include cluster-specific .env if file exists
+ifdef CLUSTER_NAME
+ifneq (,$(wildcard inventories/${CLUSTER_NAME}/.env))
+	include inventories/${CLUSTER_NAME}/.env
+endif
+endif
+
 SHELL := /usr/bin/env bash
 
 OC_CLIENT_PATH = ./openshift-client/oc
@@ -20,8 +34,17 @@ KUBECONFIG ?= ./openshift-files/auth/kubeconfig
 all:
 	$(error Please specify a make target)
 
+.PHONY: local-pip-config
+local-pip-config:
+ifdef PIP_INDEXURL
+	pip3 config set global.index-url "${PIP_INDEXURL}"
+endif
+ifdef PIP_CERT
+	pip3 config set global.cert "${PIP_CERT}"
+endif
+
 .PHONY: dependencies
-dependencies:
+dependencies: local-pip-config
 	pip3 install -r requirements.txt
 	ansible-galaxy install -r requirements.yml
 
