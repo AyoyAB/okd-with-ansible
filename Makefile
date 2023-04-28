@@ -18,13 +18,8 @@ OC_CLIENT_PATH = ./openshift-client/oc
 KUBECTL_PATH = ./openshift-client/kubectl
 KUBECONFIG ?= ./openshift-files/auth/kubeconfig
 
-# Pattern-specific Variable Values (https://www.gnu.org/software/make/manual/make.html#Pattern_002dspecific-Variable-Values)
-# (% matches all targets)
-
-# Prevent Ansible from buffering output
-%: export PYTHONUNBUFFERED=1
-# Force ansible to output color (even through tee-commands)
-%: export ANSIBLE_FORCE_COLOR=true
+# Export all variables to all shells in all targets
+export
 
 #
 #
