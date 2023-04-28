@@ -130,15 +130,15 @@ the hostname `registry.okd4.example.com` needs to be setup in DNS.
    ```
 6. Set up static DHCP entries for the machines, matching IP addresses above.
 
-### Ansible CA-Trust
+### Python PIP proxy
+
+If you are using a proxy for PIP, you can configure this by defining the `PIP_INDEXURL` and `PIP_CERT` environment variables in the `.env` or `${CLUSTER_NAME}/.env` file.
+
+### Ansible CA
 
 If you are downloading tools from a self-hosted proxy that is using a custom CA, you need to configure Ansible to use this CA.
 
-You can do this by defining the `SSL_CERT_FILE` environment variable:
-
-```shell
-export SSL_CERT_FILE=./path/to/my/CA.pem
-```
+You can do this by defining the `SSL_CERT_FILE` environment variable in the `.env` or `${CLUSTER_NAME}/.env` file.
 
 # Run playbook
 
