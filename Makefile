@@ -26,6 +26,9 @@ KUBECONFIG ?= ./openshift-files/auth/kubeconfig
 # Force ansible to output color (even through tee-commands)
 %: export ANSIBLE_FORCE_COLOR=true
 
+# Export all variables to all shells in all targets
+export
+
 #
 #
 #
