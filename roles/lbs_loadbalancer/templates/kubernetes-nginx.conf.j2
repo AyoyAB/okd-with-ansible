@@ -9,6 +9,8 @@ stream {
 {% endfor %}
   }
 
+  # This should really have a health check on /readyz but that seems to be reserved for nginx Plus.
+  # Use haproxy instead.
   server {
     listen 6443;
     proxy_pass kubernetes;
