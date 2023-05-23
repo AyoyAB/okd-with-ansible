@@ -20,8 +20,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install --upgrade pip
-          pip install -r requirements.txt
-          ansible-galaxy install -r requirements.yml
+          make dependencies
 
       - name: Lint code
         run: |
@@ -51,8 +50,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install --upgrade pip
-          pip install -r requirements.txt
-          ansible-galaxy install -r requirements.yml
+          make dependencies
 
       - name: Test with molecule
         run: |
