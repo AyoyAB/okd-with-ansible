@@ -19,9 +19,5 @@ provisioner:
     links:
       hosts: ../../inventories/local/hosts.yml
       group_vars: ../../inventories/local/group_vars/
-lint: |
-  set -e
-  yamllint .
-  ansible-lint
 verifier:
   name: ansible
