@@ -39,9 +39,16 @@ ifdef PIP_CERT
 endif
 
 .PHONY: dependencies
-dependencies: local-pip-config
-	pip3 install -r requirements.txt
+dependencies:
+	pip install -r requirements.txt
 	ansible-galaxy install -r requirements.yml
+
+.PHONY: local-dependencies
+local-dependencies: local-pip-config dependencies
+
+#
+#
+#
 
 .PHONY: env-check
 env-check:
