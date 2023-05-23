@@ -50,6 +50,21 @@ ifndef CLUSTER_NAME
 endif
 
 #
+# Lint
+#
+
+.PHONY: lint
+lint: ansible-lint yaml-lint
+
+.PHONY: ansible-lint
+ansible-lint:
+	ansible-lint
+
+.PHONY: yaml-lint
+yaml-lint:
+	yamllint .
+
+#
 # Local
 #
 
