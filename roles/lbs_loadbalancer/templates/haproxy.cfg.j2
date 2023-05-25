@@ -39,12 +39,33 @@ frontend stats
 
 listen api-server-6443
   bind *:6443
+  # Reference: https://kvaps.medium.com/for-make-this-scheme-more-safe-you-can-add-haproxy-layer-between-keepalived-and-kube-apiservers-62c344283076
+  # Use readyz endpoint for health probes.
+  option  httpchk GET /readyz HTTP/1.0
+  option  log-health-checks
+  http-check expect status 200
   mode tcp
+
+  # the default parameters for the server. Reference: http://cbonte.github.io/haproxy-dconv/2.0/configuration.html
+  # verify none   disable SSL verification, which is needed to connect to newly created clusters
+  # check-ssl     probe will use https
+  # inter         sets the interval between two consecutive health checks
+  # downinter     sets the interval between two consecutive health checks when target is down
+  # rise          number of successful health checks to consider up
+  # fall          number of unsuccessful health checks to consider down.
+  # slowstart     ramp up the traffic to a newly healthy endpoint
+  # maxconn       Sets the maximum per-process number of concurrent connections
+  # maxqueue      specifies the maximal number of connections which will wait in the queue for this server
+  # weight        All servers will receive a load proportional to their weight relative to the sum of all weights
+  default-server verify none check-ssl inter 1s downinter 5s rise 2 fall 2 slowstart 60s maxconn 5000 maxqueue 5000 weight 100
+
 {% if bootstrap_enabled %}
-  server {{ groups.bootstrap[0].split(".")[0] }} {{ groups.bootstrap[0] }}:6443 check inter 1s backup
+  # When "backup" is present on a server line, the server is only used in load
+  # balancing when all other non-backup servers are unavailable.
+  server {{ groups.bootstrap[0].split(".")[0] }} {{ groups.bootstrap[0] }}:6443 check backup
 {% endif %}
 {% for host in groups.masters %}
-  server {{ host.split(".")[0] }} {{ host }}:6443 check inter 1s
+  server {{ host.split(".")[0] }} {{ host }}:6443 check
 {% endfor %}
 
 listen machine-config-server-22623
