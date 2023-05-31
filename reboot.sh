@@ -41,6 +41,7 @@ _verify_continue() {
 _cycle_node() {
   local _NODE_NAME="${1}"
   local _SHUTDOWN="${2}"
+  local _USE_SSH="${3}"
 
   echo ""
   echo "Draining node ${_NODE_NAME}"
@@ -48,16 +49,23 @@ _cycle_node() {
   oc adm drain "${_NODE_NAME}" --ignore-daemonsets --delete-emptydir-data --force
 
   echo ""
+  local _ACTION
   if [ "${_SHUTDOWN}" == "Y" ]; then
-    ACTION="--poweroff"
+    _ACTION="--poweroff"
     echo "Shutting down node ${_NODE_NAME}"
   else
-    ACTION="--reboot"
+    _ACTION="--reboot"
     echo "Rebooting node ${_NODE_NAME}"
   fi
 
-  ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i ${SSH_KEY} -n "core@${_NODE_NAME}" "sudo shutdown +0 ${ACTION} && exit" \
-    || echo "Returned error: $?"
+  local _SHUTDOWN_CMD="shutdown +0 ${_ACTION}"
+
+  if [ "${_USE_SSH}" == "Y" ]; then
+    ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i ${SSH_KEY} -n "core@${_NODE_NAME}" "${_SHUTDOWN_CMD} && exit" \
+        || echo "Returned error: $?"
+  else
+    oc debug "node/${_NODE_NAME}" -- chroot /host sh -c "sleep 5; ${_SHUTDOWN_CMD}" || echo "Returned error: $?"
+  fi
 
   echo ""
   echo "Waiting for node ${_NODE_NAME} to be restarted"
@@ -81,7 +89,7 @@ _cycle_node() {
 # Print usage
 #
 _usage() {
-  echo "Usage: $0 [-h --help] [-s --shutdown] [nodes...]"
+  echo "Usage: $0 [-h --help] [-s --shutdown] [-u --use-ssh] [nodes...]"
 }
 
 _main() {
@@ -90,6 +98,7 @@ _main() {
   #
 
   local _SHUTDOWN="N"
+  local _USE_SSH="N"
 
   local _MANUAL_NODES=()
 
@@ -97,6 +106,10 @@ _main() {
     case $1 in
       -s|--shutdown)
         _SHUTDOWN="Y"
+        shift # past argument
+        ;;
+      -u|--use-ssh)
+        _USE_SSH="Y"
         shift # past argument
         ;;
       -h|--help)
@@ -168,7 +181,7 @@ _main() {
 
   # Perform reboot/shutdown cycle of all the provided nodes
   while IFS= read -r _NODE; do
-    _cycle_node "${_NODE}" "${_SHUTDOWN}"
+    _cycle_node "${_NODE}" "${_SHUTDOWN}" "${_USE_SSH}"
   done <<< "${_CYCLE_NODES[@]}"
 }
 
