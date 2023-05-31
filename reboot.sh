@@ -8,6 +8,34 @@ set -euo pipefail
 #
 SSH_KEY=~/.ssh/id_ansible
 
+
+#
+# Wait for node to have a specific status
+#
+_wait_for_node_ready_status() {
+  local _NODE_NAME="${1}"
+  local _WAIT_READY_STATUS="${2}"
+
+  while : ; do
+    # Get Ready status for node
+    local _STATUS
+    if ! _STATUS=$(oc get node "${_NODE_NAME}" -o json | jq -r '.status.conditions[] | select(.type=="Ready") | .status'); then
+      >&2 echo "Error, exit code from oc: $?"
+    else
+      echo "Node ready status is: ${_STATUS}"
+
+      if { [ "${_WAIT_READY_STATUS}" == "Y" ] && [ "${_STATUS}" == "True" ]; } ||
+         { [ "${_WAIT_READY_STATUS}" == "N" ] && { [ "${_STATUS}" == "False" ] || [ "${_STATUS}" == "Unknown" ]; } }; then
+        # Break retry loop when expected status is reached
+        break
+      fi
+    fi
+
+    # Sleep before trying again
+    sleep 5
+  done
+}
+
 #
 # Select y/n to continue or not
 #
@@ -68,17 +96,12 @@ _cycle_node() {
   fi
 
   echo ""
-  echo "Waiting for node ${_NODE_NAME} to be restarted"
-  sleep 90
+  echo "Waiting for node ${_NODE_NAME} to be NotReady (Rebooting/Powered off/Offline)"
+  _wait_for_node_ready_status "${_NODE_NAME}" "N"
 
-  # Wait forever until node is Ready again
-  echo "Waiting for node ${_NODE_NAME} to be Ready"
-  while : ; do
-    sleep 5
-    status=$(oc get node "${_NODE_NAME}" -o json | jq -r '.status.conditions[] | select(.type=="Ready") | .status') || status="Error from oc: $?"
-    echo "Node ready status is: $status"
-    [[ $status != "True" ]] || break
-  done
+  echo ""
+  echo "Waiting for node ${_NODE_NAME} to be Ready (Rebooted/Powered on/Online) again"
+  _wait_for_node_ready_status "${_NODE_NAME}" "Y"
 
   echo ""
   echo "Resume node ${_NODE_NAME}"
