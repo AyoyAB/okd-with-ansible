@@ -54,6 +54,13 @@ _cycle_node() {
   oc adm uncordon "${_NODE_NAME}" || exit 1
 }
 
+#
+# Print usage
+#
+_usage() {
+  echo "Usage: $0 [-h --help] [-s --shutdown] [nodes...]"
+}
+
 _main() {
   #
   # Get parameters
@@ -70,11 +77,12 @@ _main() {
         shift # past argument
         ;;
       -h|--help)
-        echo "$0 [-h --help] [-s --shutdown] [nodes...]"
+        _usage
         exit 0
         ;;
       --*|-*)
         >&2 echo "Error: Unknown option ${1}"
+        >&2 _usage
         exit 1
         ;;
       *)
