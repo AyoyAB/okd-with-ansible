@@ -9,6 +9,29 @@ set -euo pipefail
 SSH_KEY=~/.ssh/id_ansible
 
 #
+# Select y/n to continue or not
+#
+_verify_continue() {
+  local _QUESTION="${1}"
+
+  while true; do
+    read -r -p "${_QUESTION} [y/n] " _CHOICE
+    case "${_CHOICE}" in
+      y|Y )
+        return 0
+        ;;
+      n|N )
+        echo "Exiting..."
+        exit 1
+        ;;
+      * )
+        echo "Error: Invalid choice ${_CHOICE}"
+        ;;
+    esac
+  done
+}
+
+#
 # Gracefully cycle a node
 # - Drain
 # - Reboot or Shutdown
@@ -140,21 +163,7 @@ _main() {
   echo "---"
 
   # Ask for verification
-  read -r -p "Continue (y/n)?" _IM_SURE
-  case "${_IM_SURE}" in
-    y|Y )
-      echo ""
-      ;;
-    n|N )
-      echo "Exiting..."
-      exit 1
-      ;;
-    *)
-      >&2 echo "Error: Invalid choice ${_IM_SURE}"
-      exit 1
-      ;;
-  esac
-
+  _verify_continue "Continue?"
   echo "---"
 
   # Perform reboot/shutdown cycle of all the provided nodes
