@@ -8,6 +8,57 @@ set -euo pipefail
 #
 SSH_KEY=~/.ssh/id_ansible
 
+
+#
+# Wait for node to have a specific status
+#
+_wait_for_node_ready_status() {
+  local _NODE_NAME="${1}"
+  local _WAIT_READY_STATUS="${2}"
+
+  while : ; do
+    # Get Ready status for node
+    local _STATUS
+    if ! _STATUS=$(oc get node "${_NODE_NAME}" -o json | jq -r '.status.conditions[] | select(.type=="Ready") | .status'); then
+      >&2 echo "Error, exit code from oc: $?"
+    else
+      echo "Node ready status is: ${_STATUS}"
+
+      if { [ "${_WAIT_READY_STATUS}" == "Y" ] && [ "${_STATUS}" == "True" ]; } ||
+         { [ "${_WAIT_READY_STATUS}" == "N" ] && { [ "${_STATUS}" == "False" ] || [ "${_STATUS}" == "Unknown" ]; } }; then
+        # Break retry loop when expected status is reached
+        break
+      fi
+    fi
+
+    # Sleep before trying again
+    sleep 5
+  done
+}
+
+#
+# Select y/n to continue or not
+#
+_verify_continue() {
+  local _QUESTION="${1}"
+
+  while true; do
+    read -r -p "${_QUESTION} [y/n] " _CHOICE
+    case "${_CHOICE}" in
+      y|Y )
+        return 0
+        ;;
+      n|N )
+        echo "Exiting..."
+        exit 1
+        ;;
+      * )
+        echo "Error: Invalid choice ${_CHOICE}"
+        ;;
+    esac
+  done
+}
+
 #
 # Gracefully cycle a node
 # - Drain
@@ -18,6 +69,7 @@ SSH_KEY=~/.ssh/id_ansible
 _cycle_node() {
   local _NODE_NAME="${1}"
   local _SHUTDOWN="${2}"
+  local _USE_SSH="${3}"
 
   echo ""
   echo "Draining node ${_NODE_NAME}"
@@ -25,33 +77,42 @@ _cycle_node() {
   oc adm drain "${_NODE_NAME}" --ignore-daemonsets --delete-emptydir-data --force
 
   echo ""
+  local _ACTION
   if [ "${_SHUTDOWN}" == "Y" ]; then
-    ACTION="--poweroff"
+    _ACTION="--poweroff"
     echo "Shutting down node ${_NODE_NAME}"
   else
-    ACTION="--reboot"
+    _ACTION="--reboot"
     echo "Rebooting node ${_NODE_NAME}"
   fi
 
-  ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i ${SSH_KEY} -n "core@${_NODE_NAME}" "sudo shutdown +0 ${ACTION} && exit" \
-    || echo "Returned error: $?"
+  local _SHUTDOWN_CMD="shutdown +0 ${_ACTION}"
+
+  if [ "${_USE_SSH}" == "Y" ]; then
+    ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i ${SSH_KEY} -n "core@${_NODE_NAME}" "${_SHUTDOWN_CMD} && exit" \
+        || echo "Returned error: $?"
+  else
+    oc debug "node/${_NODE_NAME}" -- chroot /host sh -c "sleep 5; ${_SHUTDOWN_CMD}" || echo "Returned error: $?"
+  fi
 
   echo ""
-  echo "Waiting for node ${_NODE_NAME} to be restarted"
-  sleep 90
+  echo "Waiting for node ${_NODE_NAME} to be NotReady (Rebooting/Powered off/Offline)"
+  _wait_for_node_ready_status "${_NODE_NAME}" "N"
 
-  # Wait forever until node is Ready again
-  echo "Waiting for node ${_NODE_NAME} to be Ready"
-  while : ; do
-    sleep 5
-    status=$(oc get node "${_NODE_NAME}" -o json | jq -r '.status.conditions[] | select(.type=="Ready") | .status') || status="Error from oc: $?"
-    echo "Node ready status is: $status"
-    [[ $status != "True" ]] || break
-  done
+  echo ""
+  echo "Waiting for node ${_NODE_NAME} to be Ready (Rebooted/Powered on/Online) again"
+  _wait_for_node_ready_status "${_NODE_NAME}" "Y"
 
   echo ""
   echo "Resume node ${_NODE_NAME}"
   oc adm uncordon "${_NODE_NAME}" || exit 1
+}
+
+#
+# Print usage
+#
+_usage() {
+  echo "Usage: $0 [-h --help] [-s --shutdown] [-u --use-ssh] [nodes...]"
 }
 
 _main() {
@@ -60,6 +121,7 @@ _main() {
   #
 
   local _SHUTDOWN="N"
+  local _USE_SSH="N"
 
   local _MANUAL_NODES=()
 
@@ -69,12 +131,17 @@ _main() {
         _SHUTDOWN="Y"
         shift # past argument
         ;;
+      -u|--use-ssh)
+        _USE_SSH="Y"
+        shift # past argument
+        ;;
       -h|--help)
-        echo "$0 [-h --help] [-s --shutdown] [nodes...]"
+        _usage
         exit 0
         ;;
       --*|-*)
         >&2 echo "Error: Unknown option ${1}"
+        >&2 _usage
         exit 1
         ;;
       *)
@@ -132,26 +199,12 @@ _main() {
   echo "---"
 
   # Ask for verification
-  read -r -p "Continue (y/n)?" _IM_SURE
-  case "${_IM_SURE}" in
-    y|Y )
-      echo ""
-      ;;
-    n|N )
-      echo "Exiting..."
-      exit 1
-      ;;
-    *)
-      >&2 echo "Error: Invalid choice ${_IM_SURE}"
-      exit 1
-      ;;
-  esac
-
+  _verify_continue "Continue?"
   echo "---"
 
   # Perform reboot/shutdown cycle of all the provided nodes
   while IFS= read -r _NODE; do
-    _cycle_node "${_NODE}" "${_SHUTDOWN}"
+    _cycle_node "${_NODE}" "${_SHUTDOWN}" "${_USE_SSH}"
   done <<< "${_CYCLE_NODES[@]}"
 }
 
