@@ -39,7 +39,11 @@ read -n 1 -s -r -p "--- Press any key continue ---"
 sudo coreos-installer \
   install \
   /dev/sda \
+  {% if network_use_vlan %}
+  --firstboot-args='console=tty0 rd.neednet=1 rd.net.timeout.carrier=30 ip=eno1.42:dhcp vlan={{ network_if_name }}.{{ network_vlan_id }}:{{ network_if_name }}' \
+  {% else %}
   --firstboot-args='console=tty0 rd.neednet=1 rd.net.timeout.carrier=30' \
+  {% endif %}
   --insecure-ignition \
   --ignition-url="${IGNITION_FILE_URL}"
 
