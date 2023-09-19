@@ -35,14 +35,13 @@
     group: root
     mode: '0755'
 
-
 - name: Make sure NTP is stopped
   ansible.builtin.service:
     name: ntp
     state: stopped
     enabled: true
 
-- name: Sync time initialy
+- name: Sync time initially
   ansible.builtin.command:
     cmd: ntpdate -t 10 se.pool.ntp.org
   changed_when: false
