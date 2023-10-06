@@ -79,9 +79,9 @@ loadbalancer_use_haproxy: true
 #     mirrors:
 #       - registry.example.com:5000
 
-#network_use_vlan: true
-#network_vlan_id:  42
-#network_if_name:  eno1
+# network_use_vlan: true
+# network_vlan_id:  42
+# network_if_name:  eno1
 
 argocd: true
 argocd_namespace: argocd
