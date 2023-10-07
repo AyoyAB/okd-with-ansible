@@ -1,6 +1,6 @@
 ---
 # https://github.com/okd-project/okd/releases
-okd_version: 4.13.0-0.okd-2023-09-03-082426
+okd_version: 4.13.0-0.okd-2023-09-30-084937
 # last 4.12 version: 4.12.0-0.okd-2023-04-16-041331
 
 # Retrieve the beta image from https://origin-release.apps.ci.l2s4.p1.openshiftapps.com/#4.13.0-0.okd
