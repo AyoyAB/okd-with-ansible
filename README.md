@@ -357,7 +357,7 @@ brew install hashicorp/tap/hashicorp-vagrant
 https://molecule.readthedocs.io/en/latest/
 
 ```shell
-pip3 install -r requirements.txt
+make local-dependencies
 ```
 
 ### Usage
