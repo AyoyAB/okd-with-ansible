@@ -367,7 +367,7 @@ make local-dependencies
 To perform a full test, run:
 
 ```shell
-molecule test --all
+make molecule-test
 ```
 
 ### Manual testing
