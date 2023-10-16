@@ -72,6 +72,14 @@ yaml-lint:
 	yamllint .
 
 #
+# Test (Molecule)
+#
+
+.PHONY: molecule-test
+molecule-test:
+	molecule test --all
+
+#
 # Local
 #
 

@@ -54,4 +54,4 @@ jobs:
 
       - name: Test with molecule
         run: |
-          molecule test --all
+          make molecule-test
