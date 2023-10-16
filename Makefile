@@ -29,6 +29,11 @@ export
 all:
 	$(error Please specify a make target)
 
+.PHONY: requirements
+requirements:
+	@python3 --version | grep --quiet "Python 3." || (echo "Please install Python 3 before running make!"; exit 1)
+	@which jq > /dev/null || (echo "Please install jq before running make!"; exit 1)
+
 .PHONY: local-pip-config
 local-pip-config:
 ifdef PIP_INDEXURL
@@ -39,7 +44,7 @@ ifdef PIP_CERT
 endif
 
 .PHONY: dependencies
-dependencies:
+dependencies: requirements
 	pip install -r requirements.txt
 	ansible-galaxy install -r requirements.yml
 
