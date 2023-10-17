@@ -5,11 +5,17 @@
     path: "{{ openshift_install_directory }}"
     mode: '0755'
 
+- name: Define openshift installer download url
+  when:
+    - openshift_installer_download_url is undefined
+  ansible.builtin.set_fact:
+    openshift_installer_download_url: "{{ openshift_installer_base_url }}/{{ okd_version }}/openshift-install-{{ okd_tools_arch }}-{{ okd_version }}.tar.gz"  # noqa yaml[line-length]
+
 - name: Download openshift installer if needed
   ansible.builtin.include_tasks: "download-if-url-changed.yml"
   vars:
     name: Openshift installer
-    url: "{{ openshift_installer_base_url }}/openshift-install-{{ okd_tools_arch }}-{{ okd_version }}.tar.gz"  # noqa yaml[line-length]
+    url: "{{ openshift_installer_download_url }}"
     download_url_file: "{{ openshift_install_directory }}/.openshift-installer.url"
     download_target: "{{ openshift_install_archive }}"
     untar_downloaded: true
