@@ -16,11 +16,21 @@
     untar_directory: "{{ openshift_client_directory }}"
     delete_download_target: true
 
+#
+# Ignition Validate
+#
+
+- name: Define ignition validate download url
+  when:
+    - ignition_validate_download_url is undefined
+  ansible.builtin.set_fact:
+    ignition_validate_download_url: "{{ ignition_validate_base_url }}/{{ ignition_validate_version }}/ignition-validate-{{ ignition_tool_arch }}"
+
 - name: Download ignition validate if needed
   ansible.builtin.include_tasks: "download-if-url-changed.yml"
   vars:
     name: Openshift client
-    url: "{{ ignition_validate_base_url }}/ignition-validate-{{ ignition_tool_arch }}"
+    url: "{{ ignition_validate_download_url }}"
     download_url_file: "{{ openshift_client_directory }}/.ignition-validate.url"
     download_target: "{{ openshift_ignition_validate_executable }}"
     untar_downloaded: false
