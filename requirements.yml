@@ -7,3 +7,6 @@ collections:
   - name: community.general
     version: 6.5.0
     source: https://galaxy.ansible.com
+  - name: community.sops
+    version: 1.6.6
+    source: https://galaxy.ansible.com
