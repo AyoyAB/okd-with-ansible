@@ -45,7 +45,8 @@ disconnected_registries:
 #
 
 # Override tool download urls if using a local proxy
-# openshift_client_base_url: "https://github.com/okd-project/okd/releases/download/{{ okd_version }}"
+# openshift_client_base_url: https://github.com/okd-project/okd/releases/download
+# openshift_client_download_url: https://github.com/okd-project/okd/releases/download/{{ okd_version }}/openshift-client-mac-{{ okd_version }}.tar.gz
 # openshift_installer_base_url: https://github.com/okd-project/okd/releases/download
 # openshift_installer_download_url: https://github.com/okd-project/okd/releases/download/{{ okd_version }}/openshift-install-mac-{{ okd_version }}.tar.gz
 # ignition_validate_base_url: https://github.com/coreos/ignition/releases/download
