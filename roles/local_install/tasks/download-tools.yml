@@ -31,3 +31,29 @@
   ansible.builtin.file:
     path: "{{ openshift_ignition_validate_executable }}"
     mode: '0755'
+
+#
+# SOPS
+#
+
+- name: Define SOPS download url
+  when:
+    - sops_download_url is undefined
+  ansible.builtin.set_fact:
+    sops_download_url: "{{ sops_base_url }}/{{ sops_version }}/sops-{{ sops_version }}.{{ sops_arch }}"
+
+- name: Download SOPS if needed
+  ansible.builtin.include_tasks: "download-if-url-changed.yml"
+  vars:
+    name: SOPS
+    url: "{{ sops_download_url }}"
+    download_url_file: "{{ openshift_client_directory }}/.sops.url"
+    download_target: "{{ sops_executable }}"
+    untar_downloaded: false
+    untar_directory: "{{ openshift_client_directory }}"
+    delete_download_target: false
+
+- name: Chmod SOPS
+  ansible.builtin.file:
+    path: "{{ sops_executable }}"
+    mode: '0755'

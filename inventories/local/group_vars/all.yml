@@ -7,6 +7,7 @@ okd_version: 4.13.0-0.okd-2023-09-30-084937
 # okd_tools_image_override: quay.io/okd/scos-release:4.12.0-0.okd-scos-2023-02-14-060109
 
 ignition_validate_version: v2.15.0
+sops_version: v3.8.1
 
 # The full domain is <cluster_name>.<base_domain> (e.g. okd4.example.com)
 base_domain: local.com
@@ -47,6 +48,8 @@ ssh_public_key_file: ~/.ssh/id_ansible.pub
 # openshift_client_base_url: "https://github.com/okd-project/okd/releases/download/{{ okd_version }}"
 # openshift_installer_base_url: "https://github.com/okd-project/okd/releases/download/{{ okd_version }}"
 # ignition_validate_base_url: "https://github.com/coreos/ignition/releases/download/{{ ignition_validate_version }}"
+# sops_base_url: https://github.com/mozilla/sops/releases/download
+# sops_download_url: https://github.com/getsops/sops/releases/download/{{ sops_version }}/sops-{{ sops_version }}.darwin.amd64
 
 #
 # Infra Configuration

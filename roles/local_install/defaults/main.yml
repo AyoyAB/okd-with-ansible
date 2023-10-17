@@ -2,3 +2,4 @@
 openshift_client_base_url: "https://github.com/okd-project/okd/releases/download/{{ okd_version }}"
 openshift_installer_base_url: "https://github.com/okd-project/okd/releases/download/{{ okd_version }}"
 ignition_validate_base_url: "https://github.com/coreos/ignition/releases/download/{{ ignition_validate_version }}"
+sops_base_url: https://github.com/mozilla/sops/releases/download

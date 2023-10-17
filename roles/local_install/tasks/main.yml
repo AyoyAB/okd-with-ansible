@@ -9,6 +9,7 @@
   ansible.builtin.set_fact:
     okd_tools_arch: linux
     ignition_tool_arch: x86_64-linux
+    sops_arch: linux.amd64
 
 - name: Detect install system is MacOS x86_64
   when:
@@ -17,6 +18,7 @@
   ansible.builtin.set_fact:
     okd_tools_arch: mac
     ignition_tool_arch: x86_64-apple-darwin
+    sops_arch: darwin.amd64
 
 - name: Fail if architecture is not supported
   when: (okd_tools_arch is not defined) or
