@@ -51,7 +51,7 @@ ssh_public_key_file: ~/.ssh/id_ansible.pub
 # openshift_installer_download_url: https://github.com/okd-project/okd/releases/download/{{ okd_version }}/openshift-install-mac-{{ okd_version }}.tar.gz
 # ignition_validate_base_url: https://github.com/coreos/ignition/releases/download
 # ignition_validate_download_url: https://github.com/coreos/ignition/releases/download/v2.16.2/ignition-validate-x86_64-apple-darwin
-# sops_base_url: https://github.com/mozilla/sops/releases/download
+# sops_base_url: https://github.com/getsops/sops/releases/download
 # sops_download_url: https://github.com/getsops/sops/releases/download/{{ sops_version }}/sops-{{ sops_version }}.darwin.amd64
 
 #
