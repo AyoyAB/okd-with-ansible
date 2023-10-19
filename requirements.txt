@@ -1,7 +1,7 @@
 ansible-compat==3.0.2
 ansible-core==2.15.5
 ansible-lint==6.15.0
-kubernetes==26.1.0
+kubernetes==28.1.0
 molecule==5.0.0
 molecule-plugins==23.5.0
 python-vagrant==1.0.0
