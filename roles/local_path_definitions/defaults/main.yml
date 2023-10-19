@@ -10,7 +10,7 @@ openshift_client_executable: "{{ openshift_client_directory }}/oc"
 openshift_ignition_validate_executable: "{{ openshift_client_directory }}/ignition-validate"
 
 openshift_files_directory: "{{ playbook_dir }}/openshift-files"
-openshift_files_ignition_directory: "{{ playbook_dir }}/openshift-files/ignition"
+openshift_files_ignition_directory: "{{ openshift_files_directory }}/ignition"
 openshift_files_kubeconfig: "{{ openshift_files_directory }}/auth/kubeconfig"
 openshift_files_kubeadmin_password: "{{ openshift_files_directory }}/auth/kubeadmin-password"
 
