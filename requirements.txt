@@ -1,4 +1,4 @@
-ansible-compat==4.1.2
+ansible-compat==4.1.10
 ansible-core==2.15.5
 ansible-lint==6.15.0
 kubernetes==28.1.0
