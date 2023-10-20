@@ -72,7 +72,6 @@
 - name: Wait for bootstrap to finish
   ansible.builtin.shell:
     cmd: >-
-      set -o pipefail &&
       "{{ openshift_install_executable }}" wait-for bootstrap-complete --dir={{ openshift_files_directory }}/
     executable: /bin/bash
   delegate_to: localhost

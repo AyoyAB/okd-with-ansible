@@ -3,7 +3,6 @@
 - name: Wait for cluster installation to finish
   ansible.builtin.shell:
     cmd: >-
-      set -o pipefail &&
       "{{ openshift_install_executable }}" wait-for install-complete --dir={{ openshift_files_directory }}/
     executable: /bin/bash
   delegate_to: localhost
