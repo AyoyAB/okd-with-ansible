@@ -102,11 +102,11 @@ local-files: env-check
 
 .PHONY: cluster
 cluster: env-check
-	ansible-playbook -i inventories/${CLUSTER_NAME} -v deploy-okd.yml | tee install-$$(date +%s).log
+	ansible-playbook -i inventories/${CLUSTER_NAME} -v deploy-okd.yml 2>&1 | tee install-$$(date +%s).log
 
 .PHONY: cluster-ask-pass
 cluster-ask-pass: env-check
-	ansible-playbook -i inventories/${CLUSTER_NAME} -v deploy-okd.yml --ask-become-pass | tee install-$$(date +%s).log
+	ansible-playbook -i inventories/${CLUSTER_NAME} -v deploy-okd.yml --ask-become-pass 2>&1 | tee install-$$(date +%s).log
 
 .PHONY: cluster-masters
 cluster-masters: env-check
