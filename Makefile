@@ -136,9 +136,16 @@ lbs-config-bootstrap-disabled: env-check
 # Clean
 #
 
+.PHONY: clean-tools
+clean-tools:
+	rm -rf openshift-client openshift-install
+
+.PHONY: clean-files
+clean-files:
+	rm -rf openshift-files
+
 .PHONY: clean
-clean:
-	rm -rf openshift-client openshift-files openshift-install
+clean: clean-tools clean-files
 
 #
 #
