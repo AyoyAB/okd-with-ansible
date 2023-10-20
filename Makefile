@@ -90,11 +90,11 @@ molecule-test:
 
 .PHONY: local-tools
 local-tools: env-check
-	ansible-playbook -i inventories/${CLUSTER_NAME} -v install-local-tools.yml
+	ansible-playbook ${ANSIBLE_EXTRA_ARGS} -i inventories/${CLUSTER_NAME} -v install-local-tools.yml
 
 .PHONY: local-files
 local-files: env-check
-	ansible-playbook -i inventories/${CLUSTER_NAME} -v create-local-files.yml
+	ansible-playbook ${ANSIBLE_EXTRA_ARGS} -i inventories/${CLUSTER_NAME} -v create-local-files.yml
 
 #
 # Cluster
@@ -102,19 +102,15 @@ local-files: env-check
 
 .PHONY: cluster
 cluster: env-check
-	ansible-playbook -i inventories/${CLUSTER_NAME} -v deploy-okd.yml 2>&1 | tee install-$$(date +%s).log
-
-.PHONY: cluster-ask-pass
-cluster-ask-pass: env-check
-	ansible-playbook -i inventories/${CLUSTER_NAME} -v deploy-okd.yml --ask-become-pass 2>&1 | tee install-$$(date +%s).log
+	ansible-playbook ${ANSIBLE_EXTRA_ARGS} -i inventories/${CLUSTER_NAME} -v deploy-okd.yml 2>&1 | tee install-$$(date +%s).log
 
 .PHONY: cluster-masters
 cluster-masters: env-check
-	ansible-playbook -i inventories/${CLUSTER_NAME} -v deploy-okd.yml --extra-vars="use_control_plane_nodes_for_compute=true"
+	ansible-playbook ${ANSIBLE_EXTRA_ARGS} -i inventories/${CLUSTER_NAME} -v deploy-okd.yml --extra-vars="use_control_plane_nodes_for_compute=true"
 
 .PHONY: cluster-config
 cluster-config: env-check
-	ansible-playbook -i inventories/${CLUSTER_NAME} -v configure-cluster.yml
+	ansible-playbook ${ANSIBLE_EXTRA_ARGS} -i inventories/${CLUSTER_NAME} -v configure-cluster.yml
 
 #
 # Load Balancer (lbs)
@@ -122,19 +118,19 @@ cluster-config: env-check
 
 .PHONY: lbs
 lbs: env-check
-	ansible-playbook -i inventories/${CLUSTER_NAME} -v create-lbs.yml
+	ansible-playbook ${ANSIBLE_EXTRA_ARGS} -i inventories/${CLUSTER_NAME} -v create-lbs.yml
 
 .PHONY: lbs-config-ignition-files
 lbs-config-ignition-files: env-check
-	ansible-playbook -i inventories/${CLUSTER_NAME} -v configure-lbs-ignition-files.yml
+	ansible-playbook ${ANSIBLE_EXTRA_ARGS} -i inventories/${CLUSTER_NAME} -v configure-lbs-ignition-files.yml
 
 .PHONY: lbs-config-bootstrap-enabled
 lbs-config-bootstrap-enabled: env-check
-	ansible-playbook -i inventories/${CLUSTER_NAME} -v configure-lbs-bootstrap-enabled.yml
+	ansible-playbook ${ANSIBLE_EXTRA_ARGS} -i inventories/${CLUSTER_NAME} -v configure-lbs-bootstrap-enabled.yml
 
 .PHONY: lbs-config-bootstrap-disabled
 lbs-config-bootstrap-disabled: env-check
-	ansible-playbook -i inventories/${CLUSTER_NAME} -v configure-lbs-bootstrap-disabled.yml
+	ansible-playbook ${ANSIBLE_EXTRA_ARGS} -i inventories/${CLUSTER_NAME} -v configure-lbs-bootstrap-disabled.yml
 
 #
 # Clean
