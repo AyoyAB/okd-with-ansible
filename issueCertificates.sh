@@ -76,7 +76,7 @@ if [ -n "${1:-}" ]; then
 
     _ATTEMPTS=$((_ATTEMPTS - 1))
     if [ "${_ATTEMPTS}" -le 0 ]; then
-      echo "Attempts exhausted, please run script again!"
+      echo >&2 "Attempts exhausted, please run script again!"
       exit 1
     fi
 
