@@ -10,14 +10,16 @@ WORKSPACE=${WORKSPACE:-"$(
 )"}
 
 OC_CLIENT="${WORKSPACE}/openshift-client/oc"
-KUBECONFIG_FILE="${WORKSPACE}/openshift-files/auth/kubeconfig"
+
+# Set default KUBECONFIG
+KUBECONFIG="${KUBECONFIG:-~/.kube/config}"
 
 node_is_in_cluster() {
   local _NAME="${1}"
 
   local _OUTPUT
   _OUTPUT=$("${OC_CLIENT}" \
-    --kubeconfig "${KUBECONFIG_FILE}" \
+    --kubeconfig "${KUBECONFIG}" \
     get nodes \
     --field-selector metadata.name="${_NAME}" \
     -o json |
@@ -30,7 +32,7 @@ node_is_in_cluster() {
 approve_pending_certificate_requests() {
   local _PENDING_CSR_IDS
   _PENDING_CSR_IDS=$("${OC_CLIENT}" \
-    --kubeconfig "${KUBECONFIG_FILE}" \
+    --kubeconfig "${KUBECONFIG}" \
     get csr \
     -o go-template='{{range .items}}{{if not .status}}{{.metadata.name}}{{"\n"}}{{end}}{{end}}')
 
