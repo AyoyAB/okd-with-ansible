@@ -23,6 +23,8 @@
   ansible.builtin.command:
     cmd: |
       "{{ playbook_dir }}/issueCertificates.sh" "{{ inventory_hostname }}"
+  environment:
+    KUBECONFIG: "{{ openshift_files_kubeconfig }}"
   when: inventory_hostname in groups.workers
   delegate_to: localhost
   register: result
