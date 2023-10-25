@@ -12,7 +12,7 @@ WORKSPACE=${WORKSPACE:-"$(
 OC_CLIENT="${WORKSPACE}/openshift-client/oc"
 
 # Set default KUBECONFIG
-KUBECONFIG="${KUBECONFIG:-~/.kube/config}"
+KUBECONFIG="${KUBECONFIG:-${HOME}/.kube/config}"
 
 node_is_in_cluster() {
   local _NAME="${1}"
@@ -47,7 +47,7 @@ approve_pending_certificate_requests() {
     # || true is due to this script being run in parallell,
     # and another script already having approved a csr
     "${OC_CLIENT}" \
-      --kubeconfig "${KUBECONFIG_FILE}" \
+      --kubeconfig "${KUBECONFIG}" \
       adm certificate approve "${_CSR_ID}" || true
   done <<<"$_PENDING_CSR_IDS"
 }
