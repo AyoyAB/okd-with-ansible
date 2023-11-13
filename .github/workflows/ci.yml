@@ -5,6 +5,7 @@ name: CI
   push:
 jobs:
   lint:
+    if: (github.event_name != 'pull_request' && ! github.event.pull_request.head.repo.fork) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork)
     name: Lint
     runs-on: ubuntu-latest
     steps:
@@ -27,6 +28,7 @@ jobs:
           make lint
 
   molecule:
+    if: (github.event_name != 'pull_request' && ! github.event.pull_request.head.repo.fork) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork)
     name: Molecule
     runs-on: macOS-12
     steps:
