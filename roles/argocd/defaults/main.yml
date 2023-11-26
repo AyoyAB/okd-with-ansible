@@ -1,5 +1,5 @@
 ---
 
 argocd_namespace: argocd
-argocd_operator_starting_cluster_service_version: v0.4.0
-argocd_enable_label_management: "false"
+argocd_operator_starting_cluster_service_version: v0.8.0
+argocd_enable_label_management: "true"
