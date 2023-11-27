@@ -45,7 +45,7 @@ endif
 .PHONY: dependencies
 dependencies: requirements
 	pip install -r requirements.txt
-	ansible-galaxy install -r requirements.yml
+	ansible-galaxy install -r "${ANSIBLE_GALAXY_REQUIREMENTS_FILE}"
 
 .PHONY: local-dependencies
 local-dependencies: local-pip-config dependencies
