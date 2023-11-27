@@ -79,6 +79,22 @@ yaml-lint:
 # Test (Molecule)
 #
 
+.PHONY: molecule-create
+molecule-create:
+	molecule create
+
+.PHONY: molecule-destroy
+molecule-destroy:
+	molecule destroy
+
+.PHONY: molecule-converge
+molecule-converge:
+	molecule converge
+
+.PHONY: molecule-verify
+molecule-verify:
+	molecule verify
+
 .PHONY: molecule-test
 molecule-test:
 	molecule test --all
