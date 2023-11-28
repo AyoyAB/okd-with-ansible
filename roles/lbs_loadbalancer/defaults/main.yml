@@ -4,3 +4,5 @@ loadbalancer_use_haproxy: false
 
 haproxy_stats_username: admin
 haproxy_stats_password: password
+
+lbs_loadbalancer_extra_listen_config: []
