@@ -109,3 +109,15 @@ listen ingress-router-80
   server {{ host.split(".")[0] }} {{ host }}:80 check inter 1s
 {% endfor %}
 {% endif %}
+
+{# Additional listen configuration #}
+{% for listen in lbs_loadbalancer_extra_listen_config %}
+listen {{ listen.name}}
+  bind {{ listen.bind }}
+  mode {{ listen.mode }}
+  balance {{ listen.balance }}
+{% for server in listen.servers %}
+  server {{ server.name }} {{ server.host }}:{{ server.port }} check inter {{ server.checkInterval }} {% if server.backup is sameas true %}backup{% endif %}
+{% endfor %}
+
+{% endfor %}

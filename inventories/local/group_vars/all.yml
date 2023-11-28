@@ -66,6 +66,18 @@ loadbalancer_use_haproxy: true
 # haproxy_stats_username: admin
 # haproxy_stats_password: password
 
+# Additional HAProxy listen configurations
+# lbs_loadbalancer_extra_listen_config:
+#   - name: extra-service
+#     bind: :12345
+#     mode: tcp
+#     balance: source
+#     servers:
+#       - name: server
+#         host: 192.168.0.100
+#         port: 12345
+#         checkInterval: 1s
+
 # Configure network booting for nodes
 network_boot_enabled: true
 
