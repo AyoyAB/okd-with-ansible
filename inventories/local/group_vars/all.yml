@@ -60,7 +60,7 @@ ssh_public_key_file: ~/.ssh/id_ansible.pub
 #
 
 # Use HAProxy for load balancing
-# loadbalancer_use_haproxy: true
+loadbalancer_use_haproxy: true
 
 # Configure HAProxy stats login
 # haproxy_stats_username: admin
