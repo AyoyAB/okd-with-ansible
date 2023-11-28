@@ -13,3 +13,10 @@
     - 8080  # ignition file hosting
     - 8081  # network boot hosting
     - 22623  # okd machine config
+
+- name: Configure UFW to allow access access to custom ports
+  community.general.ufw:
+    rule: allow
+    port: "'{{ item }}'"
+    proto: tcp
+  loop: "{{ lbs_install_custom_ufw_port_openings }}"

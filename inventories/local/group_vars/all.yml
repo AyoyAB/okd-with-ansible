@@ -83,6 +83,7 @@ network_boot_enabled: true
 
 # Configure UFW port openings for load balancer
 # configure_ufw: true
+# lbs_install_custom_ufw_port_openings: []
 
 #
 # Cluster Configuration
