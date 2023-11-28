@@ -2,3 +2,5 @@
 
 loadbalancer_use_haproxy: false
 configure_ufw: false
+
+lbs_install_custom_ufw_port_openings: []
