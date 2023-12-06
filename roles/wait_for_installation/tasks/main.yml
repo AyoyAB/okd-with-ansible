@@ -1,34 +1,37 @@
 ---
-- name: Get CoreOS ISO download url
-  ansible.builtin.shell:
-    cmd: >-
-      set -o pipefail &&
-      "{{ openshift_install_executable }}" coreos print-stream-json
-      | jq -r '.architectures.x86_64.artifacts.metal.formats.iso.disk.location'
-    executable: /bin/bash
-  delegate_to: localhost
-  run_once: true
-  register: coreos_iso_url_cmd
-  changed_when: false
+- name: Show CoreOS ISO Prompt
+  when: wait_for_installation_show_coreos_iso_prompt
+  block:
+    - name: Get CoreOS ISO download url
+      ansible.builtin.shell:
+        cmd: >-
+          set -o pipefail &&
+          "{{ openshift_install_executable }}" coreos print-stream-json
+          | jq -r '.architectures.x86_64.artifacts.metal.formats.iso.disk.location'
+        executable: /bin/bash
+      delegate_to: localhost
+      run_once: true
+      register: coreos_iso_url_cmd
+      changed_when: false
 
-- name: Save CoreOS ISO download url to a variable
-  ansible.builtin.set_fact:
-    coreos_iso_url: "{{ coreos_iso_url_cmd.stdout }}"
-  delegate_to: localhost
-  run_once: true
+    - name: Save CoreOS ISO download url to a variable
+      ansible.builtin.set_fact:
+        coreos_iso_url: "{{ coreos_iso_url_cmd.stdout }}"
+      delegate_to: localhost
+      run_once: true
 
-- name: Pause for downloading CoreOS iso
-  ansible.builtin.pause:
-    prompt: |
-      --------------------------------------------------------------------
-      - Download (and create a bootable USB if needed) for Fedora CoreOS -
-      --------------------------------------------------------------------
+    - name: Pause for downloading CoreOS ISO
+      ansible.builtin.pause:
+        prompt: |
+          --------------------------------------------------------------------
+          - Download (and create a bootable USB if needed) for Fedora CoreOS -
+          --------------------------------------------------------------------
 
-      {{ coreos_iso_url }}
+          {{ coreos_iso_url }}
 
-      ----------------------------
-      - Press return to continue -
-      ----------------------------
+          ----------------------------
+          - Press return to continue -
+          ----------------------------
 
 - name: Pause for starting CoreOS installation on masters
   ansible.builtin.pause:

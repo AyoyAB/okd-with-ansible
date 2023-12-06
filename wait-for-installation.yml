@@ -5,3 +5,5 @@
   gather_facts: false
   roles:
     - role: wait_for_installation
+      vars:
+        wait_for_installation_show_coreos_iso_prompt: "{{ not(network_boot_enabled) }}"
