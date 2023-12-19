@@ -2,7 +2,7 @@
 - name: Show CoreOS ISO Prompt
   when: not wait_for_installation_skip_coreos_iso_prompt
   block:
-    - name: Get CoreOS ISO download url
+    - name: Get CoreOS ISO x86/x64 download url
       ansible.builtin.shell:
         cmd: >-
           set -o pipefail &&
@@ -11,12 +11,30 @@
         executable: /bin/bash
       delegate_to: localhost
       run_once: true
-      register: coreos_iso_url_cmd
+      register: coreos_iso_x86_64_url_cmd
       changed_when: false
 
-    - name: Save CoreOS ISO download url to a variable
+    - name: Save CoreOS ISO x86/x64 download url to a variable
       ansible.builtin.set_fact:
-        coreos_iso_url: "{{ coreos_iso_url_cmd.stdout }}"
+        coreos_iso_x86_64_url: "{{ coreos_iso_x86_64_url_cmd.stdout }}"
+      delegate_to: localhost
+      run_once: true
+
+    - name: Get CoreOS ISO aarch64 (arm64) download url
+      ansible.builtin.shell:
+        cmd: >-
+          set -o pipefail &&
+          "{{ openshift_install_executable }}" coreos print-stream-json
+          | jq -r '.architectures.aarch64.artifacts.metal.formats.iso.disk.location'
+        executable: /bin/bash
+      delegate_to: localhost
+      run_once: true
+      register: coreos_iso_aarch64_url_cmd
+      changed_when: false
+
+    - name: Save CoreOS ISO aarch64 (arm64) download url to a variable
+      ansible.builtin.set_fact:
+        coreos_iso_aarch64_url: "{{ coreos_iso_aarch64_url_cmd.stdout }}"
       delegate_to: localhost
       run_once: true
 
@@ -27,7 +45,8 @@
           - Download (and create a bootable USB if needed) for Fedora CoreOS -
           --------------------------------------------------------------------
 
-          {{ coreos_iso_url }}
+          x86/x64: {{ coreos_iso_x86_64_url }}
+          aarch64: {{ coreos_iso_aarch64_url }}
 
           ----------------------------
           - Press return to continue -
