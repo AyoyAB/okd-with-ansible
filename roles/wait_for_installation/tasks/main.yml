@@ -33,25 +33,6 @@
           - Press return to continue -
           ----------------------------
 
-- name: Pause for starting CoreOS installation on masters
-  ansible.builtin.pause:
-    prompt: |
-      -----------------------------------
-      - Do the following on all masters -
-      -----------------------------------
-      1. Boot CoreOS
-      2. Run the following command to install CoreOS:
-
-      bash -c "$(curl -fsSL http://{{ groups.lbs[0] }}:8080/install.sh)"
-      or
-      bash -c "$(curl -fsSL http://{{ groups.lbs[0] }}:8080/install.sh)" -s master[1-3]
-
-      3. Reboot and verify they are trying to retrieve the second stage ignition file.
-
-      ----------------------------
-      - Press return to continue -
-      ----------------------------
-
 - name: Pause for starting CoreOS installation on bootstrap
   ansible.builtin.pause:
     prompt: |
@@ -67,6 +48,25 @@
       bash -c "$(curl -fsSL http://{{ groups.lbs[0] }}:8080/install.sh)" -s bootstrap
 
       3. Reboot and verify it's trying to retrieve the second stage ignition file.
+
+      ----------------------------
+      - Press return to continue -
+      ----------------------------
+
+- name: Pause for starting CoreOS installation on masters
+  ansible.builtin.pause:
+    prompt: |
+      -----------------------------------
+      - Do the following on all masters -
+      -----------------------------------
+      1. Boot CoreOS
+      2. Run the following command to install CoreOS:
+
+      bash -c "$(curl -fsSL http://{{ groups.lbs[0] }}:8080/install.sh)"
+      or
+      bash -c "$(curl -fsSL http://{{ groups.lbs[0] }}:8080/install.sh)" -s master[1-3]
+
+      3. Reboot and verify they are trying to retrieve the second stage ignition file.
 
       ----------------------------
       - Press return to continue -
