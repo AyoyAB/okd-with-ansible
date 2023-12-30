@@ -52,6 +52,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip3 install --upgrade pip
+          sudo apt install vagrant virtualbox
           make dependencies
 
       - name: Test with molecule
