@@ -51,7 +51,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install --upgrade pip
+          pip3 install --upgrade pip
           make dependencies
 
       - name: Test with molecule
