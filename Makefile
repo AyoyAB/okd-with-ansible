@@ -12,7 +12,7 @@ ifneq (,$(wildcard inventories/${CLUSTER_NAME}/.env))
 endif
 endif
 
-SHELL := /usr/bin/env bash
+SHELL := /bin/bash
 
 OC_CLIENT_PATH = ./openshift-client/oc
 KUBECTL_PATH = ./openshift-client/kubectl
