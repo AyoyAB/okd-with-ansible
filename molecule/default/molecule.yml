@@ -13,7 +13,7 @@ platforms:
       - lbs
     box: debian/bullseye64
     box_version: 11.20221219.1
-    memory: 2048
+    memory: 3072
     cpu: 2
     interfaces:
       - network_name: private_network

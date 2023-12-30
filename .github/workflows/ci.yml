@@ -5,6 +5,7 @@ name: CI
   push:
 jobs:
   lint:
+    if: (github.event_name != 'pull_request' && ! github.event.pull_request.head.repo.fork) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork)
     name: Lint
     runs-on: ubuntu-latest
     steps:
@@ -27,8 +28,9 @@ jobs:
           make lint
 
   molecule:
+    if: (github.event_name != 'pull_request' && ! github.event.pull_request.head.repo.fork) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork)
     name: Molecule
-    runs-on: macOS-12
+    runs-on: ubuntu-latest
     steps:
       - name: Check out the codebase.
         uses: actions/checkout@v3
@@ -49,7 +51,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install --upgrade pip
+          pip3 install --upgrade pip
+          sudo apt install vagrant virtualbox
           make dependencies
 
       - name: Test with molecule
