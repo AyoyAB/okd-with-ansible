@@ -1,3 +1,2 @@
 ---
-wait_for_installation_show_coreos_iso_prompt: true
-network_boot_enabled: false
+wait_for_installation_skip_coreos_iso_prompt: false
