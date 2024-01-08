@@ -6,4 +6,4 @@
   roles:
     - role: wait_for_installation
       vars:
-        wait_for_installation_show_coreos_iso_prompt: "{{ not(network_boot_enabled) }}"
+        wait_for_installation_skip_coreos_iso_prompt: "{{ network_boot_enabled | default(false) | bool }}"

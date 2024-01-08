@@ -1,6 +1,6 @@
 ---
 - name: Show CoreOS ISO Prompt
-  when: wait_for_installation_show_coreos_iso_prompt
+  when: not wait_for_installation_skip_coreos_iso_prompt
   block:
     - name: Get CoreOS ISO download url
       ansible.builtin.shell:
