@@ -1,8 +1,9 @@
 ---
 # https://github.com/okd-project/okd/releases
-okd_version: 4.14.0-0.okd-2024-01-06-084517
+okd_version: 4.14.0-0.okd-2024-01-26-175629
 # last 4.12 version: 4.12.0-0.okd-2023-04-16-041331
 # last 4.13 version: 4.13.0-0.okd-2023-10-28-065448
+# last 4.14 version: 4.14.0-0.okd-2024-01-26-175629
 
 # Retrieve the beta image from https://origin-release.apps.ci.l2s4.p1.openshiftapps.com/#4.13.0-0.okd
 # okd_tools_image_override: quay.io/okd/scos-release:4.12.0-0.okd-scos-2023-02-14-060109
