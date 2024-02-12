@@ -15,6 +15,9 @@ sops_version: v3.8.1
 base_domain: example.com
 cluster_name: okd4
 
+# The network type. Note that in from 4.15 OpenShiftSDN is deprecated.
+create_local_files_network_type: OVNKubernetes
+
 opt_out_of_remote_health_reporting: true
 
 # 'true' means that the control plane nodes will also run standard pods
