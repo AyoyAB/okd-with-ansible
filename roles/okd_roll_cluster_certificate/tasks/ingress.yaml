@@ -1,0 +1,42 @@
+---
+# Reference: https://access.redhat.com/articles/regenerating_cluster_certificates
+- name: Delete the router-ca secret.
+  ansible.builtin.shell:
+    cmd: >-
+      KUBECONFIG="{{ openshift_files_kubeconfig }}"
+      "{{ openshift_client_executable }}"
+      -n openshift-ingress-operator
+      delete secrets/router-ca
+    executable: /bin/bash
+  delegate_to: localhost
+  become: false
+  changed_when: true
+
+- name: Restart the Ingress Operator.
+  ansible.builtin.shell:
+    cmd: >-
+      KUBECONFIG="{{ openshift_files_kubeconfig }}"
+      "{{ openshift_client_executable }}"
+      -n openshift-ingress-operator
+      delete pods
+      -l name=ingress-operator
+    executable: /bin/bash
+  delegate_to: localhost
+  become: false
+  changed_when: false
+
+- name: Wait for ingress operator to start
+  ansible.builtin.shell:
+    cmd: >-
+      set -o pipefail &&
+      KUBECONFIG="{{ openshift_files_kubeconfig }}"
+      "{{ openshift_client_executable }}"
+      -n openshift-ingress-operator
+      get deploy ingress-operator -o json
+      | jq '.status.readyReplicas'
+    executable: /bin/bash
+  register: ready_replicas
+  retries: 60
+  delay: 5
+  until: ready_replicas.stdout == "1"
+  changed_when: false

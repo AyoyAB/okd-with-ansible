@@ -32,3 +32,6 @@
 
 - name: Configure cluster
   ansible.builtin.import_playbook: configure-cluster.yml
+
+- name: Force rolling of certificates
+  ansible.builtin.import_playbook: roll-cluster-certificates.yml

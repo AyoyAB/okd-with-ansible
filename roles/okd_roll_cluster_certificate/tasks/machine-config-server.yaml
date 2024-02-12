@@ -1,0 +1,58 @@
+---
+# Reference: https://access.redhat.com/articles/regenerating_cluster_certificates
+- name: Create a backup of the secrets in the openshift-machine-config-operator project
+  ansible.builtin.shell:
+    cmd: >-
+      KUBECONFIG="{{ openshift_files_kubeconfig }}"
+      "{{ openshift_client_executable }}"
+      -n openshift-machine-config-operator
+      get secret/machine-config-server-tls -o yaml > {{ openshift_files_directory }}/machine-config-server-tls.bak
+    executable: /bin/bash
+  delegate_to: localhost
+  become: false
+  changed_when: true
+
+- name: Create a backup of the secrets in the openshift-machine-config-operator project
+  ansible.builtin.shell:
+    cmd: >-
+      KUBECONFIG="{{ openshift_files_kubeconfig }}"
+      "{{ openshift_client_executable }}"
+      -n openshift-machine-config-operator
+      get secret/machine-config-server-ca -o yaml > {{ openshift_files_directory }}/machine-config-server-tls.bak
+    executable: /bin/bash
+  delegate_to: localhost
+  become: false
+  changed_when: false
+
+- name: Semi automated, manual user-data updating (applicable to non-machineset backed scaling, for example, metal/pxe)
+  ansible.builtin.shell:
+    cmd: >-
+      KUBECONFIG="{{ openshift_files_kubeconfig }}"
+      "{{ openshift_client_executable }}"
+      adm ocp-certificates regenerate-machine-config-server-serving-cert --update-ignition=false
+    executable: /bin/bash
+  delegate_to: localhost
+  become: false
+  changed_when: true
+
+- name: Semi automated, manual user-data updating (applicable to non-machineset backed scaling, for example, metal/pxe)
+  ansible.builtin.shell:
+    cmd: >-
+      KUBECONFIG="{{ openshift_files_kubeconfig }}"
+      "{{ openshift_client_executable }}"
+      oc -n openshift-machine-config-operator get secret/machine-config-server-ca -o=jsonpath='{.data.tls\.crt}'
+    executable: /bin/bash
+  delegate_to: localhost
+  become: false
+  changed_when: false
+  register: machine_config_ca
+
+- name: Write cert to file
+  ansible.builtin.shell:
+    cmd: >-
+      echo "{{ machine_config_ca.stdout }}" > {{ openshift_files_directory }}/ignition/new-cert.crt
+    executable: /bin/bash
+  delegate_to: localhost
+  become: false
+  changed_when: true
+  register: machine_config_ca

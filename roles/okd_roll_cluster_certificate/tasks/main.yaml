@@ -1,0 +1,13 @@
+---
+- name: Regenerating selected control plane certificates
+  ansible.builtin.include_tasks: "control-plane.yaml"
+  when: true
+
+# This one doesn't really work in 4.15, since certificates all seem to be issued by the service issuing CA
+- name: Regenerating CA certificates for the Machine Config Server
+  ansible.builtin.include_tasks: "machine-config-server.yaml"
+  when: false
+
+- name: Regenerating CA certificates for the Ingress
+  ansible.builtin.include_tasks: "ingress.yaml"
+  when: true

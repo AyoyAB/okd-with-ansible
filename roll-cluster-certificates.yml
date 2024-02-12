@@ -1,0 +1,13 @@
+---
+#
+# Roll the cluster certificates
+#
+
+- name: Roll the cluster certificates
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  any_errors_fatal: true
+  roles:
+    # First wait for cluster to be ready
+    - role: okd_roll_cluster_certificate

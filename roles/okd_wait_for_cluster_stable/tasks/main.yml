@@ -1,0 +1,14 @@
+---
+
+- name: Wait for cluster to be stable
+  ansible.builtin.shell:
+    cmd: >-
+      KUBECONFIG="{{ openshift_files_kubeconfig }}"
+      "{{ openshift_client_executable }}"
+      adm wait-for-stable-cluster --minimum-stable-period=60s
+    executable: /bin/bash
+  delegate_to: localhost
+  register: install_complete
+  become: false
+  changed_when: false
+  until: install_complete.rc == 0
