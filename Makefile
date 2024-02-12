@@ -127,6 +127,10 @@ cluster-masters: env-check
 cluster-config: env-check
 	ansible-playbook ${ANSIBLE_EXTRA_ARGS} -i inventories/${CLUSTER_NAME} -v configure-cluster.yml
 
+.PHONY: cluster-cert-roll
+cluster-cert-roll: env-check
+	ansible-playbook ${ANSIBLE_EXTRA_ARGS} -i inventories/${CLUSTER_NAME} -v roll-cluster-certificates.yml
+
 #
 # Load Balancer (lbs)
 #
