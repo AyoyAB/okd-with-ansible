@@ -2,6 +2,8 @@
 okd_configuration_validity_duration_s: 21600  # 6 hours
 okd_samples_operator_removed: false
 
+create_local_files_network_type: OpenShiftSDN
+
 opt_out_of_remote_health_reporting: false
 
 set_etc_hostname_in_ignition_file: false
