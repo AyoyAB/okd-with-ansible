@@ -35,3 +35,4 @@
 
 - name: Force rolling of certificates
   ansible.builtin.import_playbook: roll-cluster-certificates.yml
+  when: (roll_certificates_after_install is defined) and roll_certificates_after_install

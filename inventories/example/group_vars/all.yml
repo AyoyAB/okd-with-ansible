@@ -18,6 +18,9 @@ cluster_name: okd4
 # The network type. Note that in from 4.15 OpenShiftSDN is deprecated.
 create_local_files_network_type: OVNKubernetes
 
+# Indicates whether to automatically roll the certificates after installation
+roll_certificates_after_install: true
+
 opt_out_of_remote_health_reporting: true
 
 # 'true' means that the control plane nodes will also run standard pods

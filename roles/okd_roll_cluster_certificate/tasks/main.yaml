@@ -11,3 +11,7 @@
 - name: Regenerating CA certificates for the Ingress
   ansible.builtin.include_tasks: "ingress.yaml"
   when: true
+
+- name: Issue pending certificates
+  ansible.builtin.include_tasks: "issue-pending-certificates.yaml"
+  when: true
