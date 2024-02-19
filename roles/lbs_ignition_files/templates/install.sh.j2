@@ -5,6 +5,13 @@ set -euo pipefail
 
 # Define the expected domain for cluster
 EXPECTED_HOSTNAME_DOMAIN="{{ cluster_name }}.{{ base_domain }}"
+INSTALLATION_DISK=/dev/sda
+
+echo ""
+echo "This will delete all partitions on the disk ${INSTALLATION_DISK}"
+echo ""
+read -n 1 -s -r -p "--- Press any key continue ---"
+sudo sfdisk --delete "${INSTALLATION_DISK}"
 
 if [ $# -ge 1 ]; then
   # Manually provided hostname
@@ -38,7 +45,7 @@ read -n 1 -s -r -p "--- Press any key continue ---"
 # Install CoreOS with ignition file
 sudo coreos-installer \
   install \
-  /dev/sda \
+  "${INSTALLATION_DISK}" \
   --firstboot-args='console=tty0 rd.neednet=1 rd.net.timeout.carrier=30{% if network_use_vlan %} ip={{ network_if_name }}.{{ network_vlan_id }}:dhcp vlan={{ network_if_name }}.{{ network_vlan_id }}:{{ network_if_name }}{% endif %}' \
   --insecure-ignition \
   --ignition-url="${IGNITION_FILE_URL}"
