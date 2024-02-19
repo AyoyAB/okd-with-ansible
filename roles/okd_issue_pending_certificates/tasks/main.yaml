@@ -1,0 +1,29 @@
+---
+- name: Get pending certificate requests
+  ansible.builtin.shell:
+    cmd: >-
+      set -o pipefail
+      KUBECONFIG="{{ openshift_files_kubeconfig }}"
+      "{{ openshift_client_executable }}"
+      get csr -o json  | jq -r '.items[]
+      | select(.status.certificate == null) | .metadata.name'
+    executable: /bin/bash
+  delegate_to: localhost
+  become: false
+  changed_when: false
+  register: certificate_requests
+
+- name: Issue pending certificate requests
+  ansible.builtin.shell:
+    cmd: >-
+      set -o pipefail
+      KUBECONFIG="{{ openshift_files_kubeconfig }}"
+      "{{ openshift_client_executable }}"
+      adm certificate approve
+      {{ item }}
+    executable: /bin/bash
+  delegate_to: localhost
+  become: false
+  changed_when: true
+  when: certificate_requests.stdout != ""
+  loop: "{{ certificate_requests.stdout.splitlines() }}"
