@@ -1,4 +1,9 @@
 ---
+- name: Publish install version as fact
+  ansible.builtin.set_fact:
+    okd_version_full: "{{ okd_version | regex_search('[0-9]\\.[0-9]+\\.[0-9]+.*') }}"
+    okd_version: "{{ okd_version | regex_search('[0-9]\\.[0-9]+\\.[0-9]+') }}"
+    okd_version_minor: "{{ okd_version | regex_search('([0-9]+\\.[0-9]+)\\.', '\\1') | first }}"
 
 - name: Wait for cluster to be stable
   ansible.builtin.shell:
@@ -10,5 +15,6 @@
   delegate_to: localhost
   register: install_complete
   become: false
+  when: okd_version_minor not in ["4.12"]
   changed_when: false
   until: install_complete.rc == 0
