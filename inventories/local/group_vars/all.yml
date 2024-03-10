@@ -114,5 +114,8 @@ network_boot_enabled: true
 # sealed_secrets: true
 # sealed_secret_secret: "{{ playbook_dir }}/sealed-secrets-secret.yml"
 
+# Rolling certificates
+okd_roll_cluster_certificate: false
+
 # Define for local installation and testing with molecule
 local_install: true
