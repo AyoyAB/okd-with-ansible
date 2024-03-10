@@ -120,6 +120,9 @@ argocd_sync_wave_delay: 60
 sealed_secrets: true
 sealed_secret_secret: "{{ playbook_dir }}/sealed-secrets-secret.yml"
 
+# Rolling certificates
+okd_roll_cluster_certificate: false
+
 #
 # Ansible configuration
 #

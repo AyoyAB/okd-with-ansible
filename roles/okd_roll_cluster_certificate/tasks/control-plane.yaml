@@ -1,0 +1,330 @@
+---
+# Reference: https://access.redhat.com/articles/regenerating_cluster_certificates
+- name: Store current date/time for later revocation of certificates.
+  ansible.builtin.shell:
+    cmd: >-
+      set -o pipefail &&
+      date +"%Y-%m-%dT%H:%M:%S%:z" | sed 's/:z/Z/'
+    executable: /bin/bash
+  register: start_time
+  changed_when: false
+
+- name: Generate new client certificates into namespace/openshift-config-managed – expiry will be about four weeks in the future.
+  ansible.builtin.shell:
+    cmd: >-
+      KUBECONFIG="{{ openshift_files_kubeconfig }}"
+      "{{ openshift_client_executable }}"
+      adm ocp-certificates regenerate-leaf
+      -n openshift-config-managed
+      secrets kube-controller-manager-client-cert-key kube-scheduler-client-cert-key
+    executable: /bin/bash
+  delegate_to: localhost
+  become: false
+  changed_when: true
+
+- name: Generate new certificates into namespace/kube-apiserver-operator – expiry will be about four weeks in the future.
+  ansible.builtin.shell:
+    cmd: >-
+      KUBECONFIG="{{ openshift_files_kubeconfig }}"
+      "{{ openshift_client_executable }}"
+      adm ocp-certificates regenerate-leaf
+      -n openshift-kube-apiserver-operator
+      secrets node-system-admin-client
+    executable: /bin/bash
+  delegate_to: localhost
+  become: false
+  changed_when: true
+
+- name: Generate new certificates into namespace/kube-apiserver – expiry will be about four weeks in the future.
+  ansible.builtin.shell:
+    cmd: >-
+      KUBECONFIG="{{ openshift_files_kubeconfig }}"
+      "{{ openshift_client_executable }}"
+      adm ocp-certificates regenerate-leaf
+      -n openshift-kube-apiserver
+      secrets
+      check-endpoints-client-cert-key
+      control-plane-node-admin-client-cert-key
+      external-loadbalancer-serving-certkey
+      internal-loadbalancer-serving-certkey
+      kubelet-client localhost-recovery-serving-certkey
+      localhost-serving-cert-certkey
+      service-network-serving-certkey
+    executable: /bin/bash
+  delegate_to: localhost
+  become: false
+  changed_when: true
+
+- name: Wait for cluster to be stable
+  ansible.builtin.shell:
+    cmd: >-
+      KUBECONFIG="{{ openshift_files_kubeconfig }}"
+      "{{ openshift_client_executable }}"
+      adm wait-for-stable-cluster --minimum-stable-period=60s
+    executable: /bin/bash
+  delegate_to: localhost
+  register: install_complete
+  become: false
+  changed_when: false
+  until: install_complete.rc == 0
+
+- name: Generate new root signers that were created with crypto modules that were not FIPS compliant.
+  ansible.builtin.shell:
+    cmd: >-
+      KUBECONFIG="{{ openshift_files_kubeconfig }}"
+      "{{ openshift_client_executable }}"
+      adm ocp-certificates regenerate-top-level
+      -n openshift-kube-apiserver-operator
+      secrets
+      kube-apiserver-to-kubelet-signer
+      kube-control-plane-signer
+      loadbalancer-serving-signer
+      localhost-serving-signer
+      service-network-serving-signer
+    executable: /bin/bash
+  delegate_to: localhost
+  become: false
+  changed_when: true
+
+- name: Trigger the clusteroperator/kube-controller-manager to create a new bound service account signing key.
+  ansible.builtin.shell:
+    cmd: >-
+      KUBECONFIG="{{ openshift_files_kubeconfig }}"
+      "{{ openshift_client_executable }}"
+      -n openshift-kube-controller-manager-operator
+      delete secrets/next-service-account-private-key
+    executable: /bin/bash
+  delegate_to: localhost
+  become: false
+  changed_when: true
+
+- name: Trigger the clusteroperator/kube-apiserver to create a new bound service account signing key.
+  ansible.builtin.shell:
+    cmd: >-
+      KUBECONFIG="{{ openshift_files_kubeconfig }}"
+      "{{ openshift_client_executable }}"
+      -n openshift-kube-apiserver-operator
+      delete secrets/next-bound-service-account-signing-key
+    executable: /bin/bash
+  delegate_to: localhost
+  become: false
+  changed_when: true
+
+- name: Wait for cluster to be stable (might take up to 45 minutes)
+  ansible.builtin.shell:
+    cmd: >-
+      KUBECONFIG="{{ openshift_files_kubeconfig }}"
+      "{{ openshift_client_executable }}"
+      adm wait-for-stable-cluster --minimum-stable-period=60s
+    executable: /bin/bash
+  delegate_to: localhost
+  register: install_complete
+  become: false
+  changed_when: false
+  until: install_complete.rc == 0
+
+- name: Generate new client certificates for openshift-config-managed that were created with crypto modules that were not FIPS compliant.
+  ansible.builtin.shell:
+    cmd: >-
+      KUBECONFIG="{{ openshift_files_kubeconfig }}"
+      "{{ openshift_client_executable }}"
+      adm ocp-certificates regenerate-leaf
+      -n openshift-config-managed
+      secrets kube-controller-manager-client-cert-key kube-scheduler-client-cert-key
+    executable: /bin/bash
+  delegate_to: localhost
+  become: false
+  changed_when: true
+
+- name: >-
+    Update the CA bundle for your cluster on your local kubeconfig. This will rewrite the kubeconfig on
+    your machine to include the same CA bundle that is injected into pods to recognize the kube-apiserver.
+  ansible.builtin.shell:
+    cmd: >-
+      KUBECONFIG="{{ openshift_files_kubeconfig }}"
+      "{{ openshift_client_executable }}"
+      config refresh-ca-bundle
+    executable: /bin/bash
+  delegate_to: localhost
+  become: false
+  changed_when: false
+
+- name: Create a new kubelet bootstrap.kubeconfig so that the kubelet will recognize the kube-apiserver after the kube-apiserver regenerates its serving certificates.
+  ansible.builtin.shell:
+    cmd: >-
+      KUBECONFIG="{{ openshift_files_kubeconfig }}"
+      "{{ openshift_client_executable }}"
+      config new-kubelet-bootstrap-kubeconfig > {{ openshift_files_directory }}/bootstrap.kubeconfig
+    executable: /bin/bash
+  delegate_to: localhost
+  become: false
+  changed_when: true
+
+- name: Copy the bootstrap.kubeconfig to every node.
+  ansible.builtin.shell:
+    cmd: >-
+      KUBECONFIG="{{ openshift_files_kubeconfig }}"
+      "{{ openshift_client_executable }}"
+      adm copy-to-node nodes --all --copy={{ openshift_files_directory }}/bootstrap.kubeconfig=/etc/kubernetes/kubeconfig
+    executable: /bin/bash
+  delegate_to: localhost
+  become: false
+  changed_when: true
+
+- name: Restart all kubelets and remove their old kubelet.kubeconfig to pick up the new bootstrap.kubeconfig (two different kubeconfigs) and get new client certificates.
+  ansible.builtin.shell:
+    cmd: >-
+      KUBECONFIG="{{ openshift_files_kubeconfig }}"
+      "{{ openshift_client_executable }}"
+      adm restart-kubelet nodes --all --directive=RemoveKubeletKubeconfig
+    executable: /bin/bash
+  delegate_to: localhost
+  become: false
+  changed_when: true
+
+- name: Restart all nodes to ensure every pod restarts with updated trust bundles that include the new signers.
+  ansible.builtin.shell:
+    cmd: >-
+      KUBECONFIG="{{ openshift_files_kubeconfig }}"
+      "{{ openshift_client_executable }}"
+      adm reboot-machine-config-pool mcp/worker mcp/master
+    executable: /bin/bash
+  delegate_to: localhost
+  become: false
+  changed_when: true
+
+- name: Wait for the nodes to restart.
+  ansible.builtin.shell:
+    cmd: >-
+      KUBECONFIG="{{ openshift_files_kubeconfig }}"
+      "{{ openshift_client_executable }}"
+      adm wait-for-node-reboot nodes --all
+    executable: /bin/bash
+  delegate_to: localhost
+  become: false
+  changed_when: false
+
+- name: Generate new client certificates for the kube-apiserver-operator that were created with crypto modules that were not FIPS compliant.
+  ansible.builtin.shell:
+    cmd: >-
+      KUBECONFIG="{{ openshift_files_kubeconfig }}"
+      "{{ openshift_client_executable }}"
+      adm ocp-certificates regenerate-leaf
+      -n openshift-kube-apiserver-operator
+      secrets node-system-admin-client
+    executable: /bin/bash
+  delegate_to: localhost
+  become: false
+  changed_when: true
+
+- name: Generate new client certificates for the kube-apiserver that were created with crypto modules that were not FIPS compliant.
+  ansible.builtin.shell:
+    cmd: >-
+      KUBECONFIG="{{ openshift_files_kubeconfig }}"
+      "{{ openshift_client_executable }}"
+      adm ocp-certificates regenerate-leaf
+      -n openshift-kube-apiserver
+      secrets
+      check-endpoints-client-cert-key
+      control-plane-node-admin-client-cert-key
+      external-loadbalancer-serving-certkey
+      internal-loadbalancer-serving-certkey
+      kubelet-client localhost-recovery-serving-certkey
+      localhost-serving-cert-certkey
+      service-network-serving-certkey
+    executable: /bin/bash
+  delegate_to: localhost
+  become: false
+  changed_when: true
+
+- name: Wait for cluster to be stable
+  ansible.builtin.shell:
+    cmd: >-
+      KUBECONFIG="{{ openshift_files_kubeconfig }}"
+      "{{ openshift_client_executable }}"
+      adm wait-for-stable-cluster --minimum-stable-period=10s
+    executable: /bin/bash
+  delegate_to: localhost
+  register: install_complete
+  become: false
+  changed_when: false
+  until: install_complete.rc == 0
+
+- name: At this point, the cluster is using new certificates, but still trusts old certificates. Create new system:masters/admin.kubeconfig
+  ansible.builtin.shell:
+    cmd: >-
+      KUBECONFIG="{{ openshift_files_kubeconfig }}"
+      "{{ openshift_client_executable }}"
+      config new-admin-kubeconfig > "{{ openshift_files_kubeconfig }}-new"
+    executable: /bin/bash
+  delegate_to: localhost
+  become: false
+  changed_when: true
+
+- name: Move the new admin kubeconfig into the old path.
+  ansible.builtin.shell:
+    cmd: >-
+      mv "{{ openshift_files_kubeconfig }}-new" "{{ openshift_files_kubeconfig }}"
+    executable: /bin/bash
+  delegate_to: localhost
+  become: false
+  changed_when: true
+
+# This fails almost everytime with the following error:
+#     failed to apply changes to [xxxxx]: secrets only trusted by the old bundle
+# That might be something that RH didn't think about when they wrote the instructions.
+- name: Revoke trust for old signers replaced above.
+  ansible.builtin.shell:
+    cmd: >-
+      KUBECONFIG="{{ openshift_files_kubeconfig }}"
+      "{{ openshift_client_executable }}"
+      adm ocp-certificates remove-old-trust
+      -n openshift-kube-apiserver-operator
+      configmaps kube-apiserver-to-kubelet-client-ca
+      kube-control-plane-signer-ca
+      loadbalancer-serving-ca
+      localhost-serving-ca
+      service-network-serving-ca
+      --created-before={{ start_time.stdout }}
+    executable: /bin/bash
+  delegate_to: localhost
+  become: false
+  changed_when: true
+  failed_when: false  # This fails everytime
+
+- name: Wait for cluster to be stable. This process can take 30 minutes.
+  ansible.builtin.shell:
+    cmd: >-
+      KUBECONFIG="{{ openshift_files_kubeconfig }}"
+      "{{ openshift_client_executable }}"
+      adm wait-for-stable-cluster --minimum-stable-period=10s
+    executable: /bin/bash
+  delegate_to: localhost
+  register: install_complete
+  become: false
+  changed_when: false
+  until: install_complete.rc == 0
+
+- name: Restart all nodes to ensure every pod restarts with updated trust bundles that include the new signers.
+  ansible.builtin.shell:
+    cmd: >-
+      KUBECONFIG="{{ openshift_files_kubeconfig }}"
+      "{{ openshift_client_executable }}"
+      adm reboot-machine-config-pool mcp/worker mcp/master
+    executable: /bin/bash
+  delegate_to: localhost
+  become: false
+  changed_when: true
+
+- name: Wait for the nodes to restart.
+  ansible.builtin.shell:
+    cmd: >-
+      KUBECONFIG="{{ openshift_files_kubeconfig }}"
+      "{{ openshift_client_executable }}"
+      adm wait-for-node-reboot nodes --all
+    executable: /bin/bash
+  delegate_to: localhost
+  register: install_complete
+  become: false
+  changed_when: false
+  until: install_complete.rc == 0
