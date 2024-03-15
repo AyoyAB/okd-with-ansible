@@ -37,12 +37,13 @@ If you choose to use HAProxy, the status interface is found at [infra1.okd4.exam
 
 The load balancer installation can be controlled with the following parameters:
 
-| Variable                 | Description                                    | Default    |
-|--------------------------|------------------------------------------------|------------|
-| loadbalancer_use_haproxy | Use HAProxy as load balancer instead of nginx. | false      |
-| haproxy_stats_username   | HAProxy status page username.                  | `admin`    |
-| haproxy_stats_password   | HAProxy status page password.                  | `password` |
-| configure_ufw            | Configure UFW port openings.                   | `false`    |
+| Variable                                | Description                                    | Default    |
+|-----------------------------------------|------------------------------------------------|------------|
+| loadbalancer_use_haproxy                | Use HAProxy as load balancer instead of nginx. | false      |
+| lbs_loadbalancer_haproxy_stats_auth     | Enable HAProxy status page authentication.     | true       |
+| lbs_loadbalancer_haproxy_stats_username | HAProxy status page username.                  | `admin`    |
+| lbs_loadbalancer_haproxy_stats_password | HAProxy status page password.                  | `password` |
+| configure_ufw                           | Configure UFW port openings.                   | `false`    |
 
 # Disconnected registry
 
