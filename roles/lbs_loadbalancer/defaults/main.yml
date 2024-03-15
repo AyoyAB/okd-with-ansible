@@ -2,7 +2,7 @@
 
 loadbalancer_use_haproxy: false
 
-lbs_loadbalancer_haproxy_stats_auth: true
+lbs_loadbalancer_haproxy_stats_auth: false
 lbs_loadbalancer_haproxy_stats_username: admin
 lbs_loadbalancer_haproxy_stats_password: password
 
