@@ -1,17 +1,14 @@
 ---
+- name: Copy HAProxy configuration in place.
+  ansible.builtin.template:
+    src: haproxy.cfg.j2
+    dest: /etc/haproxy/haproxy.cfg
+    mode: '0644'
+    validate: haproxy -f %s -c -q
+  notify: Restart haproxy
 
-- name: Disable nginx as load balancer.
-  ansible.builtin.include_tasks: "nginx-remove.yml"
-  when: loadbalancer_use_haproxy
-
-- name: Disable HAProxy as load balancer.
-  ansible.builtin.include_tasks: "haproxy-remove.yml"
-  when: not loadbalancer_use_haproxy
-
-- name: Configure nginx as load balancer.
-  ansible.builtin.include_tasks: "nginx.yml"
-  when: not loadbalancer_use_haproxy
-
-- name: Configure HAProxy as load balancer.
-  ansible.builtin.include_tasks: "haproxy.yml"
-  when: loadbalancer_use_haproxy
+- name: Ensure HAProxy is started and enabled on boot.
+  ansible.builtin.service:
+    name: haproxy
+    state: started
+    enabled: true

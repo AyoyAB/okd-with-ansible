@@ -63,9 +63,6 @@ disconnected_registries:
 # Infra Configuration
 #
 
-# Use HAProxy for load balancing
-loadbalancer_use_haproxy: true
-
 # Configure HAProxy stats login
 # lbs_loadbalancer_haproxy_stats_auth: false
 # lbs_loadbalancer_haproxy_stats_username: admin

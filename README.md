@@ -32,14 +32,13 @@ ansible variables. These are defined in the inventory group vars.
 
 The load balancer can be installed on a debian server (e.g. Raspberry PI) and is used for infrastructure (load balancing and serving the ignition files).
 
-Nginx is used for static hosting (ignition files) and either nginx or HAProxy can be used for load balancing.
-If you choose to use HAProxy, the status interface is found at [infra1.okd4.example.com:1936/stats](infra1.okd4.example.com:1936/stats).
+Nginx is used for static hosting (ignition files) and HAProxy is used for load balancing.
+The HAProxy status interface is found at [infra1.okd4.example.com:1936/stats](infra1.okd4.example.com:1936/stats).
 
 The load balancer installation can be controlled with the following parameters:
 
 | Variable                                | Description                                    | Default    |
 |-----------------------------------------|------------------------------------------------|------------|
-| loadbalancer_use_haproxy                | Use HAProxy as load balancer instead of nginx. | false      |
 | lbs_loadbalancer_haproxy_stats_auth     | Enable HAProxy status page authentication.     | false      |
 | lbs_loadbalancer_haproxy_stats_username | HAProxy status page username.                  | `admin`    |
 | lbs_loadbalancer_haproxy_stats_password | HAProxy status page password.                  | `password` |
