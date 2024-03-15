@@ -34,7 +34,9 @@ frontend stats
   stats   refresh 30s
   stats   show-node
   stats   show-desc Stats for {{ groups.lbs[0] }}
-  stats   auth {{ haproxy_stats_username }}:{{ haproxy_stats_password }}
+{% if lbs_loadbalancer_haproxy_stats_auth %}
+  stats   auth {{ lbs_loadbalancer_haproxy_stats_username }}:{{ lbs_loadbalancer_haproxy_stats_password }}
+{% endif %}
   stats   uri /stats
 
 listen api-server-6443

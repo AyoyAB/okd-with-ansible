@@ -67,8 +67,9 @@ disconnected_registries:
 loadbalancer_use_haproxy: true
 
 # Configure HAProxy stats login
-# haproxy_stats_username: admin
-# haproxy_stats_password: password
+# lbs_loadbalancer_haproxy_stats_auth: true
+# lbs_loadbalancer_haproxy_stats_username: admin
+# lbs_loadbalancer_haproxy_stats_password: password
 
 # Additional HAProxy listen configurations
 # lbs_loadbalancer_extra_listen_config:
