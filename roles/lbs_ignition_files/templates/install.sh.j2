@@ -11,6 +11,7 @@ echo ""
 echo "This will delete all partitions on the disk ${INSTALLATION_DISK}"
 echo ""
 read -n 1 -s -r -p "--- Press any key continue ---"
+echo ""
 sudo sfdisk --delete "${INSTALLATION_DISK}"
 
 if [ $# -ge 1 ]; then
@@ -41,6 +42,7 @@ echo "Installation will use the following ignition file:"
 echo "${IGNITION_FILE_URL}"
 echo ""
 read -n 1 -s -r -p "--- Press any key continue ---"
+echo ""
 
 # Install CoreOS with ignition file
 sudo coreos-installer \
@@ -53,4 +55,5 @@ sudo coreos-installer \
 # Reboot machine after install
 echo ""
 read -n 1 -s -r -p "--- Remove the bootable media, then press any key to reboot ---"
+echo ""
 sudo reboot now
