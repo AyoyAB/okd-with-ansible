@@ -15,5 +15,7 @@
     - role: okd_operator_catalog_sources
     - role: okd_additional_repository_mirrors
     - role: okd_issue_pending_certificates
+    # Make sure cluster is stable before installing application in it
+    - role: okd_wait_for_cluster_stable
     # Install Argo CD
     - role: argocd

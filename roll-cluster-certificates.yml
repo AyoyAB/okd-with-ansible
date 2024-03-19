@@ -9,4 +9,7 @@
   gather_facts: false
   any_errors_fatal: true
   roles:
+    # Make sure cluster is stable before rolling cluster certificates
+    - role: okd_wait_for_cluster_stable
+    # Roll cluster certificates
     - role: okd_roll_cluster_certificate

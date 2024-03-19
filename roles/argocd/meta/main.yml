@@ -48,4 +48,3 @@ galaxy_info:
 
 dependencies:
   - role: local_path_definitions
-  - role: okd_wait_for_cluster_stable
