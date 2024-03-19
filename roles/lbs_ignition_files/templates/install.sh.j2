@@ -8,9 +8,7 @@ EXPECTED_HOSTNAME_DOMAIN="{{ cluster_name }}.{{ base_domain }}"
 INSTALLATION_DISK=/dev/sda
 
 echo ""
-echo "This will delete all partitions on the disk ${INSTALLATION_DISK}"
-echo ""
-read -n 1 -s -r -p "--- Press any key continue ---"
+echo "All partitions on the disk ${INSTALLATION_DISK} will be deleted!"
 echo ""
 sudo sfdisk --delete "${INSTALLATION_DISK}"
 
