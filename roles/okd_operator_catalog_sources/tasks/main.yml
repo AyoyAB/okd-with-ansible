@@ -1,6 +1,6 @@
 ---
 
-#  https://docs.okd.io/4.11/operators/admin/olm-restricted-networks.html#olm-restricted-networks-operatorhub_olm-restricted-networks
+#  https://docs.okd.io/4.15/operators/admin/olm-restricted-networks.html
 - name: Disable default OperatorHub sources
   kubernetes.core.k8s:
     kubeconfig: "{{ openshift_files_kubeconfig }}"
@@ -13,13 +13,13 @@
       spec:
         disableAllDefaultSources: true
         sources:
-          - disabled: true
+          - disabled: "{{ okd_disable_certified_operators }}"
             name: certified-operators
-          - disabled: true
+          - disabled: "{{ okd_disable_community_operators }}"
             name: community-operators
-          - disabled: true
+          - disabled: "{{  okd_disable_redhat_marketplace }}"
             name: redhat-marketplace
-          - disabled: true
+          - disabled: "{{ okd_disable_redhat_operators }}"
             name: redhat-operators
   register: status
   until: "'result' in status"
