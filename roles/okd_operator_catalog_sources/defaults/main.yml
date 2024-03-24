@@ -1,5 +1,10 @@
 ---
 
 okd_disable_default_operator_catalog_sources: false
+okd_disable_certified_operators: true
+okd_disable_community_operators: true
+okd_disable_redhat_marketplace: true
+okd_disable_redhat_operators: true
 
 okd_additional_operator_catalog_sources: []
+
