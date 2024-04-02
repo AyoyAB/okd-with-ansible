@@ -12,7 +12,7 @@
         namespace: openshift-operators
       spec:
         channel: alpha
-        installPlanApproval: Automatic
+        installPlanApproval: Manual
         name: argocd-operator
         source: community-operators
         sourceNamespace: openshift-marketplace
@@ -21,6 +21,35 @@
           env:
             - name: ARGOCD_CLUSTER_CONFIG_NAMESPACES
               value: "{{ argocd_namespace }}"
+
+- name: Wait for ArgoCD installplan
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail && \
+      KUBECONFIG="{{ openshift_files_kubeconfig }}" \
+      "{{ openshift_client_executable }}" \
+      -n openshift-operators \
+      get installplan -o json | \
+      jq -r '.items[] | select(.spec.clusterServiceVersionNames[] == "argocd-operator.{{ argocd_operator_starting_cluster_service_version }}") | .metadata.name'
+    executable: /bin/bash
+  register: installplan_names
+  retries: 60
+  delay: 5
+  until: installplan_names.stdout != ""
+  changed_when: false
+
+- name: Approve the installplan
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail && \
+      KUBECONFIG="{{ openshift_files_kubeconfig }}" \
+      "{{ openshift_client_executable }}" \
+      -n openshift-operators \
+      patch installplan {{ installplan_names.stdout }} \
+      --type merge \
+      --patch '{"spec": {"approved": true }}'
+    executable: /bin/bash
+  changed_when: true
 
 - name: Wait for Argo CD Operator to start
   ansible.builtin.shell:
