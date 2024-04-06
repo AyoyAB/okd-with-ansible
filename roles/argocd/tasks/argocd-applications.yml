@@ -31,7 +31,7 @@
       apiVersion: argoproj.io/v1alpha1
       kind: Application
       metadata:
-        name: argo-apps
+        name: root
         namespace: "{{ argocd_namespace }}"
         finalizers:
           - resources-finalizer.argocd.argoproj.io
@@ -43,7 +43,7 @@
         source:
           helm:
             version: v3
-            releaseName: argo-apps
+            releaseName: root
             valueFiles:
               - values-okd.yaml
             parameters:
