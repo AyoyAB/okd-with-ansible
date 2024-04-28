@@ -88,6 +88,20 @@
         name: argocd
         namespace: "{{ argocd_namespace }}"
       spec:
+        applicationSet:
+          resources:
+            limits:
+              memory: 1Gi
+            requests:
+              cpu: 250m
+              memory: 512Mi
+        controller:
+          resources:
+            limits:
+              memory: 2Gi
+            requests:
+              cpu: 250m
+              memory: 1Gi
         sso:
           provider: dex
           dex:
@@ -101,11 +115,11 @@
                 cpu: 250m
                 memory: 128Mi
         server:
-          route:
-            enabled: true
           env:
             - name: ARGOCD_SYNC_WAVE_DELAY
               value: "{{ argocd_sync_wave_delay | default('2') }}"
+          route:
+            enabled: true
           resources:
             limits:
               memory: 256Mi
@@ -126,13 +140,6 @@
             requests:
               cpu: 250m
               memory: 128Mi
-        applicationSet:
-          resources:
-            limits:
-              memory: 1Gi
-            requests:
-              cpu: 250m
-              memory: 512Mi
         repo:
           resources:
             limits:
@@ -140,13 +147,6 @@
             requests:
               cpu: 250m
               memory: 256Mi
-        controller:
-          resources:
-            limits:
-              memory: 2Gi
-            requests:
-              cpu: 250m
-              memory: 1Gi
         cm:
           resource.customizations: |
             argoproj.io/Application:
