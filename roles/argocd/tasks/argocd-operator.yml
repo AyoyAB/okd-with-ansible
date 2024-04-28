@@ -126,6 +126,12 @@
             requests:
               cpu: 125m
               memory: 128Mi
+        prometheus:
+          enabled: true
+          ingress:
+            enabled: false
+          route:
+            enabled: false
         rbac:
           defaultPolicy: 'role:readonly'
           policy: |
