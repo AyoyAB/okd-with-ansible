@@ -25,6 +25,16 @@ networking:
     - 172.30.0.0/16
 platform:
   none: {}
+{% if cluster_baseline_capability_set is defined %}
+capabilities:
+  baselineCapabilitySet: {{ cluster_baseline_capability_set }}
+{% if cluster_additional_enabled_capabilities is defined %}
+  additionalEnabledCapabilities:
+{% for capability in cluster_additional_enabled_capabilities %}
+   - {{ capability }}
+{% endfor %}
+{% endif %}
+{% endif %}
 pullSecret: "{{ lookup('file', '{{ openshift_files_directory }}/pull-secret') | regex_replace('\"', '\\\"') }}"
 sshKey: "{{ lookup('file', ssh_public_key_file) }}"
 {% if use_cluster_proxy == true %}

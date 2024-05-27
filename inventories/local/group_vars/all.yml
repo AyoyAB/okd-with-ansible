@@ -18,6 +18,11 @@ cluster_name: okd4
 # The network type. Note that in from 4.15 OpenShiftSDN is deprecated.
 create_local_files_network_type: OVNKubernetes
 
+# https://docs.openshift.com/container-platform/4.15/installing/cluster-capabilities.html
+# cluster_baseline_capability_set: vCurrent
+# cluster_additional_enabled_capabilities: []
+
+# okd_samples_operator_removed: false
 opt_out_of_remote_health_reporting: true
 
 # 'true' means that the control plane nodes will also run standard pods
