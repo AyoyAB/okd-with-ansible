@@ -126,10 +126,10 @@
             enabled: true
           resources:
             limits:
-              memory: 256Mi
+              memory: 321Mi
             requests:
               cpu: 125m
-              memory: 128Mi
+              memory: 224Mi
         prometheus:
           enabled: true
           ingress:
