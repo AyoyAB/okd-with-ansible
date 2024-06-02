@@ -104,6 +104,12 @@
               memory: 1500Mi
         ha:
           enabled: true
+          resources:
+            limits:
+              memory: 128Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
         sso:
           provider: dex
           dex:
@@ -144,7 +150,7 @@
           scopes: '[groups]'
         redis:
           image: registry.okd4.example.com:5010/library/redis
-          resources:
+          resources:  # This is only used if ha.enabled is false
             limits:
               memory: 256Mi
             requests:
