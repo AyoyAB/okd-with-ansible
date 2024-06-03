@@ -128,6 +128,13 @@
         server:
           autoscale:
             enabled: true
+            hpa:
+              maxReplicas: 3
+              minReplicas: 2
+              scaleTargetRef:
+                apiVersion: apps/v1
+                kind: Deployment
+                name: argocd-server
           env:
             - name: ARGOCD_SYNC_WAVE_DELAY
               value: "{{ argocd_sync_wave_delay | default('2') }}"
