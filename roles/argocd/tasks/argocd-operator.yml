@@ -96,6 +96,7 @@
               cpu: 250m
               memory: 512Mi
         controller:
+          appSync: 10m  # Sync with git every 10m
           resources:
             limits:
               memory: 2500Mi
