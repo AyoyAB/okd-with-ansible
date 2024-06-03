@@ -167,6 +167,7 @@
               cpu: 250m
               memory: 128Mi
         repo:
+          replicas: 2
           resources:
             limits:
               memory: 512Mi
