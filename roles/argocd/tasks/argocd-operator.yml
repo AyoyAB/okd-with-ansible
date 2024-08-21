@@ -82,7 +82,7 @@
   kubernetes.core.k8s:
     kubeconfig: "{{ openshift_files_kubeconfig }}"
     resource_definition:
-      apiVersion: argoproj.io/v1alpha1
+      apiVersion: argoproj.io/v1beta1  # ArgoCD v1alpha1 CRD has been deprecated starting from argocd-operator v0.8.0
       kind: ArgoCD
       metadata:
         name: argocd
