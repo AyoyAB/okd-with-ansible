@@ -11,7 +11,7 @@ echo ""
 
 SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
-ansible -i "${SCRIPT_DIR}/inventories/example/hosts" workers -m raw -a "/usr/sbin/shutdown ${MINUTES_TO_SHUTDOWN}" --become
+ansible -i "${SCRIPT_DIR}/inventories/example-scos/hosts" workers -m raw -a "/usr/sbin/shutdown ${MINUTES_TO_SHUTDOWN}" --become
 echo "Wait ${SECONDS_AFTER_WORKERS} seconds for worker nodes to shutdown first."
 sleep "${SECONDS_AFTER_WORKERS}"
-ansible -i "${SCRIPT_DIR}/inventories/example/hosts" masters -m raw -a "/usr/sbin/shutdown 1" --become
+ansible -i "${SCRIPT_DIR}/inventories/example-scos/hosts" masters -m raw -a "/usr/sbin/shutdown 1" --become
