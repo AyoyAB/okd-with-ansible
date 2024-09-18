@@ -15,10 +15,15 @@
   register: reverse_result
   changed_when: false
 
-- name: Check if reverse DNS lookup succeeded
+- name: Check if reverse DNS lookup succeeded (Without additional domains, only reverse domain)
   ansible.builtin.fail:
     msg: Reverse DNS lookup of {{ item }} failed! IP {{ ip_result.stdout }} did not resolve to {{ item }}
-  when: reverse_result.stdout != (item + '.')
+  when: additional_domains is not defined and reverse_result.stdout != (item + '.')
+
+- name: Check if reverse DNS lookup succeeded (With additional domains, one of many reverse domains)
+  ansible.builtin.fail:
+    msg: Reverse DNS lookup of {{ item }} failed! IP {{ ip_result.stdout }} did not resolve to {{ item }} in dns-response [{{ reverse_result.stdout }}]
+  when: additional_domains is defined and reverse_result.stdout is not search('^' + item + '\.$', multiline=true)
 
 - name: Validate additional DNS entries
   ansible.builtin.command: dig +short "{{ test_domain }}"
