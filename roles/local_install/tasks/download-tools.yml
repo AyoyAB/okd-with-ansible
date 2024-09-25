@@ -9,11 +9,19 @@
     path: "{{ openshift_client_directory }}"
     mode: '0755'
 
-- name: Define openshift client download url
+- name: Define openshift client download url (OKD)
   when:
     - openshift_client_download_url is undefined
+    - not is_openshift   # This is OKD
   ansible.builtin.set_fact:
     openshift_client_download_url: "{{ openshift_client_base_url }}/{{ okd_version }}/openshift-client-{{ okd_tools_arch }}-{{ okd_version }}.tar.gz"
+
+- name: Define openshift client download url (OCP)
+  when:
+    - openshift_client_download_url is undefined
+    - is_openshift  # This is OCP
+  ansible.builtin.set_fact:
+    openshift_client_download_url: "{{ openshift_client_base_url }}/openshift-client-{{ okd_tools_arch }}-{{ okd_version }}.tar.gz"
 
 - name: Download openshift client if needed
   ansible.builtin.include_tasks: "download-if-url-changed.yml"
