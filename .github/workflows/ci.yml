@@ -56,6 +56,29 @@ jobs:
           sudo apt install vagrant virtualbox
           make dependencies
 
+      - name: Disable kvm
+        run: |
+          echo "Stop KVM"
+          #  sudo invoke-rc.d kvm stop       # Unload all modules
+          sudo invoke-rc.d qemu-kvm stop  # Karmic
+          sudo service qemu-kvm stop      # Lucid and later
+
+          echo ""
+          echo "These kvm modules are loaded"
+          sudo lsmod | grep kvm
+          echo ""
+          echo "Trying to unload kvm_intel"
+          sudo rmmod kvm_intel || echo "Could not remove kvm_intel, perhaps this is AMD?"
+          echo ""
+          echo "Trying to unload kvm_amd"
+          sudo rmmod kvm_amd   || echo "Could not remove kvm_amd, perhaps this is Intel?"
+          echo ""
+          echo "Trying to unload kvm"
+          sudo rmmod kvm
+          echo ""
+          echo "These kvm modules are loaded:"
+          sudo lsmod | grep kvm || echo "Found no kvm modules loaded"
+
       - name: Test with molecule
         run: |
           make molecule-test
