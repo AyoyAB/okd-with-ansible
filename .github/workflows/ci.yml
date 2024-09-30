@@ -56,6 +56,14 @@ jobs:
           sudo apt install vagrant virtualbox
           make dependencies
 
+      - name: Disable kvm
+        run: |
+          #  sudo invoke-rc.d kvm stop       # Unload all modules
+          sudo invoke-rc.d qemu-kvm stop  # Karmic
+          sudo service qemu-kvm stop      # Lucid and later
+          sudo lsmod | grep kvm
+          sudo rmmod kvm_amd kvm  # kvm_intel
+
       - name: Test with molecule
         run: |
           make molecule-test
