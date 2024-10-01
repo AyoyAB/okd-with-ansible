@@ -12,8 +12,8 @@ platforms:
     groups:
       - lbs
     box: debian/bullseye64
-    box_version: 11.20221219.1
-    memory: 3072
+    box_version: 11.20240905.1  # https://app.vagrantup.com/debian/boxes/bullseye64
+    memory: 4096
     cpu: 2
     interfaces:
       - network_name: private_network
