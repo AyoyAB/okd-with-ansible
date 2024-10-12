@@ -3,3 +3,4 @@
 argocd_namespace: argocd
 argocd_operator_starting_cluster_service_version: v0.11.0
 argocd_enable_label_management: "true"
+argocd_value_file: values-okd.yaml
