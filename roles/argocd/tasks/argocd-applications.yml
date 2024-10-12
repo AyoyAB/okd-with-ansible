@@ -45,7 +45,7 @@
             version: v3
             releaseName: root
             valueFiles:
-              - values-okd.yaml
+              - "{{ argocd_value_file }}"
             parameters:
               - name: argo.common.target_revision
                 value: "{{ argocd_repository_revision }}"
