@@ -93,16 +93,16 @@
             limits:
               memory: 1Gi
             requests:
-              cpu: 250m
-              memory: 512Mi
+              cpu: 10m
+              memory: 73Mi
         controller:
           appSync: 10m  # Sync with git every 10m
           resources:
             limits:
               memory: 2500Mi
             requests:
-              cpu: 250m
-              memory: 1500Mi
+              cpu: 10m
+              memory: 222Mi
           sharding:
             enabled: true
             replicas: 2
@@ -163,18 +163,18 @@
           image: registry.okd4.example.com:5010/library/redis
           resources:  # This is only used if ha.enabled is false
             limits:
-              memory: 256Mi
-            requests:
-              cpu: 250m
               memory: 128Mi
+            requests:
+              cpu: 12m
+              memory: 64Mi
         repo:
           replicas: 2
           resources:
             limits:
               memory: 512Mi
             requests:
-              cpu: 250m
-              memory: 256Mi
+              cpu: 55m
+              memory: 164Mi
         cm:
           resource.customizations: |
             argoproj.io/Application:
