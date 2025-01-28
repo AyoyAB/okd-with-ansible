@@ -120,6 +120,7 @@
             openShiftOAuth: true
             groups:
               - "system:authenticated"
+              - "system:cluster-admins"
             resources:
               limits:
                 memory: 256Mi
@@ -156,7 +157,8 @@
         rbac:
           defaultPolicy: 'role:readonly'
           policy: |
-            g, cluster-admins, role:admin
+            g, system:cluster-admins, role:admin
+            g, github-cluster-admins, role:admin
             g, system:authenticated, role:readonly
           scopes: '[groups]'
         redis:
