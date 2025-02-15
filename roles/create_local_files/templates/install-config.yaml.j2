@@ -48,7 +48,7 @@ proxy:
 additionalTrustBundle: |
   {{ lookup('file', disconnected_registry_trust_bundle_file) | indent(2) }}
 {% endif %}
-imageContentSources:
+ImageDigestSources:
 {% for repo_mirror in disconnected_registries %}
   - source: {{ repo_mirror.source }}
     mirrors:
