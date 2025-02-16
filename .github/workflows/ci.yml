@@ -65,8 +65,8 @@ jobs:
         run: |
           echo "Stop KVM"
           #  sudo invoke-rc.d kvm stop       # Unload all modules
-          sudo invoke-rc.d qemu-kvm stop  # Karmic
-          sudo service qemu-kvm stop      # Lucid and later
+          sudo invoke-rc.d qemu-kvm stop || echo "Could not stop qemu-kvm" # Karmic
+          sudo service qemu-kvm stop     || echo "Could not stop qemu-kvm" # Lucid and later
 
           echo ""
           echo "These kvm modules are loaded"
