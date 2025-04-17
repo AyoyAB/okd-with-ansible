@@ -4,10 +4,17 @@
   when:
     - sealed_secrets is defined
 
+- name: Configure openshift-gitops-operator
+  ansible.builtin.include_tasks: "openshift-gitops-operator.yml"
+  when:
+    - argocd is defined
+    - openshiftGitOpsOperator is defined
+
 - name: Configure argocd operator
   ansible.builtin.include_tasks: "argocd-operator.yml"
   when:
     - argocd is defined
+    - openshiftGitOpsOperator is not defined
 
 - name: Configure argocd applications
   ansible.builtin.include_tasks: "argocd-applications.yml"
