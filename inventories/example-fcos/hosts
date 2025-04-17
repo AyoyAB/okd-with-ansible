@@ -25,3 +25,4 @@ master3.okd4.example.com
 # The first worker is also the bootstrap machine
 [workers]
 worker1.okd4.example.com
+worker2.okd4.example.com
