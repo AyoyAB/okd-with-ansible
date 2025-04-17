@@ -1,6 +1,8 @@
 ---
 
-argocd_namespace: argocd
+argocd_namespace: openshift-gitops
 argocd_operator_starting_cluster_service_version: v0.13.0
+openshift_gitops_operator_starting_cluster_service_version: v1.16.0
+argocd_operator_channel: gitops-1.16
 argocd_enable_label_management: "true"
 argocd_value_file: values-okd.yaml

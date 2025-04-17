@@ -116,7 +116,6 @@ okd_disable_redhat_operators: false
 # network_if_name:  eno1
 
 argocd: true
-argocd_namespace: argocd
 argocd_repository: https://github.com/smuda/home-cluster-argo.git
 argocd_repository_revision: main
 argocd_sync_wave_delay: 60

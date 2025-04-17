@@ -111,7 +111,6 @@ network_boot_enabled: true
 #       - registry.example.com:5000
 
 # argocd: true
-# argocd_namespace: argocd
 # argocd_repository: https://github.com/smuda/home-cluster-argo.git
 # argocd_repository_revision: main
 # argocd_sync_wave_delay: 60

@@ -61,4 +61,3 @@
             - CreateNamespace=true
           automated:
             selfHeal: true
-          preserveResourcesOnDeletion: false
