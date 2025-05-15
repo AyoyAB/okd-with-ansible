@@ -7,6 +7,13 @@ set -euo pipefail
 EXPECTED_HOSTNAME_DOMAIN="{{ cluster_name }}.{{ base_domain }}"
 INSTALLATION_DISK=/dev/sda
 
+echo "Check for disk nvme0n1"
+INSTALLATION_DISK_ALT=$(sudo fdisk -l | grep "Disk /dev/nvme0n1" || echo "")
+echo "INSTALLATION_DISK_ALT=${INSTALLATION_DISK_ALT}"
+if [[ "${INSTALLATION_DISK_ALT}" != ""  ]]; then
+  INSTALLATION_DISK=/dev/nvme0n1
+fi
+
 echo ""
 echo "All partitions on the disk ${INSTALLATION_DISK} will be deleted!"
 echo ""
