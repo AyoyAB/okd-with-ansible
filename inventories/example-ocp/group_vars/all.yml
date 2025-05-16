@@ -1,7 +1,7 @@
 ---
 # https://access.redhat.com/downloads/content/290/ver=4.14/rhel---9/4.14.46/x86_64/product-software
 # https://access.redhat.com/downloads/content/290/ver=4.16/rhel---9/4.16.27/x86_64/product-software
-okd_version: 4.16.38
+okd_version: 4.16.39
 
 # This forces the scos releases
 openshift_client_base_url: https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable-4.16
