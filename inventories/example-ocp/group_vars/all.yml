@@ -29,7 +29,7 @@ create_local_files_network_type: OVNKubernetes
 opt_out_of_remote_health_reporting: true
 
 # 'true' means that the control plane nodes will also run standard pods
-use_control_plane_nodes_for_compute: true
+use_control_plane_nodes_for_compute: false
 
 # This public ssh key will be required to access the control plane nodes and worker nodes.
 ssh_public_key_file: ~/.ssh/id_ansible.pub
