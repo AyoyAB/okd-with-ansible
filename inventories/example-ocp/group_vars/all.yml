@@ -116,6 +116,8 @@ okd_disable_redhat_operators: false
 # network_vlan_id:  42
 # network_if_name:  eno1
 
+openshift_custom_manifests: openshift-custom-manifests/
+
 argocd: true
 argocd_repository: https://github.com/smuda/home-cluster-argo.git
 argocd_repository_revision: main

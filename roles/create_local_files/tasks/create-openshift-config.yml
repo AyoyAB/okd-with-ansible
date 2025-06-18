@@ -37,6 +37,12 @@
         - install-config.yaml
         - pull-secret
 
+    - name: Copy custom manifests
+      ansible.builtin.command:
+        cmd: "cp -R {{ playbook_dir }}/{{ openshift_custom_manifests }} {{ openshift_files_directory }}/.install-config/openshift"
+      changed_when: true
+      when: openshift_custom_manifests is defined
+
     - name: Create cluster manifests files
       ansible.builtin.command:
         cmd: "{{ openshift_install_executable }} create manifests --dir={{ openshift_files_directory }}/.install-config"
