@@ -23,8 +23,37 @@ networking:
   networkType: {{ create_local_files_network_type }}
   serviceNetwork:
     - 172.30.0.0/16
+  machineNetwork:
+    - cidr: 192.168.60.0/24
 platform:
-  none: {}
+  baremetal:
+    additionalNTPServers:
+      - se.pool.ntp.org
+    provisioningNetwork: Unmanaged
+    apiVIPs:
+      - 192.168.60.179
+    #ingressVIPs:
+    #  - 192.168.60.178
+    # provisioningNetworkCIDR: 172.22.0.0/24
+    # bootstrapExternalStaticIP: 192.168.60.184
+    # bootstrapExternalStaticGateway: 192.168.60.1
+    # bootstrapExternalStaticDNS: 192.168.40.2
+    hosts:
+      - name: master1.okd4.example.com
+        role: master
+        bootMACAddress: "1c:69:7a:a5:c8:4e"
+      - name: master2.okd4.example.com
+        role: master
+        bootMACAddress: "1c:69:7a:a5:c9:5a"
+      - name: master3.okd4.example.com
+        role: master
+        bootMACAddress: "1c:69:7a:a3:76:24"
+      - name: worker1.okd4.example.com
+        role: worker
+        bootMACAddress: "f4:4d:30:6d:8d:d6"
+      - name: worker2.okd4.example.com
+        role: worker
+        bootMACAddress: "1c:69:7a:a2:50:ce"
 {% if cluster_baseline_capability_set is defined %}
 capabilities:
   baselineCapabilitySet: {{ cluster_baseline_capability_set }}
