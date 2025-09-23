@@ -17,7 +17,7 @@
     - openshift_installer_download_url is undefined
     - is_openshift  # This is OCP
   ansible.builtin.set_fact:
-    openshift_installer_download_url: "{{ openshift_installer_base_url }}/openshift-install-{{ okd_tools_arch }}-{{ okd_version }}.tar.gz"  # noqa yaml[line-length]
+    openshift_installer_download_url: "{{ openshift_installer_base_url }}/{{ okd_version }}/openshift-install-{{ okd_tools_arch }}-{{ okd_version }}.tar.gz"  # noqa yaml[line-length]
 
 - name: Download openshift installer if needed
   ansible.builtin.include_tasks: "download-if-url-changed.yml"

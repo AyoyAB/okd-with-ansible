@@ -21,7 +21,7 @@
     - openshift_client_download_url is undefined
     - is_openshift  # This is OCP
   ansible.builtin.set_fact:
-    openshift_client_download_url: "{{ openshift_client_base_url }}/openshift-client-{{ okd_tools_arch }}-{{ okd_version }}.tar.gz"
+    openshift_client_download_url: "{{ openshift_client_base_url }}/{{ okd_version }}/openshift-client-{{ okd_tools_arch }}-{{ okd_version }}.tar.gz"
 
 - name: Download openshift client if needed
   ansible.builtin.include_tasks: "download-if-url-changed.yml"
