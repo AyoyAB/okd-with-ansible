@@ -196,7 +196,7 @@
         defaultClusterScopedRoleDisabled: false
         disableAdmin: true
         ha:
-          enabled: true
+          enabled: false
           resources:
             limits:
               memory: 128Mi
