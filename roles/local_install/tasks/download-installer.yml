@@ -22,7 +22,7 @@
 - name: Download openshift installer if needed
   ansible.builtin.include_tasks: "download-if-url-changed.yml"
   vars:
-    name: Openshift installer
+    download_name: Openshift installer
     url: "{{ openshift_installer_download_url }}"
     download_url_file: "{{ openshift_install_directory }}/.openshift-installer.url"
     download_target: "{{ openshift_install_archive }}"

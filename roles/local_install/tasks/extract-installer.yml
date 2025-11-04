@@ -5,14 +5,14 @@
     path: "{{ openshift_install_directory }}"
     mode: '0755'
 
-- name: Write image url to file - {{ name }}
+- name: Write image url to file - {{ download_name }}
   ansible.builtin.copy:
     content: "{{ okd_tools_image_override }}"
     dest: "{{ openshift_install_directory }}/.openshift-installer.url"
     mode: '0644'
   register: download_url
 
-- name: Download if url has changed - {{ name }}  # noqa: no-handler
+- name: Download if url has changed - {{ download_name }}  # noqa: no-handler
   when: download_url.changed
   block:
     - name: Extract openshift installer from image
@@ -36,7 +36,7 @@
         cmd: tar -xvf "{{ filenames.files[0].path }}" -C "{{ openshift_install_directory }}"  # noqa yaml[line-length] command-instead-of-module
       changed_when: true
 
-    - name: Delete download - {{ name }}
+    - name: Delete download - {{ download_name }}
       ansible.builtin.file:
         state: absent
         path: "{{ filenames.files[0].path }}"
@@ -53,7 +53,7 @@
         cmd: tar -xvf "{{ filenames.files[0].path }}" -C "{{ openshift_client_directory }}"  # noqa yaml[line-length] command-instead-of-module
       changed_when: true
 
-    - name: Delete download - {{ name }}
+    - name: Delete download - {{ download_name }}
       ansible.builtin.file:
         state: absent
         path: "{{ filenames.files[0].path }}"

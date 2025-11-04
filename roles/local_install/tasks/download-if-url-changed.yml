@@ -1,5 +1,5 @@
 ---
-- name: Compare download url with file - {{ name }}
+- name: Compare download url with file - {{ download_name }}
   ansible.builtin.copy:
     content: "{{ url }}"
     dest: "{{ download_url_file }}"
@@ -7,33 +7,33 @@
   check_mode: true
   register: download_url
 
-- name: Download if url has changed - {{ name }}  # noqa: no-handler
+- name: Download if url has changed - {{ download_name }}  # noqa: no-handler
   when: download_url.changed
   block:
-    - name: Inform user about download location - {{ name }}
+    - name: Inform user about download location - {{ download_name }}
       ansible.builtin.debug:
         msg: "Downloading from {{ url }}"
 
-    - name: Download - {{ name }}
+    - name: Download - {{ download_name }}
       ansible.builtin.get_url:
         url: "{{ url }}"
         dest: "{{ download_target }}"
         mode: '0440'
 
-    - name: Unpack download - {{ name }}
+    - name: Unpack download - {{ download_name }}
       ansible.builtin.command:
         # As we're running on mac, we can't use the module as it requires GNU tar.
         cmd: tar -xvf "{{ download_target }}" -C "{{ untar_directory }}"  # noqa yaml[line-length] command-instead-of-module
       when: untar_downloaded
       changed_when: untar_downloaded
 
-    - name: Delete download - {{ name }}
+    - name: Delete download - {{ download_name }}
       ansible.builtin.file:
         state: absent
         path: "{{ download_target }}"
       when: delete_download_target
 
-    - name: Write download url with file - {{ name }}
+    - name: Write download url with file - {{ download_name }}
       ansible.builtin.copy:
         content: "{{ url }}"
         dest: "{{ download_url_file }}"
