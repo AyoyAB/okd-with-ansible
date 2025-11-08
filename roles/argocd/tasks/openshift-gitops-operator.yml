@@ -104,6 +104,8 @@
 - name: Create or update Openshift Gitops operator group
   kubernetes.core.k8s:
     kubeconfig: "{{ openshift_files_kubeconfig }}"
+    server_side_apply:
+      field_manager: ansible
     resource_definition:
       apiVersion: operators.coreos.com/v1
       kind: OperatorGroup
@@ -116,6 +118,8 @@
 - name: Create or update Openshift Gitops subscription
   kubernetes.core.k8s:
     kubeconfig: "{{ openshift_files_kubeconfig }}"
+    server_side_apply:
+      field_manager: ansible
     resource_definition:
       apiVersion: operators.coreos.com/v1alpha1
       kind: Subscription
@@ -155,6 +159,8 @@
 - name: Create or update namespace {{ argocd_namespace }}
   kubernetes.core.k8s:
     kubeconfig: "{{ openshift_files_kubeconfig }}"
+    server_side_apply:
+      field_manager: ansible
     resource_definition:
       apiVersion: v1
       kind: Namespace
@@ -166,6 +172,8 @@
 - name: Setup a basic Argo CD cluster
   kubernetes.core.k8s:
     kubeconfig: "{{ openshift_files_kubeconfig }}"
+    server_side_apply:
+      field_manager: ansible
     resource_definition:
       apiVersion: argoproj.io/v1beta1  # ArgoCD v1alpha1 CRD has been deprecated starting from argocd-operator v0.8.0
       kind: ArgoCD
