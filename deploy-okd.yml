@@ -11,22 +11,26 @@
 
 - name: Create lbs
   ansible.builtin.import_playbook: create-lbs.yml
+  when: lbs_loadbalancer_configure | default(true)
 
 - name: Configure lbs ignition files
   ansible.builtin.import_playbook: configure-lbs-ignition-files.yml
-  when: not openshift_agent_installation
+  when: not openshift_agent_installation and (lbs_loadbalancer_configure | default(true))
 
 - name: Configure lbs network boot
   ansible.builtin.import_playbook: configure-lbs-network-boot.yml
+  when: lbs_loadbalancer_configure | default(true)
 
 - name: Configure lbs bootstrap enabled
   ansible.builtin.import_playbook: configure-lbs-bootstrap-enabled.yml
+  when: lbs_loadbalancer_configure | default(true)
 
 - name: Wait for installation
   ansible.builtin.import_playbook: wait-for-installation.yml
 
 - name: Configure lbs bootstrap disabled
   ansible.builtin.import_playbook: configure-lbs-bootstrap-disabled.yml
+  when: lbs_loadbalancer_configure | default(true)
 
 - name: Wait for workers
   ansible.builtin.import_playbook: wait-for-workers.yml

@@ -37,12 +37,13 @@ The HAProxy status interface is found at [infra1.okd4.example.com:1936/stats](in
 
 The load balancer installation can be controlled with the following parameters:
 
-| Variable                                | Description                                    | Default    |
-|-----------------------------------------|------------------------------------------------|------------|
-| lbs_loadbalancer_haproxy_stats_auth     | Enable HAProxy status page authentication.     | false      |
-| lbs_loadbalancer_haproxy_stats_username | HAProxy status page username.                  | `admin`    |
-| lbs_loadbalancer_haproxy_stats_password | HAProxy status page password.                  | `password` |
-| configure_ufw                           | Configure UFW port openings.                   | `false`    |
+| Variable                                | Description                                | Default    |
+|-----------------------------------------|--------------------------------------------|------------|
+| lbs_loadbalancer_configure              | Whether to configure the HA proxy at all   | true       |
+| lbs_loadbalancer_haproxy_stats_auth     | Enable HAProxy status page authentication. | false      |
+| lbs_loadbalancer_haproxy_stats_username | HAProxy status page username.              | `admin`    |
+| lbs_loadbalancer_haproxy_stats_password | HAProxy status page password.              | `password` |
+| configure_ufw                           | Configure UFW port openings.               | `false`    |
 
 # Disconnected registry
 

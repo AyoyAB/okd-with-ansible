@@ -28,7 +28,15 @@ networking:
   serviceNetwork:
     - 172.30.0.0/16
 platform:
+{%  if create_local_files_platform == "none" %}
   none: {}
+{% elif create_local_files_platform == "baremetal" %}
+  baremetal:
+    apiVIPs:
+      - {{ lookup('community.general.dig', "api." + cluster_name + "." + base_domain)}}
+    ingressVIPs:
+      - {{ lookup('community.general.dig', "foo.apps." + cluster_name + "." + base_domain)}}
+{% endif %}
 {% if cluster_baseline_capability_set is defined %}
 capabilities:
   baselineCapabilitySet: {{ cluster_baseline_capability_set }}

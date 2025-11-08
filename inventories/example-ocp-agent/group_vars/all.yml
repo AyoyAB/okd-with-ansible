@@ -23,6 +23,10 @@ cluster_name: okd4
 # The network type. Note that in from 4.15 OpenShiftSDN is deprecated.
 create_local_files_network_type: OVNKubernetes
 
+# Remove usage of external LBS and use LBS internally in Openshift
+create_local_files_platform: "baremetal"
+lbs_loadbalancer_configure: false
+
 # https://docs.openshift.com/container-platform/4.15/installing/cluster-capabilities.html
 # cluster_baseline_capability_set: vCurrent
 # cluster_additional_enabled_capabilities: []
