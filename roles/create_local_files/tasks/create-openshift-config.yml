@@ -23,7 +23,7 @@
   register: okd_version_file
 
 - name: Create new cluster files if config file or okd version changed  # noqa: no-handler
-  when: install_config.changed or okd_version_file.changed
+  when: install_config.changed or okd_version_file.changed or agent_config.changed or openshift_agent_installation
   block:
     - name: Delete installation config tmp directory
       ansible.builtin.file:
@@ -52,11 +52,6 @@
       changed_when: true
       when: openshift_custom_manifests is defined
 
-    - name: Create cluster manifests files
-      ansible.builtin.command:
-        cmd: "{{ openshift_install_executable }} create manifests --dir={{ openshift_files_directory }}/.install-config"
-      changed_when: true
-
     - name: Copy additional samples-operator configuration
       ansible.builtin.copy:
         src: "files/samples-operator-removed.yaml"
@@ -64,10 +59,28 @@
         mode: '0644'
       when: okd_samples_operator_removed
 
+    - name: Create agent image (this takes a long time, expect roughly a minute)
+      ansible.builtin.command:
+        cmd: "{{ openshift_install_executable }} agent create image --dir={{ openshift_files_directory }}/.install-config --log-level=debug"
+      when: openshift_agent_installation
+      register: image_creation
+
+    - name: Log image creation line (stdout)
+      debug: msg="{{ image_creation.stdout_lines }}"
+    - name: Log image creation line (stderr)
+      debug: msg="{{ image_creation.stderr_lines }}"
+
+    - name: Create cluster manifests files
+      ansible.builtin.command:
+        cmd: "{{ openshift_install_executable }} create manifests --dir={{ openshift_files_directory }}/.install-config"
+      changed_when: true
+      when: not openshift_agent_installation
+
     - name: Create cluster ignition files
       ansible.builtin.command:
         cmd: "{{ openshift_install_executable }} create ignition-configs --dir={{ openshift_files_directory }}/.install-config"
       changed_when: true
+      when: not openshift_agent_installation
 
     - name: Create auth directory
       ansible.builtin.file:

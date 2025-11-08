@@ -1,6 +1,6 @@
 ---
 - name: Show CoreOS ISO Prompt
-  when: not wait_for_installation_skip_coreos_iso_prompt
+  when: not wait_for_installation_skip_coreos_iso_prompt and not openshift_agent_installation
   block:
     - name: Get CoreOS ISO download url
       ansible.builtin.shell:
@@ -24,7 +24,7 @@
       ansible.builtin.pause:
         prompt: |
           --------------------------------------------------------------------
-          - Download (and create a bootable USB if needed) for Fedora CoreOS -
+          - Download (and create a bootable USB if needed) for CoreOS -
           --------------------------------------------------------------------
 
           {{ coreos_iso_url }}
@@ -33,61 +33,103 @@
           - Press return to continue -
           ----------------------------
 
-- name: Pause for starting CoreOS installation on bootstrap
-  ansible.builtin.pause:
-    prompt: |
-      ---------------------------------
-      - Do the following on bootstrap -
-      ---------------------------------
+- name: Openshift agent installation
+  when: openshift_agent_installation
+  block:
+    - name: Pause for creating a bootable USB
+      ansible.builtin.pause:
+        prompt: |
+          --------------------------------------------------------------------
+          - Create a bootable USB from {{ openshift_files_directory }}/.install-config/agent.x86_64.iso
+          --------------------------------------------------------------------
+    
+          ----------------------------
+          - Press return to continue -
+          ----------------------------
 
-      1. Boot CoreOS
-      2. Run the following command:
+    - name: Pause for creating a bootable USB
+      ansible.builtin.pause:
+        prompt: |
+          --------------------------------------------------------------------
+          - Boot from the USB on all nodes
+          --------------------------------------------------------------------
 
-      bash -c "$(curl -fsSL http://{{ groups.lbs[0] }}:8080/install.sh)"
-      or
-      bash -c "$(curl -fsSL http://{{ groups.lbs[0] }}:8080/install.sh)" -s bootstrap
+          ----------------------------
+          - Press return to continue -
+          ----------------------------
 
-      3. Reboot and verify it's trying to retrieve the second stage ignition file.
+    - name: Wait for bootstrap to finish (agent installation)
+      ansible.builtin.shell:
+        cmd: >-
+          "{{ openshift_install_executable }}" agent wait-for bootstrap-complete --dir={{ openshift_files_directory }}/.install-config
+        executable: /bin/bash
+      delegate_to: localhost
+      register: bootstrap_complete
+      become: false
+      changed_when: false
+      until: bootstrap_complete.rc == 0
+      when:
+        - inventory_hostname == groups.bootstrap[0]
 
-      ----------------------------
-      - Press return to continue -
-      ----------------------------
 
-- name: Pause for starting CoreOS installation on masters
-  ansible.builtin.pause:
-    prompt: |
-      -----------------------------------
-      - Do the following on all masters -
-      -----------------------------------
-      1. Boot CoreOS
-      2. Run the following command to install CoreOS:
+- name: Not Openshift agent installation
+  when: not openshift_agent_installation
+  block:
+    - name: Pause for starting CoreOS installation on bootstrap
+      ansible.builtin.pause:
+        prompt: |
+          ---------------------------------
+          - Do the following on bootstrap -
+          ---------------------------------
+    
+          1. Boot CoreOS
+          2. Run the following command:
+    
+          bash -c "$(curl -fsSL http://{{ groups.lbs[0] }}:8080/install.sh)"
+          or
+          bash -c "$(curl -fsSL http://{{ groups.lbs[0] }}:8080/install.sh)" -s bootstrap
+    
+          3. Reboot and verify it's trying to retrieve the second stage ignition file.
+    
+          ----------------------------
+          - Press return to continue -
+          ----------------------------
 
-      bash -c "$(curl -fsSL http://{{ groups.lbs[0] }}:8080/install.sh)"
-      or
-      bash -c "$(curl -fsSL http://{{ groups.lbs[0] }}:8080/install.sh)" -s master[1-3]
+    - name: Pause for starting CoreOS installation on masters
+      ansible.builtin.pause:
+        prompt: |
+          -----------------------------------
+          - Do the following on all masters -
+          -----------------------------------
+          1. Boot CoreOS
+          2. Run the following command to install CoreOS:
+    
+          bash -c "$(curl -fsSL http://{{ groups.lbs[0] }}:8080/install.sh)"
+          or
+          bash -c "$(curl -fsSL http://{{ groups.lbs[0] }}:8080/install.sh)" -s master[1-3]
+    
+          3. Reboot and verify they are trying to retrieve the second stage ignition file.
+    
+          ----------------------------
+          - Press return to continue -
+          ----------------------------
 
-      3. Reboot and verify they are trying to retrieve the second stage ignition file.
+    - name: Wait for bootstrap to finish (not agent installation)
+      ansible.builtin.shell:
+        cmd: >-
+          "{{ openshift_install_executable }}" wait-for bootstrap-complete --dir={{ openshift_files_directory }}/
+        executable: /bin/bash
+      delegate_to: localhost
+      register: bootstrap_complete
+      become: false
+      changed_when: false
+      until: bootstrap_complete.rc == 0
+      when:
+        - inventory_hostname == groups.bootstrap[0]
 
-      ----------------------------
-      - Press return to continue -
-      ----------------------------
-
-- name: Wait for bootstrap to finish
-  ansible.builtin.shell:
-    cmd: >-
-      "{{ openshift_install_executable }}" wait-for bootstrap-complete --dir={{ openshift_files_directory }}/
-    executable: /bin/bash
-  delegate_to: localhost
-  register: bootstrap_complete
-  become: false
-  changed_when: false
-  until: bootstrap_complete.rc == 0
-  when:
-    - inventory_hostname == groups.bootstrap[0]
-
-- name: Shutdown the bootstrap machine
-  ansible.builtin.raw: |
-    sudo shutdown 1
-  when:
-    - inventory_hostname == groups.bootstrap[0]
-  changed_when: true
+    - name: Shutdown the bootstrap machine
+      ansible.builtin.raw: |
+        sudo shutdown 1
+      when:
+        - inventory_hostname == groups.bootstrap[0]
+      changed_when: true
