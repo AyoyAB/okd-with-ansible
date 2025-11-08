@@ -1,0 +1,141 @@
+---
+# https://access.redhat.com/downloads/content/290/ver=4.18/rhel---9/4.18.13/x86_64/product-software
+okd_version: 4.18.21
+
+# This forces the ocp releases
+openshift_client_base_url: https://mirror.openshift.com/pub/openshift-v4/amd64/clients/ocp
+openshift_installer_base_url: https://mirror.openshift.com/pub/openshift-v4/amd64/clients/ocp
+is_openshift: true
+argocd_value_file: values-ocp.yaml
+
+openshift_agent_installation: true
+openshift_agent_rendezvousIP:  192.168.60.181
+
+# Retrieve the beta image from https://origin-release.apps.ci.l2s4.p1.openshiftapps.com/#4.13.0-0.okd
+
+ignition_validate_version: v2.15.0
+sops_version: v3.8.1
+
+# The full domain is <cluster_name>.<base_domain> (e.g. okd4.example.com)
+base_domain: example.com
+cluster_name: okd4
+
+# The network type. Note that in from 4.15 OpenShiftSDN is deprecated.
+create_local_files_network_type: OVNKubernetes
+
+# https://docs.openshift.com/container-platform/4.15/installing/cluster-capabilities.html
+# cluster_baseline_capability_set: vCurrent
+# cluster_additional_enabled_capabilities: []
+
+# okd_samples_operator_removed: false
+opt_out_of_remote_health_reporting: true
+
+# 'true' means that the control plane nodes will also run standard pods
+use_control_plane_nodes_for_compute: false
+
+# This public ssh key will be required to access the control plane nodes and worker nodes.
+ssh_public_key_file: ~/.ssh/id_ansible.pub
+
+# use_cluster_proxy: true
+# cluster_proxy_http_proxy: http://proxy.example.com:6080
+# cluster_proxy_https_proxy: http://proxy.example.com:6080
+# cluster_proxy_no_proxy: internal.example.com,192.168.0.0/24
+
+use_disconnected_registry: true
+disconnected_registry_trust_bundle_file: "{{ playbook_dir }}/openshift-ca/ca.pem"
+disconnected_registries:
+  - source: quay.io/openshift/okd
+    mirrors:
+      - registry.okd4.example.com:5011/openshift/okd
+  - source: quay.io/openshift/okd-content
+    mirrors:
+      - registry.okd4.example.com:5011/openshift/okd-content
+
+# use_custom_container_registry: true
+# custom_container_registry_ca_file: "{{ playbook_dir }}/example.crt"
+# custom_container_registry_hostname_port: registry.example.com:5000
+
+#
+# Local Configuration
+#
+
+# Override tool download urls if using a local proxy
+# openshift_client_base_url: https://github.com/okd-project/okd/releases/download
+# openshift_client_download_url: https://github.com/okd-project/okd/releases/download/{{ okd_version }}/openshift-client-mac-{{ okd_version }}.tar.gz
+# openshift_installer_base_url: https://github.com/okd-project/okd/releases/download
+# openshift_installer_download_url: https://github.com/okd-project/okd/releases/download/{{ okd_version }}/openshift-install-mac-{{ okd_version }}.tar.gz
+# ignition_validate_base_url: https://github.com/coreos/ignition/releases/download
+# ignition_validate_download_url: https://github.com/coreos/ignition/releases/download/v2.16.2/ignition-validate-x86_64-apple-darwin
+# sops_base_url: https://github.com/getsops/sops/releases/download
+# sops_download_url: https://github.com/getsops/sops/releases/download/{{ sops_version }}/sops-{{ sops_version }}.darwin.amd64
+
+#
+# Infra Configuration
+#
+
+# Configure HAProxy stats login
+# lbs_loadbalancer_haproxy_stats_auth: false
+# lbs_loadbalancer_haproxy_stats_username: admin
+# lbs_loadbalancer_haproxy_stats_password: password
+
+# Additional HAProxy listen configurations
+# lbs_loadbalancer_extra_listen_config:
+#   - name: extra-service
+#     bind: :12345
+#     mode: tcp
+#     balance: source
+#     servers:
+#       - name: server
+#         host: 192.168.0.100
+#         port: 12345
+#         checkInterval: 1s
+
+# Configure network booting for nodes
+# network_boot_enabled: true
+
+# Configure UFW port openings for load balancer
+# configure_ufw: true
+# lbs_install_custom_ufw_port_openings: []
+
+#
+# Cluster Configuration
+#
+
+okd_disable_default_operator_catalog_sources: false
+# okd_disable_certified_operators: true
+okd_disable_community_operators: false
+# okd_disable_redhat_marketplace: true
+okd_disable_redhat_operators: false
+# okd_additional_operator_catalog_sources:
+#   - name: community-operators-mirror
+#     image: registry.access.redhat.com/redhat/community-operator-index:v4.12
+
+# additional_repository_mirrors:
+#   - source: docker.io
+#     mirrors:
+#       - registry.example.com:5000
+
+# network_use_vlan: true
+# network_vlan_id:  42
+# network_if_name:  eno1
+
+openshift_custom_manifests: openshift-custom-manifests/
+
+argocd: true
+argocd_repository: https://github.com/smuda/home-cluster-argo.git
+argocd_repository_revision: main
+argocd_sync_wave_delay: 60
+
+# Sealed secrets
+sealed_secrets: true
+sealed_secret_secret: "{{ playbook_dir }}/sealed-secrets-secret.yml"
+
+# Rolling certificates
+okd_roll_cluster_certificate: false
+
+#
+# Ansible configuration
+#
+
+ansible_ssh_private_key_file: ~/.ssh/id_ansible
+ansible_python_interpreter: auto

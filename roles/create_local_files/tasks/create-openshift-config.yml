@@ -7,6 +7,14 @@
     mode: '0644'
   register: install_config
 
+- name: Create installation agent config file
+  ansible.builtin.template:
+    src: templates/agent-config.yaml.j2
+    dest: "{{ openshift_files_directory }}/agent-config.yaml"
+    mode: '0644'
+  when: openshift_agent_installation
+  register: agent_config
+
 - name: Write OKD version to file
   ansible.builtin.copy:
     content: "{{ okd_version_full }}"
@@ -34,6 +42,7 @@
         dest: "{{ openshift_files_directory }}/.install-config/{{ item }}"
         mode: '0644'
       with_items:
+        - agent-config.yaml
         - install-config.yaml
         - pull-secret
 

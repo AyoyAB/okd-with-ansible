@@ -29,6 +29,7 @@
 
 - name: Wait for workers
   ansible.builtin.import_playbook: wait-for-workers.yml
+  when: not openshift_agent_installation | default(true)
 
 - name: Configure cluster
   ansible.builtin.import_playbook: configure-cluster.yml
