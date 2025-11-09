@@ -237,7 +237,7 @@
                 name: argocd-server
           env:
             - name: ARGOCD_SYNC_WAVE_DELAY
-              value: "{{ argocd_sync_wave_delay | default('2') }}"
+              value: "{{ argocd_sync_wave_delay | default('2') }}s"
           route:
             enabled: true
           resources:
