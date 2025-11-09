@@ -105,7 +105,7 @@ the hostname `registry.okd4.example.com` needs to be setup in DNS.
    | worker1.okd4.example.com       | 192.168.60.184                 |
 
    If you're using pihole (as I do), increase rate limiting, create `/etc/dnsmasq.d/99-openshift.conf`
-   with the following content and restart dns (`pihole restartdns`)
+   with the following content and restart dns (`pihole reloaddns`)
    ```
    address=/.apps.okd4.example.com/192.168.60.180
    ```
