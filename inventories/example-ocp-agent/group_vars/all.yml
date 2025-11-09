@@ -22,6 +22,8 @@ cluster_name: okd4
 
 # The network type. Note that in from 4.15 OpenShiftSDN is deprecated.
 create_local_files_network_type: OVNKubernetes
+create_local_files_machine_networks:
+  - cidr: 192.168.60.0/24
 
 # Remove usage of external LBS and use LBS internally in Openshift
 create_local_files_platform: "baremetal"
