@@ -1,6 +1,6 @@
 ---
 # https://github.com/okd-project/okd/releases
-okd_version: 4.19.0-okd-scos.0
+okd_version: 4.20.0-okd-scos.9
 
 # This forces the scos releases
 openshift_client_base_url: https://github.com/okd-project/okd/releases/download
