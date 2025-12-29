@@ -4,8 +4,8 @@
 
 - name: Detect install system is Linux x86_64
   when:
-    - ansible_system == "Linux"
-    - ansible_architecture == "x86_64"
+    - ansible_facts["system"] == "Linux"
+    - ansible_facts["architecture"] == "x86_64"
   ansible.builtin.set_fact:
     supported_arch: true
     okd_tools_arch: linux
@@ -14,8 +14,8 @@
 
 - name: Detect install system is MacOS x86_64
   when:
-    - ansible_system == "Darwin"
-    - ansible_architecture == "x86_64"
+    - ansible_facts["system"] == "Darwin"
+    - ansible_facts["architecture"] == "x86_64"
   ansible.builtin.set_fact:
     supported_arch: true
     okd_tools_arch: mac
@@ -24,8 +24,8 @@
 
 - name: Detect install system is MacOS arm64
   when:
-    - ansible_system == "Darwin"
-    - ansible_architecture == "arm64"
+    - ansible_facts["system"] == "Darwin"
+    - ansible_facts["architecture"] == "arm64"
   ansible.builtin.set_fact:
     supported_arch: true
     okd_tools_arch: mac-arm64
@@ -35,7 +35,7 @@
 - name: Fail if architecture is not supported
   when: supported_arch is not defined
   ansible.builtin.fail:
-    msg: "Aborting. System [{{ ansible_system }}] and architecture [{{ ansible_architecture }}] is not supported at the moment."
+    msg: "Aborting. System [{{ ansible_facts["system"] }}] and architecture [{{ ansible_facts["architecture"] }}] is not supported at the moment."
 
 - name: Download other tools
   ansible.builtin.include_tasks: "download-tools.yml"
