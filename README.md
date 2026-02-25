@@ -16,7 +16,7 @@ If you have more hardware, adjust the inventory file accordingly.
 NOTE: If you want to run a different version of OKD, extract
 the installer under ./openshift-install which will stop retrieving the installer.
 The exact command to extract the installer is available per beta version at
-[OKD Nightly Releases](https://amd64.origin.releases.ci.openshift.org/#4.8.0-0.okd).
+[OKD Nightly Releases](https://amd64.origin.releases.ci.openshift.org/).
 
 There are optional components to install which are controlled by
 ansible variables. These are defined in the inventory group vars.
@@ -77,7 +77,7 @@ the hostname `registry.okd4.example.com` needs to be setup in DNS.
 # Preparation
 
 1. Pull your [RedHat pull secret](https://console.redhat.com/openshift/install/metal/user-provisioned) and place in file `pull-secret`.
-2. [If you want github integration](https://docs.openshift.com/container-platform/4.8/authentication/identity_providers/configuring-github-identity-provider.html),
+2. [If you want github integration](https://docs.openshift.com/container-platform/latest/authentication/identity_providers/configuring-github-identity-provider.html),
    create a file called "github-config.json" with similar content as this:
    ```json
    {
