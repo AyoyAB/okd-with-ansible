@@ -21,12 +21,19 @@ The exact command to extract the installer is available per beta version at
 There are optional components to install which are controlled by
 ansible variables. These are defined in the inventory group vars.
 
-| variable                            | description                                                                                        |
-|-------------------------------------|----------------------------------------------------------------------------------------------------|
-| argocd                              | whether to install the argocd operator                                                             |
-| sealed_secrets                      | Whether to pre-install a secret for sealed_secret to make sure git sealed secrets can be decrypted | 
-| set_etc_hostname_in_ignition_file   | Whether to set the hostname in /etc/hostname                                                       |
-| use_control_plane_nodes_for_compute | Whether to allow masters to be used for regular pods                                               |
+| variable                                  | description                                                       |
+|-------------------------------------------|-------------------------------------------------------------------|
+| argocd                                    | Whether to install the ArgoCD operator.                           |
+| sealed_secrets                            | Whether to pre-install a sealed secrets decryption key.           |
+| set_etc_hostname_in_ignition_file         | Whether to set the hostname in /etc/hostname.                     |
+| use_control_plane_nodes_for_compute       | Whether to allow masters to be used for regular pods.             |
+| openshift_agent_installation              | Use agent-based installation instead of bootstrap.                |
+| openshift_agent_rendezvousIP              | Rendezvous IP for agent-based installation.                       |
+| create_local_files_platform               | Platform type for install-config (`none` or `baremetal`).         |
+| create_local_files_network_type           | Network type (`OVNKubernetes` or `OpenShiftSDN`).                 |
+| create_local_files_machine_networks       | List of machine network CIDRs.                                    |
+| opt_out_of_remote_health_reporting        | Opt out of remote health reporting.                               |
+| okd_disable_default_operator_catalog_sources | Disable default operator catalog sources.                      |
 
 # Load Balancer
 
