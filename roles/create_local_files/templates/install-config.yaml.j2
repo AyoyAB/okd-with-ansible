@@ -57,6 +57,7 @@ proxy:
 {% endif %}
 {% if use_disconnected_registry == true %}
 {% if disconnected_registry_trust_bundle_file is defined %}
+additionalTrustBundlePolicy: Always
 additionalTrustBundle: |
   {{ lookup('file', disconnected_registry_trust_bundle_file) | indent(2) }}
 {% endif %}
