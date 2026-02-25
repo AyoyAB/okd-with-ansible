@@ -153,14 +153,17 @@ This is how to run the playbook:
 
 ```shell
 make dependencies
-CLUSTER_NAME=example make cluster
+CLUSTER_NAME=example-ocp make cluster
 ```
 
 Or if you wish to run the playbook directly:
 
 ```shell
-ansible-playbook -i inventories/example -v deploy-okd.yml --extra-vars "use_control_plane_nodes_for_compute=true argocd=true"
+ansible-playbook -i inventories/example-ocp -v deploy-okd.yml --extra-vars "use_control_plane_nodes_for_compute=true argocd=true"
 ```
+
+Available inventories: `example-fcos`, `example-ocp`,
+`example-ocp-agent`, `example-scos`.
 
 Once the playbook tell you to, boot the masters on Fedora CoreOS USB.
 
