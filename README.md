@@ -128,9 +128,8 @@ the hostname `registry.okd4.example.com` needs to be setup in DNS.
    - thanos-querier-openshift-monitoring.apps.okd4.example.com
 
 4. Create a new image for the rasperry pi with enabled ssh and boot it up.
-5. Create a bootable USB from the correct version of Fedora CoreOS.  
-   (At the time of writing, the current working release is
-   [36.20220716.3.1](https://builds.coreos.fedoraproject.org/prod/streams/stable/builds/36.20220716.3.1/x86_64/fedora-coreos-36.20220716.3.1-live.x86_64.iso))
+5. Create a bootable USB from the correct version of Fedora
+   CoreOS. Use the following command to get the ISO URL:
 
    ```shell
    ./openshift-install/openshift-install coreos print-stream-json | jq -r '.architectures.x86_64.artifacts.metal.formats.iso.disk.location'
