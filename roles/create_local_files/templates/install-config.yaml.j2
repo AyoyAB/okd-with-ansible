@@ -32,6 +32,12 @@ platform:
   none: {}
 {% elif create_local_files_platform == "baremetal" %}
   baremetal:
+{% if create_local_files_additional_ntp_servers | length > 0 %}
+    additionalNTPServers:
+{% for ntp_server in create_local_files_additional_ntp_servers %}
+      - {{ ntp_server }}
+{% endfor %}
+{% endif %}
     apiVIPs:
       - {{ lookup('community.general.dig', "api." + cluster_name + "." + base_domain)}}
     ingressVIPs:

@@ -27,6 +27,8 @@ create_local_files_machine_networks:
 
 # Remove usage of external LBS and use LBS internally in Openshift
 create_local_files_platform: "baremetal"
+create_local_files_additional_ntp_servers:
+  - se.pool.ntp.org
 lbs_loadbalancer_configure: false
 
 # https://docs.openshift.com/container-platform/4.15/installing/cluster-capabilities.html
