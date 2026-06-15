@@ -38,10 +38,22 @@ platform:
       - {{ ntp_server }}
 {% endfor %}
 {% endif %}
+    provisioningNetwork: Unmanaged
     apiVIPs:
       - {{ lookup('community.general.dig', "api." + cluster_name + "." + base_domain)}}
     ingressVIPs:
       - {{ lookup('community.general.dig', "foo.apps." + cluster_name + "." + base_domain)}}
+    hosts:
+{% for host in groups['masters'] %}
+      - name: {{ host }}
+        role: master
+        bootMACAddress: "{{ hostvars[host].mac_address }}"
+{% endfor %}
+{% for host in groups['workers'] %}
+      - name: {{ host }}
+        role: worker
+        bootMACAddress: "{{ hostvars[host].mac_address }}"
+{% endfor %}
 {% endif %}
 {% if cluster_baseline_capability_set is defined %}
 capabilities:
