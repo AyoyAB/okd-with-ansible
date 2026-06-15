@@ -44,12 +44,39 @@ The HAProxy status interface is found at [infra1.okd4.example.com:1936/stats](in
 
 The load balancer installation can be controlled with the following parameters:
 
-| Variable                                | Description                                    | Default    |
-|-----------------------------------------|------------------------------------------------|------------|
-| lbs_loadbalancer_haproxy_stats_auth     | Enable HAProxy status page authentication.     | false      |
-| lbs_loadbalancer_haproxy_stats_username | HAProxy status page username.                  | `admin`    |
-| lbs_loadbalancer_haproxy_stats_password | HAProxy status page password.                  | `password` |
-| configure_ufw                           | Configure UFW port openings.                   | `false`    |
+| Variable                                | Description                                | Default    |
+|-----------------------------------------|--------------------------------------------|------------|
+| lbs_loadbalancer_configure              | Whether to configure the HA proxy at all   | true       |
+| lbs_loadbalancer_haproxy_stats_auth     | Enable HAProxy status page authentication. | false      |
+| lbs_loadbalancer_haproxy_stats_username | HAProxy status page username.              | `admin`    |
+| lbs_loadbalancer_haproxy_stats_password | HAProxy status page password.              | `password` |
+| configure_ufw                           | Configure UFW port openings.               | `false`    |
+
+## Using OpenShift's internal load balancer
+
+Instead of an external HAProxy, you can let OpenShift
+manage load balancing internally using keepalived VIPs
+on the master nodes. Set the following:
+
+```yaml
+create_local_files_platform: "baremetal"
+lbs_loadbalancer_configure: false
+```
+
+When `create_local_files_platform` is set to `baremetal`,
+the installer configures `apiVIPs` and `ingressVIPs` by
+resolving `api.<cluster>.<domain>` and
+`*.apps.<cluster>.<domain>` from DNS. OpenShift then
+manages these VIPs across master nodes automatically.
+
+When `lbs_loadbalancer_configure` is `false`, the playbook
+skips all external LBS provisioning (HAProxy, Nginx,
+ignition file hosting, network boot configuration).
+
+This is typically used together with agent-based
+installation. See the
+[Agent-based installation](#agent-based-installation)
+section.
 
 # Disconnected registry
 
@@ -240,6 +267,62 @@ You can now open the cluster console by
 opening https://console-openshift-console.apps.okd4.example.com.
 
 Have fun with your cluster!
+
+## Agent-based installation
+
+As an alternative to the bootstrap flow described above,
+you can use the agent-based installer. This generates a
+single bootable ISO that all nodes boot from. The nodes
+discover each other via a rendezvous IP, eliminating the
+need for a separate bootstrap machine and external load
+balancer.
+
+To use agent-based installation, set the following in
+your inventory group vars:
+
+```yaml
+openshift_agent_installation: true
+openshift_agent_rendezvousIP: 192.168.60.181
+
+# Use OpenShift internal load balancer instead of
+# external HAProxy
+create_local_files_platform: "baremetal"
+lbs_loadbalancer_configure: false
+```
+
+Each host in the inventory must define a `mac_address`:
+
+```ini
+[masters]
+master1.okd4.example.com mac_address=1c:69:7a:a5:c8:4e
+master2.okd4.example.com mac_address=1c:69:7a:a5:c9:5a
+master3.okd4.example.com mac_address=1c:69:7a:a3:76:24
+
+[workers]
+worker1.okd4.example.com mac_address=f4:4d:30:6d:8d:d6
+```
+
+No `[bootstrap]` group is needed.
+
+Run the playbook as usual:
+
+```shell
+CLUSTER_NAME=example-ocp-agent make cluster
+```
+
+The playbook will:
+
+1. Generate `install-config.yaml` and `agent-config.yaml`.
+2. Build a bootable ISO (`agent.x86_64.iso`).
+3. Pause and ask you to create a bootable USB from the
+   ISO and boot all nodes from it.
+4. Wait for bootstrap and installation to complete using
+   `openshift-install agent wait-for`.
+
+Workers register automatically — no manual `oc` enrollment
+or certificate approval is needed.
+
+See `inventories/example-ocp-agent` for a complete example.
 
 ## Adding the bootstrap or any other node to the cluster
 
