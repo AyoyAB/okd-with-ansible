@@ -9,7 +9,7 @@
       metadata:
         name: "{{ argocd_namespace }}"
 
-- name: Initiate applications from github
+- name: Initiate application secrets from github
   kubernetes.core.k8s:
     kubeconfig: "{{ openshift_files_kubeconfig }}"
     resource_definition:
