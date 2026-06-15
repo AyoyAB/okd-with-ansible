@@ -1,0 +1,32 @@
+---
+# https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer?utm_source=chatgpt.com
+apiVersion: v1beta1
+kind: AgentConfig
+metadata:
+  name: example-cluster
+rendezvousIP: {{ openshift_agent_rendezvousIP }}
+hosts:
+{% for host in groups.masters %}
+  - hostname: {{ host }}
+    role: master
+    interfaces:
+      - name: eno1
+        macAddress: {{ hostvars[host].mac_address }}
+    networkConfig:
+      interfaces:
+        - name: eno1
+          type: ethernet
+          state: up
+          mac-address: {{ hostvars[host].mac_address }}
+          ipv4:
+            enabled: true
+            dhcp: true
+{% endfor %}
+
+{% for host in groups.workers %}
+  - hostname: {{ host }}
+    role: worker
+    interfaces:
+      - name: eno1
+        macAddress: {{ hostvars[host].mac_address }}
+{% endfor %}

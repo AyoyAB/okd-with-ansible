@@ -1,0 +1,28 @@
+[all:children]
+lbs
+nodes
+
+[lbs]
+infra1.okd4.example.com ansible_user=pi ansible_ssh_pass=raspberry
+
+[rpis]
+infra1.okd4.example.com
+
+[nodes:children]
+bootstrap
+masters
+workers
+
+[bootstrap]
+# Only first machine in bootstrap group will be used as bootstrap machine
+bootstrap.okd4.example.com
+
+[masters]
+master1.okd4.example.com mac_address=1c:69:7a:a5:c8:4e
+master2.okd4.example.com mac_address=1c:69:7a:a5:c9:5a
+master3.okd4.example.com mac_address=1c:69:7a:a3:76:24
+
+# The first worker is also the bootstrap machine
+[workers]
+worker1.okd4.example.com mac_address=f4:4d:30:6d:8d:d6
+worker2.okd4.example.com mac_address=1c:69:7a:a2:50:ce

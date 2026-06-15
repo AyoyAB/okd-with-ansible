@@ -5,7 +5,7 @@
     okd_version: "{{ okd_version | regex_search('[0-9]\\.[0-9]+\\.[0-9]+') }}"
     okd_version_minor: "{{ okd_version | regex_search('([0-9]+\\.[0-9]+)\\.', '\\1') | first }}"
 
-- name: Wait for cluster installation to finish
+- name: Wait for cluster installation to finish (ordinary installation)
   ansible.builtin.shell:
     cmd: >-
       "{{ openshift_install_executable }}" wait-for install-complete --dir={{ openshift_files_directory }}/
@@ -15,4 +15,16 @@
   become: false
   changed_when: false
   until: install_complete.rc == 0
-  when: okd_version_minor not in ["4.12"]
+  when: not openshift_agent_installation
+
+- name: Wait for cluster installation to finish (agent installation)
+  ansible.builtin.shell:
+    cmd: >-
+      "{{ openshift_install_executable }}" agent wait-for install-complete --dir={{ openshift_files_directory }}/.install-config/
+    executable: /bin/bash
+  delegate_to: localhost
+  register: install_complete
+  become: false
+  changed_when: false
+  until: install_complete.rc == 0
+  when: openshift_agent_installation
