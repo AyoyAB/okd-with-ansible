@@ -42,9 +42,15 @@
         dest: "{{ openshift_files_directory }}/.install-config/{{ item }}"
         mode: '0644'
       with_items:
-        - agent-config.yaml
         - install-config.yaml
         - pull-secret
+
+    - name: Copy agent config
+      ansible.builtin.copy:
+        src: "{{ openshift_files_directory }}/agent-config.yaml"
+        dest: "{{ openshift_files_directory }}/.install-config/agent-config.yaml"
+        mode: '0644'
+      when: openshift_agent_installation
 
     - name: Copy custom manifests
       ansible.builtin.command:
@@ -67,8 +73,10 @@
 
     - name: Log image creation line (stdout)
       debug: msg="{{ image_creation.stdout_lines }}"
+      when: openshift_agent_installation
     - name: Log image creation line (stderr)
       debug: msg="{{ image_creation.stderr_lines }}"
+      when: openshift_agent_installation
 
     - name: Create cluster manifests files
       ansible.builtin.command:
