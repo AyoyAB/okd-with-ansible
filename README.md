@@ -324,6 +324,37 @@ or certificate approval is needed.
 
 See `inventories/example-ocp-agent` for a complete example.
 
+## Wiping cluster nodes
+
+To reinstall a cluster on the same machines, the old
+installation must be removed first. Otherwise the machines
+keep booting from disk even when a USB stick is selected.
+
+```shell
+CLUSTER_NAME=example-scos-agent make wipe-nodes
+```
+
+This destroys the cluster. The playbook lists the masters
+and workers it will wipe and asks you to type `yes`. It
+then erases the partition table of each node's boot disk
+and reboots the node immediately, without a normal
+shutdown. With no bootable disk left, the machines boot
+from USB or network.
+
+To wipe only some nodes, use a limit:
+
+```shell
+CLUSTER_NAME=example-scos-agent \
+  ANSIBLE_EXTRA_ARGS='-l master2.okd4.example.com' make wipe-nodes
+```
+
+Nodes are only wiped when running an installed CoreOS
+system. A node already booted from a live ISO is refused,
+and if any node fails before the wipe, no node is wiped.
+Only the partition table is erased, so the data is still
+on the disk; this is fine for a reinstall but not for
+decommissioning.
+
 ## Adding the bootstrap or any other node to the cluster
 
 Once the cluster has been correctly installed, shutdown the
