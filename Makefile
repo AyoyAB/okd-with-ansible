@@ -127,6 +127,10 @@ cluster-masters: env-check
 cluster-config: env-check
 	ansible-playbook ${ANSIBLE_EXTRA_ARGS} -i inventories/${CLUSTER_NAME} -v configure-cluster.yml
 
+.PHONY: wipe-nodes
+wipe-nodes: env-check
+	ansible-playbook ${ANSIBLE_EXTRA_ARGS} -i inventories/${CLUSTER_NAME} -v wipe-nodes.yml
+
 #
 # Load Balancer (lbs)
 #

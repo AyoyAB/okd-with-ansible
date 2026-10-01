@@ -1,0 +1,61 @@
+---
+#
+# Wipe the boot disk of all masters and workers and reboot them,
+# so they boot from USB or network on the next start.
+# This destroys the cluster.
+#
+
+- name: Wipe cluster nodes
+  hosts: masters:workers
+  any_errors_fatal: true
+  gather_facts: false
+  become: true
+  vars:
+    # Reinstalled nodes get new host keys, so don't trust or update known_hosts
+    ansible_ssh_common_args: -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no
+  tasks:
+    # Confirmation lives in this play so --limit or --start-at-task cannot skip it
+    - name: Ask for confirmation
+      ansible.builtin.pause:
+        prompt: |
+          This wipes the boot disk of these hosts in inventory {{ inventory_dir | basename }}:
+          {{ ansible_play_hosts_all | join('\n') }}
+
+          Type yes to continue
+      run_once: true
+      register: wipe_nodes_confirmation
+
+    - name: Abort unless confirmed
+      ansible.builtin.assert:
+        that: wipe_nodes_confirmation.user_input == 'yes'
+        fail_msg: Aborting, not confirmed.
+      run_once: true
+
+    # Only installed CoreOS nodes, never a live ISO boot or a removable disk
+    - name: Find boot disk
+      ansible.builtin.shell:
+        cmd: |
+          set -eo pipefail
+          test -e /run/ostree-booted
+          test ! -e /run/ostree-live
+          lsblk -rnso NAME,TYPE,RM "$(findmnt -nvo SOURCE /sysroot)" | awk '$2 == "disk" && $3 == "0" {print "/dev/" $1}'
+        executable: /bin/bash
+      register: wipe_nodes_disk
+      changed_when: false
+      failed_when: >-
+        wipe_nodes_disk.rc != 0
+        or wipe_nodes_disk.stdout_lines | length != 1
+        or wipe_nodes_disk.stdout is not match('^/dev/[A-Za-z0-9._-]+$')
+
+    - name: Wipe boot disk
+      ansible.builtin.command:
+        argv: [wipefs, -af, "{{ wipe_nodes_disk.stdout }}"]
+      changed_when: true
+      when: wipe_nodes_confirmation.user_input == 'yes'
+
+    # Skip the normal shutdown, which hangs on a node whose disk was just wiped
+    - name: Reboot
+      ansible.builtin.shell: sleep 2 && systemctl reboot --force --force
+      async: 1
+      poll: 0
+      changed_when: true
