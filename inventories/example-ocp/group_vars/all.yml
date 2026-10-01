@@ -8,6 +8,8 @@ openshift_installer_base_url: https://mirror.openshift.com/pub/openshift-v4/amd6
 is_openshift: true
 argocd_value_file: values-ocp.yaml
 
+openshift_agent_installation: false
+
 # Retrieve the beta image from https://origin-release.apps.ci.l2s4.p1.openshiftapps.com/#4.13.0-0.okd
 
 ignition_validate_version: v2.15.0
