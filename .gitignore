@@ -10,3 +10,4 @@ openshift-ca/
 sealed-secrets-secret.yml
 
 install-*.log
+.claude/agent-memory/
