@@ -9,7 +9,7 @@ is_openshift: true
 argocd_value_file: values-ocp.yaml
 
 openshift_agent_installation: true
-openshift_agent_rendezvousIP:  192.168.60.181
+openshift_agent_rendezvous_ip: 192.168.60.181
 
 # Retrieve the beta image from https://origin-release.apps.ci.l2s4.p1.openshiftapps.com/#4.13.0-0.okd
 

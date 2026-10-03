@@ -9,7 +9,7 @@ is_openshift: false
 argocd_value_file: values-okd.yaml
 
 openshift_agent_installation: true
-openshift_agent_rendezvousIP:  192.168.60.181
+openshift_agent_rendezvous_ip: 192.168.60.181
 
 # Retrieve the beta image from https://origin-release.apps.ci.l2s4.p1.openshiftapps.com/#4.13.0-0.okd
 # okd_tools_image_override: quay.io/okd/scos-release:4.12.0-0.okd-scos-2023-02-14-060109

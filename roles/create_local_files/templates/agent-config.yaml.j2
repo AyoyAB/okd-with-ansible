@@ -4,7 +4,7 @@ apiVersion: v1beta1
 kind: AgentConfig
 metadata:
   name: example-cluster
-rendezvousIP: {{ openshift_agent_rendezvousIP }}
+rendezvousIP: {{ openshift_agent_rendezvous_ip }}
 hosts:
 {% for host in groups.masters %}
   - hostname: {{ host }}

@@ -68,14 +68,17 @@
     - name: Create agent image (this takes a long time, expect roughly a minute)
       ansible.builtin.command:
         cmd: "{{ openshift_install_executable }} agent create image --dir={{ openshift_files_directory }}/.install-config --log-level=debug"
+      changed_when: true
       when: openshift_agent_installation
       register: image_creation
 
     - name: Log image creation line (stdout)
-      debug: msg="{{ image_creation.stdout_lines }}"
+      ansible.builtin.debug:
+        msg: "{{ image_creation.stdout_lines }}"
       when: openshift_agent_installation
     - name: Log image creation line (stderr)
-      debug: msg="{{ image_creation.stderr_lines }}"
+      ansible.builtin.debug:
+        msg: "{{ image_creation.stderr_lines }}"
       when: openshift_agent_installation
 
     - name: Create cluster manifests files

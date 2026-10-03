@@ -28,7 +28,7 @@ ansible variables. These are defined in the inventory group vars.
 | set_etc_hostname_in_ignition_file         | Whether to set the hostname in /etc/hostname.                     |
 | use_control_plane_nodes_for_compute       | Whether to allow masters to be used for regular pods.             |
 | openshift_agent_installation              | Use agent-based installation instead of bootstrap.                |
-| openshift_agent_rendezvousIP              | Rendezvous IP for agent-based installation.                       |
+| openshift_agent_rendezvous_ip             | Rendezvous IP for agent-based installation.                       |
 | create_local_files_platform               | Platform type for install-config (`none` or `baremetal`).         |
 | create_local_files_network_type           | Network type (`OVNKubernetes` or `OpenShiftSDN`).                 |
 | create_local_files_machine_networks       | List of machine network CIDRs.                                    |
@@ -282,7 +282,7 @@ your inventory group vars:
 
 ```yaml
 openshift_agent_installation: true
-openshift_agent_rendezvousIP: 192.168.60.181
+openshift_agent_rendezvous_ip: 192.168.60.181
 
 # Use OpenShift internal load balancer instead of
 # external HAProxy

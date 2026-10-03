@@ -9,13 +9,15 @@
   hosts: masters:workers
   any_errors_fatal: true
   gather_facts: false
+  # run_once confirmation below relies on the linear strategy
+  strategy: linear
   become: true
   vars:
     # Reinstalled nodes get new host keys, so don't trust or update known_hosts
     ansible_ssh_common_args: -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no
   tasks:
     # Confirmation lives in this play so --limit or --start-at-task cannot skip it
-    - name: Ask for confirmation
+    - name: Ask for confirmation  # noqa: run-once[task]
       ansible.builtin.pause:
         prompt: |
           This wipes the boot disk of these hosts in inventory {{ inventory_dir | basename }}:
@@ -25,7 +27,7 @@
       run_once: true
       register: wipe_nodes_confirmation
 
-    - name: Abort unless confirmed
+    - name: Abort unless confirmed  # noqa: run-once[task]
       ansible.builtin.assert:
         that: wipe_nodes_confirmation.user_input == 'yes'
         fail_msg: Aborting, not confirmed.
