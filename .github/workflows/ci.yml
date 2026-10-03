@@ -79,7 +79,7 @@ jobs:
           sudo rmmod kvm_amd   || echo "Could not remove kvm_amd, perhaps this is Intel?"
           echo ""
           echo "Trying to unload kvm"
-          sudo rmmod kvm
+          sudo rmmod kvm       || echo "Could not remove kvm, newer VirtualBox depends on it"
           echo ""
           echo "These kvm modules are loaded:"
           sudo lsmod | grep kvm || echo "Found no kvm modules loaded"
