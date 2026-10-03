@@ -11,8 +11,8 @@ platforms:
   - name: lbs.okd4.local.com
     groups:
       - lbs
-    box: debian/bullseye64
-    box_version: 11.20240905.1  # https://app.vagrantup.com/debian/boxes/bullseye64
+    box: debian/bookworm64
+    box_version: 12.20250126.1  # newest with a virtualbox provider: https://portal.cloud.hashicorp.com/vagrant/discover/debian/bookworm64
     memory: 3072
     cpu: 2
     interfaces:
