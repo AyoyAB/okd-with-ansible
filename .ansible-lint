@@ -2,3 +2,5 @@ use_default_rules: true
 skip_list:
   - 'yaml'
   - 'role-name'
+  # Role inputs are set from inventories; prefixing them all would break those
+  - 'var-naming[no-role-prefix]'
