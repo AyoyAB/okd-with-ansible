@@ -337,9 +337,9 @@ CLUSTER_NAME=example-scos-agent make wipe-nodes
 This destroys the cluster. The playbook lists the masters
 and workers it will wipe and asks you to type `yes`. It
 then erases the partition table of each node's boot disk
-and reboots the node immediately, without a normal
-shutdown. With no bootable disk left, the machines boot
-from USB or network.
+and powers the node off immediately, without a normal
+shutdown. Start the machines again yourself; with no
+bootable disk left, they boot from USB or network.
 
 To wipe only some nodes, use a limit:
 

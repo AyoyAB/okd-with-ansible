@@ -1,6 +1,6 @@
 ---
 #
-# Wipe the boot disk of all masters and workers and reboot them,
+# Wipe the boot disk of all masters and workers and power them off,
 # so they boot from USB or network on the next start.
 # This destroys the cluster.
 #
@@ -56,8 +56,8 @@
       when: wipe_nodes_confirmation.user_input == 'yes'
 
     # Skip the normal shutdown, which hangs on a node whose disk was just wiped
-    - name: Reboot
-      ansible.builtin.shell: sleep 2 && systemctl reboot --force --force
+    - name: Power off
+      ansible.builtin.shell: sleep 2 && systemctl poweroff --force --force
       # async is a time limit, so it must outlast the sleep or the job is killed first
       async: 10
       poll: 0
