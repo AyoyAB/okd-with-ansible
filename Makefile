@@ -81,7 +81,7 @@ yaml-lint:
 
 # molecule 26 no longer puts a driver's modules on the Ansible module path,
 # so the vagrant driver cannot find its own vagrant module.
-molecule-create molecule-destroy molecule-converge molecule-verify molecule-test: export ANSIBLE_LIBRARY := $(shell python3 -c 'import pathlib, molecule_plugins.vagrant as v; print(pathlib.Path(v.__file__).parent / "modules")')
+molecule-create molecule-destroy molecule-converge molecule-verify molecule-test: export ANSIBLE_LIBRARY = $(shell python3 -c 'import pathlib, molecule_plugins.vagrant as v; print(pathlib.Path(v.__file__).parent / "modules")')
 
 .PHONY: molecule-create
 molecule-create:
