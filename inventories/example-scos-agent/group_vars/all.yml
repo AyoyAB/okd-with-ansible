@@ -5,7 +5,6 @@ okd_version: 4.22.0-okd-scos.9
 # This forces the scos releases
 openshift_client_base_url: https://github.com/okd-project/okd/releases/download
 openshift_installer_base_url: https://github.com/okd-project/okd/releases/download
-is_openshift: false
 argocd_value_file: values-okd.yaml
 
 openshift_agent_installation: true

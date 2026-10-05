@@ -5,7 +5,6 @@ okd_version: 4.20.24
 # This forces the ocp releases
 openshift_client_base_url: https://mirror.openshift.com/pub/openshift-v4/amd64/clients/ocp
 openshift_installer_base_url: https://mirror.openshift.com/pub/openshift-v4/amd64/clients/ocp
-is_openshift: true
 argocd_value_file: values-ocp.yaml
 
 openshift_agent_installation: false
