@@ -155,8 +155,8 @@ the hostname `registry.okd4.example.com` needs to be setup in DNS.
    - thanos-querier-openshift-monitoring.apps.okd4.example.com
 
 4. Create a new image for the rasperry pi with enabled ssh and boot it up.
-5. Create a bootable USB from the correct version of Fedora
-   CoreOS. Use the following command to get the ISO URL:
+5. Create a bootable USB from the correct version of CoreOS.
+   Use the following command to get the ISO URL:
 
    ```shell
    ./openshift-install/openshift-install coreos print-stream-json | jq -r '.architectures.x86_64.artifacts.metal.formats.iso.disk.location'
@@ -195,10 +195,10 @@ Or if you wish to run the playbook directly:
 ansible-playbook -i inventories/example-ocp -v deploy-okd.yml --extra-vars "use_control_plane_nodes_for_compute=true argocd=true"
 ```
 
-Available inventories: `example-fcos`, `example-ocp`,
-`example-ocp-agent`, `example-scos`.
+Available inventories: `example-ocp`, `example-ocp-agent`,
+`example-scos`.
 
-Once the playbook tell you to, boot the masters on Fedora CoreOS USB.
+Once the playbook tell you to, boot the masters on CoreOS USB.
 
 To switch keyboard mapping on CoreOS, do the following:
 
@@ -224,7 +224,7 @@ Verify that the master is trying to pull the secondary ignition from `https://ap
 
 Once all masters are waiting for the secondary ignition, continue the playbook
 which tell you to boot the first worker machine on
-Fedora CoreOS USB and start the installation for the bootstrap process:
+CoreOS USB and start the installation for the bootstrap process:
 
 ```shell
 # Use hostname from DHCP or DNS
