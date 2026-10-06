@@ -26,7 +26,7 @@
 3. Decompress with
 
    ```shell
-   xz -d fedora-coreos-*-metal.aarch64.raw.xz
+   xz -d *-metal.aarch64.raw.xz
    ```
 
 4. Write as second partition

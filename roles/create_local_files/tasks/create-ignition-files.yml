@@ -26,17 +26,6 @@
     - master.ign.tmp
     - worker.ign.tmp
 
-- name: Fix ignition files v4.8
-  ansible.builtin.include_tasks: "fix-ignition-files-v4.8.yml"
-  vars:
-    workdir: "{{ openshift_files_directory }}/.ignition"
-    ifname: "eno1"
-  loop:
-    - bootstrap.ign.tmp
-    - master.ign.tmp
-    - worker.ign.tmp
-  when: okd_version_minor in ["4.8", "4.9"]
-
 - name: Bootstrap - Create node specific ignition files
   ansible.builtin.include_tasks: "create-node-specific-ignition-file.yml"
   loop: "{{ groups.bootstrap }}"

@@ -196,7 +196,7 @@ ansible-playbook -i inventories/example-ocp -v deploy-okd.yml --extra-vars "use_
 ```
 
 Available inventories: `example-ocp`, `example-ocp-agent`,
-`example-scos`.
+`example-scos`. The minimum supported OKD/OCP version is 4.16.
 
 Once the playbook tell you to, boot the masters on CoreOS USB.
 
