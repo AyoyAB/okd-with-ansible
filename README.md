@@ -89,8 +89,8 @@ To use a disconnected registry, set the following parameters:
 | use_disconnected_registry               | Boolean. Indicating a registry should be used. Example: true                                    |
 | disconnected_registry_trust_bundle_file | String. Filename of the root CA for the registry. Example: ./openshift-ca/example.crt           |
 | disconnected_registries                 | Array of objects. Mirror registries.                                                            |
-| disconnected_registries.source          | String. URL that will be replaced with mirror. Example: quay.io/openshift/okd                   |
-| disconnected_registries.mirrors         | Array of strings. URL to mirror registry. Example: registry.okd4.example.com:5011/openshift/okd |
+| disconnected_registries.source          | String. URL that will be replaced with mirror. Example: quay.io/okd/scos-release                |
+| disconnected_registries.mirrors         | Array of strings. URL to mirror registry. Example: registry.okd4.example.com:5011/okd/scos-release |
 
 # Pull-through-cache
 
