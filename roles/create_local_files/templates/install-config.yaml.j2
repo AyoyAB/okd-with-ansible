@@ -53,7 +53,7 @@ capabilities:
 {% endfor %}
 {% endif %}
 {% endif %}
-pullSecret: "{{ lookup('file', '{{ openshift_files_directory }}/pull-secret') | regex_replace('\"', '\\\"') }}"
+pullSecret: "{{ lookup('file', openshift_files_directory ~ '/pull-secret') | regex_replace('\"', '\\\"') }}"
 sshKey: "{{ lookup('file', ssh_public_key_file) }}"
 {% if use_cluster_proxy == true %}
 proxy:
